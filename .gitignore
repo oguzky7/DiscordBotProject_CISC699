@@ -57,6 +57,5 @@ ehthumbs.db
 Thumbs.db
 
 # Exclude config.py to avoid exposing sensitive information
-config.py
 Instance-1-key-pair.pem
  
