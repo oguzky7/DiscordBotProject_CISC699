@@ -71,3 +71,11 @@ class Notification:
         stop_message = "Stopping the bot. Goodbye!"
         logger.log(f"Bot is stopping as requested by {self.user}.")
         await channel.send(stop_message)
+
+    async def notify_price_change(self, channel, price):
+        """
+        Send a notification to the Discord channel with the found price.
+        """
+        price_message = f"The price is: {price}"
+        logger.log(f"Notifying {self.user} of price change: {price}")
+        await channel.send(price_message)

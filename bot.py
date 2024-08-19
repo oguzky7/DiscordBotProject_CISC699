@@ -37,6 +37,7 @@ async def on_message(message):
         recognized = True
         await bot.process_commands(message)
         logger.log_message_recognized()
+        await message.channel.send(f"Message recognized: {message.content}")
 
     if not recognized:
         logger.log_message_not_recognized()
@@ -45,38 +46,41 @@ async def on_message(message):
 @bot.command(name='launch_browser')
 async def launch_browser(ctx, *args):
     incognito = "incognito" in args
-    await cmd.launch_browser(ctx, incognito=incognito)
-
+    response = cmd.launch_browser(ctx, incognito=incognito)
+    await ctx.send(response)
 
 @bot.command(name='navigate_to_url')
 async def navigate_to_url(ctx, url: str):
-    await cmd.navigate_to_url(ctx, url)
+    response = cmd.navigate_to_url(ctx, url)
+    await ctx.send(response)
 
 @bot.command(name='get_price')
 async def get_price(ctx, url: str):
-    await cmd.get_price(ctx, url)
-
-@bot.command(name='login')
-async def login(ctx, url: str, username: str, password: str):
-    await cmd.login(ctx, url, username, password)
-
-@bot.command(name='close_browser')
-async def close_browser(ctx):
-    await cmd.close_browser(ctx)
-
-@bot.command(name='commands')
-async def commands_command(ctx):
-    await cmd.send_help_message(ctx.channel)
+    response = await cmd.get_price(ctx, url)
+    # No need to send the response here, since it's handled within get_price
 
 @bot.command(name='monitor_price')
 async def monitor_price(ctx, url: str):
-    await ctx.send(f"Started monitoring price for: {url}")
-    await cmd.monitor_price(ctx, url)
+    await cmd.monitor_price(ctx, url)  # Ensure this calls the function from commands.py
+
+@bot.command(name='login')
+async def login(ctx, url: str):
+    response = cmd.login(ctx, url)
+    await ctx.send(response)
+
+@bot.command(name='close_browser')
+async def close_browser(ctx):
+    response = cmd.close_browser(ctx)
+    await ctx.send(response)
+
+@bot.command(name='commands')
+async def commands_command(ctx):
+    await ctx.send(help.get_help_message())
 
 @bot.command(name='stop')
 async def stop_command(ctx):
     if ctx.channel.id == Config.CHANNEL_ID:
-        await cmd.send_stop_message(ctx.channel)
+        await ctx.send("Stopping the bot. Goodbye!")
         sys.exit(0)
     else:
         logger.log_wrong_channel('stop', ctx.author)
