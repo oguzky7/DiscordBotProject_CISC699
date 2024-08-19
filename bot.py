@@ -1,108 +1,57 @@
-import discord # type: ignore
-from discord.ext import tasks, commands # type: ignore
+import discord
+from discord.ext import commands
+from browser_interface import BrowserInterface
+from config import Config  # Import the Config class from config.py
 
-import config
-import commands as cmd
-import scraper
-import logger
-import beautifier
-import checker
-import help
+# Define the intents your bot will use
+intents = discord.Intents.default()
+intents.message_content = True  # This enables the bot to read message content
 
-class MyBot(commands.Bot):
-    def __init__(self):
-        intents = discord.Intents.default()
-        intents.message_content = True
-        super().__init__(command_prefix='?', intents=intents)
-        self.channel_id = config.Config.CHANNEL_ID
+# Initialize the bot with a command prefix and intents
+bot = commands.Bot(command_prefix='!', intents=intents)
 
-    async def on_ready(self):
-        print(f'{self.user} is now running!')
+# Initialize the browser interface
+browser = BrowserInterface()
 
-    async def on_message(self, message):
-        if message.author == self.user:
-            return
-        await cmd.print_message(self, message)
-        await cmd.handle_message(self, message)
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user.name}')
 
-    @tasks.loop(seconds=1.0, count = 1)
-    async def send_logs(self):
-        channel = self.get_channel(self.channel_id)
-        logs = await logger.return_logs()
-        await beautifier.log_beautify_and_send(logs,channel)
+@bot.command(name='launch_browser')
+async def launch_browser(ctx):
+    # Command to launch the browser
+    try:
+        browser.launch_browser()
+        await ctx.send("Chrome browser launched successfully.")
+    except Exception as e:
+        await ctx.send(f"Failed to launch browser: {e}")
 
-    @tasks.loop(minutes=120.0)
-    async def send_trendyol_fiyat(self):
-        change_detected = False
-        channel = self.get_channel(self.channel_id)
-        data = await scraper.scrape_trendyol()
-        await logger.log_data(data, channel)
-        logs = await logger.return_logs()
+@bot.command(name='navigate_to_url')
+async def navigate_to_url(ctx, url: str):
+    # Command to navigate to a specific URL, launches browser if not already running
+    try:
+        browser.navigate_to_url(url)
+        await ctx.send(f"Navigated to URL: {url}")
+    except Exception as e:
+        await ctx.send(f"Failed to navigate: {e}")
 
-        if len(logs) < 2:
-            print("logs has one entry, probably first call")
-            await beautifier.trendyol_beautify_and_send(data,channel,change_detected)
-        else:
-            changed_rows_df = await checker.check_price(data,logs)
-            
-            if changed_rows_df.empty:
-                print("No changes detected.")
-            else:
-                change_detected = True
-                await beautifier.trendyol_beautify_and_send(changed_rows_df,channel,change_detected)
-    
-    @tasks.loop(seconds=1.0, count = 1)
-    async def kosmos_get_max_date(self):
-        change_detected = ''
-        channel = self.get_channel(self.channel_id)
-        data = await scraper.scrape_kosmos_max_date()
-        if data is None:
-            print("scraper failed, data is empty")
-            try:
-                response = "olmadı yav"
-                await channel.send(response)
-            except Exception as e:
-                print(e)
-        else:
-            await logger.log_data_kosmos(data)
-            await beautifier.kosmos_beautify_and_send(data,channel,change_detected)
-        
-    @tasks.loop(seconds=1.0, count = 1)
-    async def send_kosmos_logs(self):
-        channel = self.get_channel(self.channel_id)
-        logs = await logger.return_kosmos_logs()
-        await beautifier.kosmos_log_beautify_and_send(logs,channel)
+@bot.command(name='login')
+async def login(ctx, username: str, password: str, username_field_id: str, password_field_id: str, login_button_xpath: str):
+    # Command to perform login
+    try:
+        browser.login(username, password, username_field_id, password_field_id, login_button_xpath)
+        await ctx.send(f"Logged in with username: {username}")
+    except Exception as e:
+        await ctx.send(f"Failed to log in: {e}")
 
-    @tasks.loop(minutes = 60.0)
-    async def kosmos_get_max_date_job(self):
-        channel = self.get_channel(self.channel_id)
-        data = await scraper.scrape_kosmos_max_date()
+@bot.command(name='close_browser')
+async def close_browser(ctx):
+    # Command to close the browser
+    try:
+        browser.close_browser()
+        await ctx.send("Browser closed successfully.")
+    except Exception as e:
+        await ctx.send(f"Failed to close browser: {e}")
 
-        await logger.log_data_kosmos(data)
-        logs = await logger.return_kosmos_logs()
-
-        if len(logs) < 2:
-            print("logs is empty, probably first call")
-            #logs.at[0, 'Name'] = '1997-09-14'
-        else:
-            changed_rows_df = await checker.check_kosmos_max_date(data, logs)
-            if changed_rows_df.empty:
-                print("No changes detected on kosmos.")
-            else:
-                change_detected = True
-                await beautifier.kosmos_beautify_and_send(changed_rows_df,channel,change_detected)
-
-    @tasks.loop(seconds=1.0, count = 1)
-    async def help(self):
-        channel = self.get_channel(self.channel_id)
-        help_list = help.return_help_list()
-        for key, value in help_list.items():
-            message_to_send = "**" + key + "** -> " + value
-            await channel.send(message_to_send)
-        message_to_send = '----------------'
-        await channel.send(message_to_send)
-        message_to_send = 'şimdilik bu kadar.'
-        await channel.send(message_to_send)
-
-bot = MyBot()
-bot.run(config.Config.TOKEN)
+# Run the bot with the token from config.py
+bot.run(Config.DISCORD_TOKEN)
