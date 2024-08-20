@@ -1,20 +1,14 @@
 import discord
 from discord.ext import commands
-import sys
-import commands as cmd  # Import the commands module
+import commands as cmd 
 import help
 import logger
 from config import Config
 from css_selectors import Selectors
 from selenium.webdriver.common.by import By
-import logger
 import time
-from css_selectors import Selectors
-from browser_interface import BrowserInterface  # Import the BrowserInterface cla
+from browser_interface import BrowserInterface 
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 # Define the intents your bot will use
 intents = discord.Intents.default()
@@ -22,8 +16,7 @@ intents.message_content = True  # This enables the bot to read message content
 
 # Initialize the bot with a command prefix and intents
 bot = commands.Bot(command_prefix='!', intents=intents)
-
-
+browser = BrowserInterface()
 
 @bot.event
 async def on_ready():
@@ -36,22 +29,20 @@ async def on_message(message):
 
     # Log the received message
     logger.log_message_received(message)
-
-    # Greet the user if they say "Hello", "Hi", or "Hey"
-    if message.content.lower() in ["hello", "hi", "hey"]:
-        await message.channel.send(f"Hello, {message.author.name}! How can I help you? If you want to see what I can do, type `!commands`.")
-        return
-
-    # Check if the message is a recognized command
-    recognized = False
-
+    
+    # Let the user know the message is recognized
     if message.content.startswith('!'):
+        await message.channel.send(f"Message recognized: {message.content}. Processing...")
+
+        # Process the command
         recognized = True
         await bot.process_commands(message)
         logger.log_message_recognized()
-        await message.channel.send(f"Message recognized: {message.content}")
 
-    if not recognized:
+        # After processing, confirm that the command was executed
+        await message.channel.send(f"Command '{message.content}' has been executed successfully.")
+
+    else:
         logger.log_message_not_recognized()
         await message.channel.send("Message not recognized as a command. Type `!commands` to see possible actions.")
 
@@ -72,13 +63,8 @@ async def get_price(ctx, url: str):
     # No need to send the response here, since it's handled within get_price
 
 @bot.command(name='monitor_price')
-async def monitor_price(ctx, url: str):
-    await cmd.monitor_price(ctx, url)  # Ensure this calls the function from commands.py
-
-@bot.command(name='login')
-async def login(ctx, url: str):
-    response = cmd.login(ctx, url)
-    await ctx.send(response)
+async def monitor_price(ctx, url: str, frequency: int = 1):
+    await cmd.monitor_price(ctx, url, frequency)  # Pass the frequency to the function
 
 @bot.command(name='close_browser')
 async def close_browser(ctx):
@@ -98,12 +84,7 @@ async def stop_command(ctx):
         logger.log_wrong_channel('stop', ctx.author)
         await ctx.send("This command can only be used in the designated channel.")
 
-
-# Instantiate the browser interface object
-browser = BrowserInterface()
-from selenium.webdriver.common.action_chains import ActionChains
 @bot.command(name="check_availability")
-
 async def check_availability(ctx, url: str, date_str: str):
     """
     Checks availability for a specific date on OpenTable and returns whether the date is available.
@@ -154,7 +135,38 @@ async def check_availability(ctx, url: str, date_str: str):
         logger.log_wrong_channel('check_availability', ctx.author)
         await ctx.send("This command can only be used in the designated channel.")
 
+@bot.command(name='login')
+async def login(ctx, site: str, *args):
+    if ctx.channel.id == Config.CHANNEL_ID:
+        try:
+            logger.log_command_execution('login', ctx.author)
 
+            # Get the appropriate selectors and credentials based on the site
+            selectors = Selectors.get_selectors_for_url(site)
+            if not selectors:
+                await ctx.send(f"No selectors found for {site}.")
+                return
+            
+            username = getattr(Config, f"{site.upper()}_USERNAME", None)
+            password = getattr(Config, f"{site.upper()}_PASSWORD", None)
+            if not username or not password:
+                await ctx.send(f"Credentials for {site} are not configured.")
+                return
+
+            # Determine incognito mode and retries
+            incognito = "incognito" in args
+            retries = next((int(arg) for arg in args if arg.isdigit()), 1)
+
+            # Call the login method from BrowserInterface
+            response = browser.login(selectors['url'], username, password, incognito=incognito, retries=retries)
+            await ctx.send(response)
+
+        except Exception as e:
+            logger.log_command_failed('login', e)
+            await ctx.send(f"Failed to log in to {site}: {e}")
+    else:
+        logger.log_wrong_channel('login', ctx.author)
+        await ctx.send("This command can only be used in the designated channel.")
 
 # Run the bot with the token from config.py
 bot.run(Config.DISCORD_TOKEN)

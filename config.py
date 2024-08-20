@@ -3,10 +3,9 @@ class Config:
     CHANNEL_ID = 1269383349278081054
 
     # Credentials
-    SHEIN_USERNAME = 'oguzky7@gmail.com'
-    SHEIN_PASSWORD = '438007Sh*'
-    USERNAME = 'oguzky7@gmail.com'
-    PASSWORD = '438007Sh*'
-    EMAIL = 'oguzky7@gmail.com'
+    EBAY_USERNAME = 'oguzky7@gmail.com'
+    EBAY_PASSWORD = '438007Sh*'
+    BESTBUY_USERNAME = 'oguzky7@gmail.com'
+    BESTBUY_PASSWORD = '*Hesoyam123'
 
     CHROME_USER_DATA_PATH = r'C:\Users\oguzk\AppData\Local\Google\Chrome\User Data'

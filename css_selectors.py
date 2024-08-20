@@ -3,13 +3,22 @@ class Selectors:
         "trendyol": {
             "price": ".featured-prices .prc-dsc"  # Selector for Trendyol price
         },
-        "shein": {
-            "url": "https://www.shein.com/user/auth/login",
-            "email_field": "[aria-label*='Email Address:']",
-            "continue_button": ".login-point_button .page__login_mainButton",
-            "password_field": "[aria-label*='Password:']",
-            "login_button": "span[data-v-0d926f8f]",
-            "price": ".from.original span"  # CSS selector for Shein price
+        "ebay": {
+            "url": "https://signin.ebay.com/signin/",
+            "email_field": "#userid",
+            "continue_button": "[data-testid*='signin-continue-btn']",
+            "password_field": "#pass",
+            "login_button": "#sgnBt",
+            "price": ".x-price-primary span"  # CSS selector for Ebay price
+        },
+        "bestbuy": {
+            "url": "https://www.bestbuy.com/signin/",
+            "email_field": "#fld-e",
+            #"continue_button": ".cia-form__controls  button",
+            "password_field": "#fld-p1",
+            "SignIn_button": ".cia-form__controls  button",
+            "price": "[data-testid='customer-price'] span",  # CSS selector for BestBuy price
+            "homePage": ".v-p-right-xxs.line-clamp"
         },
         "opentable": {
             "url": "https://www.opentable.com/",

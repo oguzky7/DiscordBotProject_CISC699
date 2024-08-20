@@ -3,17 +3,20 @@ from config import Config
 import logger
 import notification
 import asyncio
-from selenium.webdriver.common.by import By
+from css_selectors import Selectors
 
 # Initialize the browser interface
 browser = BrowserInterface()
 
-async def monitor_price(ctx, url):
+async def monitor_price(ctx, url, frequency=1):
     if ctx.channel.id == Config.CHANNEL_ID:
         try:
             logger.log_command_execution('monitor_price', ctx.author)
             previous_price = None
             
+            # Notify the user about the monitoring frequency
+            await ctx.send(f"Monitoring price every {frequency} minute(s).")
+
             while True:
                 current_price = browser.get_price(url)
                 
@@ -32,7 +35,8 @@ async def monitor_price(ctx, url):
                 else:
                     await ctx.send("Failed to retrieve the price.")
                 
-                await asyncio.sleep(60)
+                # Convert frequency to seconds
+                await asyncio.sleep(frequency * 60)
         
         except Exception as e:
             logger.log_command_failed('monitor_price', e)
@@ -84,21 +88,6 @@ async def get_price(ctx, url):
         logger.log_wrong_channel('get_price', ctx.author)
         await ctx.send("This command can only be used in the designated channel.")
 
-def login(ctx, url):
-    if ctx.channel.id == Config.CHANNEL_ID:
-        try:
-            logger.log_command_execution('login', ctx.author)
-            username = Config.SHEIN_USERNAME  
-            password = Config.SHEIN_PASSWORD  
-            browser.login(url, username, password)
-            return f"Logged in to {url} with username: {username}"
-        except Exception as e:
-            logger.log_command_failed('login', e)
-            return f"Failed to log in to {url}: {e}"
-    else:
-        logger.log_wrong_channel('login', ctx.author)
-        return "This command can only be used in the designated channel."
-
 def close_browser(ctx):
     if ctx.channel.id == Config.CHANNEL_ID:
         try:
@@ -111,3 +100,4 @@ def close_browser(ctx):
     else:
         logger.log_wrong_channel('close_browser', ctx.author)
         return "This command can only be used in the designated channel."
+
