@@ -1,38 +1,46 @@
-# logger.py
+import logging
 
-import pandas as pd
-import datetime
+# Configure the logger
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
-# Define a global DataFrame to store log entries
-df_logs = pd.DataFrame(columns=['Product', 'Brand', 'Price', 'Datetime'])
-df_logs_kosmos = pd.DataFrame(columns=['ID', 'Name', 'Code', 'Foreign Code', 'Description', 'Foreign Name', 'Data Type', 'Datetime'])
+def log(message):
+    """
+    Log a general message.
+    """
+    logging.info(message)
 
-async def log_data(data, channel):
-    global df_logs  # Declare the DataFrame as global to access and modify it within the function
-    
-    formatted_local_datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+def log_message_received(message):
+    """
+    Log when a message is received.
+    """
+    logging.info(f"Message received: {message.content} from {message.author}")
 
-    # Add the formatted_local_datetime column to the data DataFrame
-    data['Datetime'] = formatted_local_datetime
-    print(formatted_local_datetime)
+def log_message_recognized():
+    """
+    Log when a message is recognized as a valid command.
+    """
+    logging.info("Message recognized as a command.")
 
-    # Append the new data to the global DataFrame
-    df_logs = pd.concat([df_logs, pd.DataFrame(data)], ignore_index=True)
+def log_message_not_recognized():
+    """
+    Log when a message is not recognized as a valid command.
+    """
+    logging.info("Message not recognized.")
 
-async def return_logs():
-    return df_logs
+def log_command_execution(command_name, user):
+    """
+    Log the execution of a command.
+    """
+    logging.info(f"Executing command: {command_name} from '{user}'")
 
-async def log_data_kosmos(data):
-    global df_logs_kosmos
+def log_command_failed(command_name, error):
+    """
+    Log when a command fails.
+    """
+    logging.error(f"Failed to execute command: {command_name}. Error: {error}")
 
-    formatted_local_datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    # Add the formatted_local_datetime column to the data DataFrame
-    data['Datetime'] = formatted_local_datetime
-    print("local_date_time geliyor")
-    print(formatted_local_datetime)
-    print("local_date_time gidiyor")
-
-    df_logs_kosmos = pd.concat([df_logs_kosmos, pd.DataFrame(data)], ignore_index=True)
-
-async def return_kosmos_logs():
-    return df_logs_kosmos
+def log_wrong_channel(command_name, user):
+    """
+    Log when a command is used in the wrong channel.
+    """
+    logging.warning(f"User '{user}' tried to execute command '{command_name}' in a non-designated channel.")
