@@ -5,6 +5,16 @@ import commands as cmd  # Import the commands module
 import help
 import logger
 from config import Config
+from css_selectors import Selectors
+from selenium.webdriver.common.by import By
+import logger
+import time
+from css_selectors import Selectors
+from browser_interface import BrowserInterface  # Import the BrowserInterface cla
+from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # Define the intents your bot will use
 intents = discord.Intents.default()
@@ -12,6 +22,8 @@ intents.message_content = True  # This enables the bot to read message content
 
 # Initialize the bot with a command prefix and intents
 bot = commands.Bot(command_prefix='!', intents=intents)
+
+
 
 @bot.event
 async def on_ready():
@@ -81,10 +93,68 @@ async def commands_command(ctx):
 async def stop_command(ctx):
     if ctx.channel.id == Config.CHANNEL_ID:
         await ctx.send("Stopping the bot. Goodbye!")
-        sys.exit(0)
+        await bot.close()  # Gracefully close the bot instead of using sys.exit()
     else:
         logger.log_wrong_channel('stop', ctx.author)
         await ctx.send("This command can only be used in the designated channel.")
+
+
+# Instantiate the browser interface object
+browser = BrowserInterface()
+from selenium.webdriver.common.action_chains import ActionChains
+@bot.command(name="check_availability")
+
+async def check_availability(ctx, url: str, date_str: str):
+    """
+    Checks availability for a specific date on OpenTable and returns whether the date is available.
+    """
+    if ctx.channel.id == Config.CHANNEL_ID:
+        try:
+            logger.log_command_execution('check_availability', ctx.author)
+            
+            # Navigate to the restaurant's page
+            browser.navigate_to_url(url)
+            time.sleep(3)  # Wait for the page to load
+            
+            # Open the date picker
+            date_field = browser.driver.find_element(By.CSS_SELECTOR, "#restProfileSideBarDtpDayPicker-label")
+            date_field.click()
+            time.sleep(1)  # Wait for the calendar to open
+            
+            # Search for the date in the current month
+            try:
+                date_button = browser.driver.find_element(By.CSS_SELECTOR, f"#restProfileSideBarDtpDayPicker-wrapper button[aria-label*='{date_str}']")
+                # Ensure the element is interactable
+                #browser.driver.execute_script("arguments[0].scrollIntoView(true);", date_button)
+                date_button.click()
+                print(f"Clicked on the date: {date_str}")
+            except (NoSuchElementException, ElementNotInteractableException) as e:
+                await ctx.send(f"Failed to click the date {date_str}: {str(e)}")
+                return
+
+            time.sleep(2)  # Wait for the page to load after clicking the date
+
+            # Check for availability
+            try:
+                # Look for the "Select a time" header to confirm availability
+                available_element = browser.driver.find_element(By.CSS_SELECTOR, 'h3[data-test="select-time-header"]')
+                await ctx.send(f"Date {date_str} is available!")
+            except NoSuchElementException:
+                # If not found, check for the "no availability" message
+                no_availability_element = browser.driver.find_element(By.CSS_SELECTOR, "div._8ye6OVzeOuU- span")
+                if no_availability_element:
+                    await ctx.send(f"No availability for the selected date {date_str}.")
+                else:
+                    await ctx.send(f"Date {date_str} is available!")
+
+        except Exception as e:
+            logger.log_command_failed('check_availability', e)
+            await ctx.send(f"Failed to check availability: {e}")
+    else:
+        logger.log_wrong_channel('check_availability', ctx.author)
+        await ctx.send("This command can only be used in the designated channel.")
+
+
 
 # Run the bot with the token from config.py
 bot.run(Config.DISCORD_TOKEN)

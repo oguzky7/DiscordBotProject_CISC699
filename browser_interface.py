@@ -157,3 +157,51 @@ class BrowserInterface:
             print("Browser closed.")
         else:
             print("No browser is currently open.")
+
+    def select_date(self, date_selector, date):
+        try:
+            date_field = self.driver.find_element(By.CSS_SELECTOR, date_selector)
+            date_field.clear()
+            date_field.send_keys(date)
+            print(f"Selected date: {date}")
+        except Exception as e:
+            print(f"Error selecting date: {e}")
+            raise
+
+    def select_time(self, time_selector, time_slot):
+        try:
+            time_field = self.driver.find_element(By.CSS_SELECTOR, time_selector)
+            time_field.clear()
+            time_field.send_keys(time_slot)
+            print(f"Selected time: {time_slot}")
+        except Exception as e:
+            print(f"Error selecting time: {e}")
+            raise
+    def check_availability(self, url, date, time_slot):
+        selectors = Selectors.get_selectors_for_url(url)
+        if not selectors:
+            raise ValueError(f"No selectors found for URL: {url}")
+
+        self.navigate_to_url(selectors['url'])
+
+        try:
+            date_field = self.driver.find_element(By.CSS_SELECTOR, selectors['date_field'])
+            date_field.clear()
+            date_field.send_keys(date)
+
+            time_field = self.driver.find_element(By.CSS_SELECTOR, selectors['time_field'])
+            time_field.clear()
+            time_field.send_keys(time_slot)
+
+            find_table_button = self.driver.find_element(By.CSS_SELECTOR, selectors['find_table_button'])
+            find_table_button.click()
+
+            time.sleep(2)  # Wait for the results to load
+
+            availability_result = self.driver.find_element(By.CSS_SELECTOR, selectors['availability_result'])
+            availability_text = availability_result.text
+            print(f"Availability result: {availability_text}")
+            return availability_text
+        except Exception as e:
+            print(f"Error checking availability: {e}")
+            return None
