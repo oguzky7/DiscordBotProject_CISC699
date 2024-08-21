@@ -6,29 +6,33 @@ from CISC699 import logger
 from CISC699.config import Config
 from CISC699 import notification
 from CISC699.css_selectors import Selectors
-from BrowserInterface import BrowserInterface
 from selenium.webdriver.common.by import By
-browser = BrowserInterface()
+import BrowserInterface
 
+browser = BrowserInterface.BrowserInterface()
+# Monitoring stop event flag
 monitoring_stop_event = False
 
 class ProductInfoInterface:
 
+    @staticmethod
     def stop_monitoring():
-        globals()['monitoring_stop_event'] = True
+        global monitoring_stop_event
+        monitoring_stop_event = True
 
+    @staticmethod
     async def monitor_price(ctx, url, frequency=1):
-        
+        global monitoring_stop_event
         if ctx.channel.id == Config.CHANNEL_ID:
             try:
                 logger.log_command_execution('monitor_price', ctx.author)
                 previous_price = None
 
                 await ctx.send(f"Monitoring price every {frequency} minute(s).")
-                while not globals()['monitoring_stop_event']:
+                while not monitoring_stop_event:
                     print("Monitoring loop started...")  # Debug print statement
-                    await ctx.send(f"Monitoring loop started...")
-                    current_price = await ProductInfoInterface.get_price(ctx, url)  # Updated to await
+                    await ctx.send("Monitoring loop started...")
+                    current_price = await ProductInfoInterface.get_price(ctx, url)
 
                     if current_price:
                         if previous_price is None:
@@ -46,10 +50,10 @@ class ProductInfoInterface:
                         await ctx.send("Failed to retrieve the price.")
 
                     await asyncio.sleep(frequency * 60)
-                await ctx.send(f"Monitoring loop stopped...")
+                await ctx.send("Monitoring loop stopped...")
                 print("Monitoring loop stopped...")  # Debug print statement
-                globals()['monitoring_stop_event'] = False
                 
+                monitoring_stop_event = False  # Reset the flag for future monitoring
             except Exception as e:
                 logger.log_command_failed('monitor_price', e)
                 await ctx.send(f"Failed to monitor price: {e}")
@@ -57,34 +61,34 @@ class ProductInfoInterface:
             logger.log_wrong_channel('monitor_price', ctx.author)
             await ctx.send("This command can only be used in the designated channel.")
 
+    @staticmethod
     async def get_price(ctx, url):
         if ctx.channel.id == Config.CHANNEL_ID:
             try:
                 logger.log_command_execution('get_price', ctx.author)
                 browser.navigate_to_url(url)
-
                 selectors = Selectors.get_selectors_for_url(url)
                 if not selectors:
                     raise ValueError(f"No selectors found for URL: {url}")
 
-                time.sleep(2)  # Wait for the page to load
+                await asyncio.sleep(2)  # Wait for the page to load
 
                 try:
                     price_element = browser.driver.find_element(By.CSS_SELECTOR, selectors['price'])
                     price = price_element.text
                     print(f"Price found: {price}")
+                    await ctx.send(f"Price Found! Current price is: {price}")
                     return price
                 except Exception as e:
                     print(f"Error finding price: {e}")
-                    price = None
-
-                if price:
-                    await notification.Notification(ctx.author).notify_price_change(ctx.channel, price)
-                else:
-                    await ctx.send("Failed to retrieve the price.")
+                    await ctx.send(f"Failed to retrieve the price: {e}")
+                    raise e
             except Exception as e:
                 logger.log_command_failed('get_price', e)
                 await ctx.send(f"Failed to get price: {e}")
+            finally:
+                # Optional: You may close the browser here if you want
+                pass
         else:
             logger.log_wrong_channel('get_price', ctx.author)
             await ctx.send("This command can only be used in the designated channel.")

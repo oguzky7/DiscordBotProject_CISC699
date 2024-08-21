@@ -14,9 +14,10 @@ async def handle_message(bot, message):
     if message.content.startswith('!'):
         try:
             # Process the command
+            await message.channel.send("Message recognized as a command. Taking Action")
             await bot.process_commands(message)
             logger.log_message_recognized()
-            await message.channel.send("Message recognized as a command. Taking Action")
+            
         except commands.CommandNotFound:
             await message.channel.send("I didn't understand that. Please type `!project_help` to see what I can do.")
             logger.log_message_not_recognized()

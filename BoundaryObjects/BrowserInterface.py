@@ -74,6 +74,7 @@ class BrowserInterface:
     def close_browser(self):
         if self.driver:
             self.driver.quit()
+            self.driver = None  # Reset the driver after closing
             print("Browser closed successfully.")
             return "Browser closed successfully."
         else:

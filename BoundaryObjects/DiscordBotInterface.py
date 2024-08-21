@@ -1,3 +1,4 @@
+import asyncio
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from CISC699 import logger
@@ -8,8 +9,8 @@ from CISC699.EntityObjects.Commands import handle_message  # Import the message 
 from CISC699.help import get_help_message  # Import the help message function
 import discord
 from discord.ext import commands
-from BrowserInterface import BrowserInterface
 from ProductInfoInterface import ProductInfoInterface as PI
+from ProductInfoInterface import browser
 from DateInfoInterface import DateInfoInterface as DI
 from ExcelInterface import ExcelInterface as Ex
 
@@ -19,7 +20,6 @@ intents.message_content = True  # This enables the bot to read message content
 
 # Initialize the bot with a command prefix and intents
 bot = commands.Bot(command_prefix='!', intents=intents)
-browser = BrowserInterface()
 
 @bot.event
 async def on_message(message):
@@ -67,15 +67,11 @@ async def monitor_price(ctx, url: str, frequency: int = 1):
 async def close_browser(ctx):
     response = browser.close_browser()
     await ctx.send(response)
+
 @bot.command(name='stop')
 async def stop_command(ctx):
     if ctx.channel.id == Config.CHANNEL_ID:
         await ctx.send("Stopping the bot. Goodbye!")
-        
-        # Close the bot and ensure that all resources are properly released
-        for session in bot.http._HTTPClient__sessions:  # Access all aiohttp sessions
-            await session.close()
-
         await bot.close()  # Gracefully close the bot
     else:
         logger.log_wrong_channel('stop', ctx.author)
