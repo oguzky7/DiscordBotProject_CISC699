@@ -3,14 +3,6 @@ class Selectors:
         "trendyol": {
             "price": ".featured-prices .prc-dsc"  # Selector for Trendyol price
         },
-        "ebay": {
-            "url": "https://signin.ebay.com/signin/",
-            "email_field": "#userid",
-            "continue_button": "[data-testid*='signin-continue-btn']",
-            "password_field": "#pass",
-            "login_button": "#sgnBt",
-            "price": ".x-price-primary span"  # CSS selector for Ebay price
-        },
         "bestbuy": {
             "url": "https://www.bestbuy.com/signin/",
             "email_field": "#fld-e",

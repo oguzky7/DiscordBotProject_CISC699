@@ -7,5 +7,3 @@ class Config:
     EBAY_PASSWORD = '438007Sh*'
     BESTBUY_USERNAME = 'oguzky7@gmail.com'
     BESTBUY_PASSWORD = '*Hesoyam123'
-
-    CHROME_USER_DATA_PATH = r'C:\Users\oguzk\AppData\Local\Google\Chrome\User Data'
