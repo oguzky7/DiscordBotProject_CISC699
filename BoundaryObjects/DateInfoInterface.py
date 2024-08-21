@@ -1,13 +1,12 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 from CISC699.css_selectors import Selectors
 from CISC699.help import get_help_message  # Import the help message function
 import asyncio
 from selenium.webdriver.common.by import By
 
-# Global event to stop monitoring
-monitoring_stop_event = asyncio.Event()
 availability_stop_event = asyncio.Event()  # Global event to stop availability check
 
 class DateInfoInterface:

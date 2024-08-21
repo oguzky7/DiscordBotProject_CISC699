@@ -10,7 +10,7 @@ import discord
 from discord.ext import commands
 from BrowserInterface import BrowserInterface
 from ProductInfoInterface import ProductInfoInterface as PI
-from DateInfoInterface import DateInfoInterface as DI, monitoring_stop_event
+from DateInfoInterface import DateInfoInterface as DI
 from ExcelInterface import ExcelInterface as Ex
 
 # Define the intents your bot will use
@@ -19,10 +19,7 @@ intents.message_content = True  # This enables the bot to read message content
 
 # Initialize the bot with a command prefix and intents
 bot = commands.Bot(command_prefix='!', intents=intents)
-
-# Create a global browser instance
 browser = BrowserInterface()
-
 
 @bot.event
 async def on_message(message):
@@ -70,12 +67,16 @@ async def monitor_price(ctx, url: str, frequency: int = 1):
 async def close_browser(ctx):
     response = browser.close_browser()
     await ctx.send(response)
-
 @bot.command(name='stop')
 async def stop_command(ctx):
     if ctx.channel.id == Config.CHANNEL_ID:
         await ctx.send("Stopping the bot. Goodbye!")
-        await bot.close()  # Gracefully close the bot instead of using sys.exit()
+        
+        # Close the bot and ensure that all resources are properly released
+        for session in bot.http._HTTPClient__sessions:  # Access all aiohttp sessions
+            await session.close()
+
+        await bot.close()  # Gracefully close the bot
     else:
         logger.log_wrong_channel('stop', ctx.author)
         await ctx.send("This command can only be used in the designated channel.")
@@ -95,9 +96,8 @@ async def check_availability(ctx, url: str, date_str: str = None, time_slot: str
 @bot.command(name='stop_monitoring')
 async def stop_monitoring(ctx):
     if ctx.channel.id == Config.CHANNEL_ID:
-        monitoring_stop_event.set()
+        PI.stop_monitoring()
         await ctx.send("Monitoring and availability checks have been stopped.")
-        monitoring_stop_event.clear()
     else:
         logger.log_wrong_channel('stop_monitoring', ctx.author)
         await ctx.send("This command can only be used in the designated channel.")

@@ -8,23 +8,26 @@ from CISC699 import notification
 from CISC699.css_selectors import Selectors
 from BrowserInterface import BrowserInterface
 from selenium.webdriver.common.by import By
-
-# Initialize global objects
-monitoring_stop_event = asyncio.Event()
 browser = BrowserInterface()
+
+monitoring_stop_event = False
 
 class ProductInfoInterface:
 
+    def stop_monitoring():
+        globals()['monitoring_stop_event'] = True
+
     async def monitor_price(ctx, url, frequency=1):
+        
         if ctx.channel.id == Config.CHANNEL_ID:
             try:
                 logger.log_command_execution('monitor_price', ctx.author)
                 previous_price = None
 
                 await ctx.send(f"Monitoring price every {frequency} minute(s).")
-
-                while not monitoring_stop_event.is_set():
+                while not globals()['monitoring_stop_event']:
                     print("Monitoring loop started...")  # Debug print statement
+                    await ctx.send(f"Monitoring loop started...")
                     current_price = await ProductInfoInterface.get_price(ctx, url)  # Updated to await
 
                     if current_price:
@@ -43,8 +46,10 @@ class ProductInfoInterface:
                         await ctx.send("Failed to retrieve the price.")
 
                     await asyncio.sleep(frequency * 60)
+                await ctx.send(f"Monitoring loop stopped...")
                 print("Monitoring loop stopped...")  # Debug print statement
-
+                globals()['monitoring_stop_event'] = False
+                
             except Exception as e:
                 logger.log_command_failed('monitor_price', e)
                 await ctx.send(f"Failed to monitor price: {e}")
