@@ -24,7 +24,8 @@ class ProductInfoInterface:
                 await ctx.send(f"Monitoring price every {frequency} minute(s).")
 
                 while not monitoring_stop_event.is_set():
-                    current_price = ProductInfoInterface.get_price(url)
+                    print("Monitoring loop started...")  # Debug print statement
+                    current_price = await ProductInfoInterface.get_price(ctx, url)  # Updated to await
 
                     if current_price:
                         if previous_price is None:
@@ -42,6 +43,7 @@ class ProductInfoInterface:
                         await ctx.send("Failed to retrieve the price.")
 
                     await asyncio.sleep(frequency * 60)
+                print("Monitoring loop stopped...")  # Debug print statement
 
             except Exception as e:
                 logger.log_command_failed('monitor_price', e)
@@ -66,6 +68,7 @@ class ProductInfoInterface:
                     price_element = browser.driver.find_element(By.CSS_SELECTOR, selectors['price'])
                     price = price_element.text
                     print(f"Price found: {price}")
+                    return price
                 except Exception as e:
                     print(f"Error finding price: {e}")
                     price = None
