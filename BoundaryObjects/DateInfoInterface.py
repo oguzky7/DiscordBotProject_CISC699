@@ -1,49 +1,68 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-
-from CISC699.css_selectors import Selectors
-from CISC699.help import get_help_message  # Import the help message function
-import asyncio
+from CISC699 import logger
+from CISC699.config import Config
 from selenium.webdriver.common.by import By
-
-availability_stop_event = asyncio.Event()  # Global event to stop availability check
+from ProductInfoInterface import browser
+import time
+from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
 
 class DateInfoInterface:
 
-    def __init__(self, driver):
-        self.driver = driver
+    async def check_availability(ctx, url: str, date_str: str = None, time_slot: str = None):
+        """
+        Checks availability for a specific date and time on OpenTable and returns whether the date is available.
+        If date_str or time_slot is not provided, it will use the current defaulted date/time on the website.
+        """
+        try:
+            logger.log_command_execution('check_availability', ctx.author)
+            
+            # Navigate to the restaurant's page
+            browser.navigate_to_url(url)
+            time.sleep(3)  # Wait for the page to load
 
-    async def select_date(self, date_selector, date):
-        date_field = self.driver.find_element(By.CSS_SELECTOR, date_selector)
-        date_field.clear()
-        date_field.send_keys(date)
-        print(f"Selected date: {date}")
+            # If date_str is provided, select the date
+            if date_str:
+                # Open the date picker
+                date_field = browser.driver.find_element(By.CSS_SELECTOR, "#restProfileSideBarDtpDayPicker-label")
+                date_field.click()
+                time.sleep(1)  # Wait for the calendar to open
 
-    async def select_time(self, time_selector, time_slot):
-        time_field = self.driver.find_element(By.CSS_SELECTOR, time_selector)
-        time_field.clear()
-        time_field.send_keys(time_slot)
-        print(f"Selected time: {time_slot}")
+                try:
+                    date_button = browser.driver.find_element(By.CSS_SELECTOR, f"#restProfileSideBarDtpDayPicker-wrapper button[aria-label*='{date_str}']")
+                    date_button.click()
+                    print(f"Clicked on the date: {date_str}")
+                except (NoSuchElementException, ElementNotInteractableException) as e:
+                    await ctx.send(f"Failed to click the date {date_str}: {str(e)}")
+                    return
+            else:
+                print("No date provided, using the website's default date.")
 
-    async def check_availability(self, url, date=None, time_slot=None):
-        selectors = Selectors.get_selectors_for_url(url)
-        if not selectors:
-            raise ValueError(f"No selectors found for URL: {url}")
+            # If time_slot is provided, select the time
+            if time_slot:
+                time_field = browser.driver.find_element(By.CSS_SELECTOR, "#restProfileSideBartimePickerDtpPicker")
+                time_field.clear()
+                time_field.send_keys(time_slot)
+                print(f"Selected time: {time_slot}")
+            else:
+                print("No time slot provided, using the website's default time.")
 
-        await self.navigate_to_url(selectors['url'])
+            time.sleep(2)  # Wait for the page to load after selecting the date/time
 
-        if date:
-            await self.select_date(selectors['date_field'], date)
-        if time_slot:
-            await self.select_time(selectors['time_field'], time_slot)
+            # Check for availability
+            try:
+                # Look for the "Select a time" header to confirm availability
+                available_element = browser.driver.find_element(By.CSS_SELECTOR, 'h3[data-test="select-time-header"]')
+                await ctx.send(f"Date {date_str if date_str else 'current date'} is available!")
+            except NoSuchElementException:
+                # If not found, check for the "no availability" message
+                no_availability_element = browser.driver.find_element(By.CSS_SELECTOR, "div._8ye6OVzeOuU- span")
+                if no_availability_element:
+                    await ctx.send(f"No availability for the selected date {date_str if date_str else 'current date'}.")
+                else:
+                    await ctx.send(f"Date {date_str if date_str else 'current date'} is available!")
 
-        find_table_button = self.driver.find_element(By.CSS_SELECTOR, selectors['find_table_button'])
-        find_table_button.click()
-
-        await asyncio.sleep(2)  # Wait for the results to load
-
-        availability_result = self.driver.find_element(By.CSS_SELECTOR, selectors['availability_result'])
-        availability_text = availability_result.text
-        print(f"Availability result: {availability_text}")
-        return availability_text
+        except Exception as e:
+            logger.log_command_failed('check_availability', e)
+            await ctx.send(f"Failed to check availability: {e}")

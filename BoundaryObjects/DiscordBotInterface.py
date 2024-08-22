@@ -83,11 +83,12 @@ async def login(ctx, site: str, *args):
     retries = next((int(arg) for arg in args if arg.isdigit()), 1)
     response = await browser.login(site, incognito=incognito, retries=retries)
     await ctx.send(response)
-
+    
 @bot.command(name="check_availability")
 async def check_availability(ctx, url: str, date_str: str = None, time_slot: str = None):
-    availability_text = await DI.check_availability(url, date_str, time_slot)
-    await ctx.send(f"Availability result: {availability_text}")
+    await DI.check_availability(ctx, url, date_str, time_slot)
+
+
 
 @bot.command(name='stop_monitoring')
 async def stop_monitoring(ctx):
