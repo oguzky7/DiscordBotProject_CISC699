@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, asyncio
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from CISC699 import logger
 from CISC699.config import Config
@@ -8,8 +8,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import asyncio
-
+from datetime import datetime
 
 class BrowserInterface:
 
@@ -131,24 +130,23 @@ class BrowserInterface:
                     raise e
 
     def display_data_in_html(self, data, command_name):
-        # Create the HTML directory if it doesn't exist
-        html_dir = os.path.join(os.path.dirname(__file__), 'htmlFiles')
-        os.makedirs(html_dir, exist_ok=True)
+            # Use a timestamp to create a unique filename
+            timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            file_name = f"{command_name}_{timestamp}.html"
+            file_path = os.path.join("BoundaryObjects", "htmlFiles", file_name)
 
-        # Generate the HTML content
-        html_content = "<html><head><title>Command Result</title></head><body>"
-        html_content += f"<h1>Results for {command_name}</h1><table border='1'>"
-        html_content += "<tr><th>Timestamp</th><th>URL</th><th>Result</th></tr>"
+            # Create an HTML page to display the data
+            html_content = "<html><head><title>Command Data</title></head><body>"
+            html_content += f"<h1>Results for {command_name}</h1><table border='1'>"
+            html_content += "<tr><th>Timestamp</th><th>URL</th><th>Result</th></tr>"
+            
+            for row in data:
+                html_content += f"<tr><td>{row['Timestamp']}</td><td>{row['URL']}</td><td>{row['Result']}</td></tr>"
+            
+            html_content += "</table></body></html>"
 
-        for row in data:
-            html_content += f"<tr><td>{row['Timestamp']}</td><td>{row['URL']}</td><td>{row['Result']}</td></tr>"
-
-        html_content += "</table></body></html>"
-
-        # Save the HTML content to a file
-        html_file = os.path.join(html_dir, f"{command_name}_result.html")
-        with open(html_file, "w") as file:
-            file.write(html_content)
-
-        print(f"Data displayed in HTML page ({html_file}).")
-
+            # Save the HTML content to a file
+            with open(file_path, "w") as file:
+                file.write(html_content)
+            
+            return f"HTML file saved as {file_path}."

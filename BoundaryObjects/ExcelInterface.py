@@ -1,32 +1,34 @@
-import os
 import pandas as pd
 from datetime import datetime
+import os
 
 class ExcelInterface:
 
     def __init__(self):
-        self.file_path = os.path.join(os.path.dirname(__file__), 'command_results.xlsx')
+        self.file_path = "BoundaryObjects/command_results.xlsx"
+        self.initialize_excel()
+
+    def initialize_excel(self):
+        # Create a new Excel file with headers if it doesn't exist
         if not os.path.exists(self.file_path):
-            # Create a new Excel file with the headers
-            df = pd.DataFrame(columns=['Timestamp', 'Command', 'URL', 'Result'])
+            df = pd.DataFrame(columns=["Timestamp", "Command", "URL", "Result"])
             df.to_excel(self.file_path, index=False)
 
-    def log_result_to_excel(self, command_name, url, result):
-        # Load the existing Excel file
+    def log_result_to_excel(self, command, url, result):
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         df = pd.read_excel(self.file_path)
-        
-        # Create a new DataFrame with the new row
-        new_row = pd.DataFrame([{
-            'Timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'Command': command_name,
-            'Result': result,
-            'URL': url
-        }])
-        
-        # Concatenate the new row with the existing DataFrame
-        df = pd.concat([df, new_row], ignore_index=True)
-        
-        # Save the updated DataFrame back to the Excel file
+        new_row = {"Timestamp": timestamp, "Command": command, "URL": url, "Result": result}
+        df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
         df.to_excel(self.file_path, index=False)
+        return f"Result logged to Excel file ({self.file_path})."
 
-        print(f"Result logged to Excel file ({self.file_path}).")
+    def log_and_save(self, command_name, url, result, browser_interface):
+        # Log result to Excel
+        excel_msg = self.log_result_to_excel(command_name, url, result)
+        # Generate and save HTML
+        html_msg = browser_interface.display_data_in_html([{
+            'Timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'URL': url,
+            'Result': result
+        }], command_name)
+        return excel_msg, html_msg

@@ -1,7 +1,7 @@
 class Selectors:
     SELECTORS = {
         "trendyol": {
-            "price": ".featured-prices .prc-dsc"  # Selector for Trendyol price
+            "price": ".product-detail-wrapper .prc-dsc"  # Selector for Trendyol price
         },
         "bestbuy": {
             "url": "https://www.bestbuy.com/signin/",
