@@ -1,31 +1,32 @@
+import os
 import pandas as pd
 from datetime import datetime
 
 class ExcelInterface:
-    """
-    Handles data extraction to and from Excel files.
-    """
 
-    def __init__(self, file_path):
-        # Initialize with the file path where the Excel file will be saved
-        self.__file_path = file_path
+    def __init__(self):
+        self.file_path = os.path.join(os.path.dirname(__file__), 'command_results.xlsx')
+        if not os.path.exists(self.file_path):
+            # Create a new Excel file with the headers
+            df = pd.DataFrame(columns=['Timestamp', 'Command', 'URL', 'Result'])
+            df.to_excel(self.file_path, index=False)
 
-    def save_data_to_excel(self, data):
-        # Save the data to an Excel file with additional details
-        if data:
-            df = pd.DataFrame(data)
-            df['Timestamp'] = datetime.now()  # Add a timestamp column
-            df.to_excel(self.__file_path, index=False)
-            print(f"Data saved to {self.__file_path}")
-        else:
-            raise ValueError("Data must not be null.")
+    def log_result_to_excel(self, command_name, url, result):
+        # Load the existing Excel file
+        df = pd.read_excel(self.file_path)
+        
+        # Create a new DataFrame with the new row
+        new_row = pd.DataFrame([{
+            'Timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'Command': command_name,
+            'Result': result,
+            'URL': url
+        }])
+        
+        # Concatenate the new row with the existing DataFrame
+        df = pd.concat([df, new_row], ignore_index=True)
+        
+        # Save the updated DataFrame back to the Excel file
+        df.to_excel(self.file_path, index=False)
 
-    def load_data_from_excel(self):
-        # Load data from an Excel file
-        try:
-            data = pd.read_excel(self.__file_path).to_dict(orient="records")
-            print(f"Data loaded from {self.__file_path}")
-            return data
-        except Exception as e:
-            print(f"Failed to load data from Excel: {e}")
-            return None
+        print(f"Result logged to Excel file ({self.file_path}).")

@@ -1,5 +1,4 @@
-import sys
-import os
+import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from CISC699 import logger
 from CISC699.config import Config
@@ -130,3 +129,26 @@ class BrowserInterface:
                 else:
                     print(f"Failed to log in to {url}: {e}")
                     raise e
+
+    def display_data_in_html(self, data, command_name):
+        # Create the HTML directory if it doesn't exist
+        html_dir = os.path.join(os.path.dirname(__file__), 'htmlFiles')
+        os.makedirs(html_dir, exist_ok=True)
+
+        # Generate the HTML content
+        html_content = "<html><head><title>Command Result</title></head><body>"
+        html_content += f"<h1>Results for {command_name}</h1><table border='1'>"
+        html_content += "<tr><th>Timestamp</th><th>URL</th><th>Result</th></tr>"
+
+        for row in data:
+            html_content += f"<tr><td>{row['Timestamp']}</td><td>{row['URL']}</td><td>{row['Result']}</td></tr>"
+
+        html_content += "</table></body></html>"
+
+        # Save the HTML content to a file
+        html_file = os.path.join(html_dir, f"{command_name}_result.html")
+        with open(html_file, "w") as file:
+            file.write(html_content)
+
+        print(f"Data displayed in HTML page ({html_file}).")
+

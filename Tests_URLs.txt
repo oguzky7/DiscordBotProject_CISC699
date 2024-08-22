@@ -6,6 +6,8 @@ Working Commands:
 
 !get_price https://www.bestbuy.com/site/microsoft-xbox-wireless-controller-for-xbox-series-x-xbox-series-s-xbox-one-windows-devices-sky-cipher-special-edition/6584960.p?skuId=6584960
 
+!check_availability https://www.opentable.com/r/bar-spero-washington/
+
 *********************************
 Working on it:
 

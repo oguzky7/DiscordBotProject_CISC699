@@ -1,4 +1,4 @@
-import asyncio
+from datetime import datetime
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from CISC699 import logger
@@ -13,6 +13,11 @@ from ProductInfoInterface import ProductInfoInterface as PI
 from ProductInfoInterface import browser
 from DateInfoInterface import DateInfoInterface as DI
 from ExcelInterface import ExcelInterface as Ex
+from ExcelInterface import ExcelInterface
+from BrowserInterface import BrowserInterface
+
+excel_interface = ExcelInterface()
+browser_interface = BrowserInterface()
 
 # Define the intents your bot will use
 intents = discord.Intents.default()
@@ -56,8 +61,10 @@ async def navigate_to_url(ctx, url: str):
 
 @bot.command(name='get_price')
 async def get_price(ctx, url: str):
-    response = await PI.get_price(ctx, url)
-    # No need to send the response here, since it's handled within get_price
+    result = await PI.get_price(ctx, url)
+    excel_interface.log_result_to_excel('get_price', url, result)
+    browser_interface.display_data_in_html([{'Timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'URL': url, 'Result': result}], 'get_price')
+    await ctx.send(f"Price for {url}: {result}")
 
 @bot.command(name='monitor_price')
 async def monitor_price(ctx, url: str, frequency: int = 1):
@@ -83,12 +90,10 @@ async def login(ctx, site: str, *args):
     retries = next((int(arg) for arg in args if arg.isdigit()), 1)
     response = await browser.login(site, incognito=incognito, retries=retries)
     await ctx.send(response)
-    
+
 @bot.command(name="check_availability")
 async def check_availability(ctx, url: str, date_str: str = None, time_slot: str = None):
     await DI.check_availability(ctx, url, date_str, time_slot)
-
-
 
 @bot.command(name='stop_monitoring')
 async def stop_monitoring(ctx):
