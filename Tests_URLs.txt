@@ -1,3 +1,4 @@
+database password: postgres
 
 Working Commands:
 
