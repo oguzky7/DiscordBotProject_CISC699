@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from UserControl import UserControl
+from control.UserControl import UserControl
 
 class DatabaseBoundary(commands.Cog):
     def __init__(self, bot):

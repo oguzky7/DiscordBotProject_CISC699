@@ -1,6 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from BrowserEntity import BrowserEntity
+from entity.BrowserEntity import BrowserEntity
 
 class BrowserControl:
     def __init__(self):

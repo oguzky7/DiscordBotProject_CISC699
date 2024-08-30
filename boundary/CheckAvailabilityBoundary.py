@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from DateControl import DateControl
+from control.DateControl import DateControl
 
 class CheckAvailabilityBoundary(commands.Cog):
     def __init__(self, bot):

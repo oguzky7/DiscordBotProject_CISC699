@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from BrowserControl import BrowserControl
+from control.BrowserControl import BrowserControl
 
 class BrowserBoundary(commands.Cog):
     def __init__(self, bot):

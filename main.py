@@ -1,7 +1,10 @@
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'BoundaryObjects')))
-import DiscordBotInterface
-if __name__ == "__main__":
-    # Running the bot by importing and executing DiscordBotInterface
-    pass  # The bot runs automatically when the DiscordBotInterface module is loaded
+import asyncio
+from control.BotControl import BotControl
+from Config import Config
 
+async def main():
+    bot_control = BotControl()
+    await bot_control.start(Config.DISCORD_TOKEN)
+
+if __name__ == "__main__":
+    asyncio.run(main())

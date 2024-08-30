@@ -1,5 +1,5 @@
-from DateEntity import DateEntity
-from BrowserControl import BrowserControl
+from entity.DateEntity import DateEntity
+from control.BrowserControl import BrowserControl
 from selenium.webdriver.common.by import By
 
 class DateControl:

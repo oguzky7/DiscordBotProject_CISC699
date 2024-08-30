@@ -5,7 +5,7 @@ class DatabaseEntity:
         self.connection = psycopg2.connect(
             dbname=dbname,
             user=user,
-            password=password,
+            password=password,  # Make sure this is the correct password
             host=host,
             port=port
         )

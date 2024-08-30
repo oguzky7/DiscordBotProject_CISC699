@@ -1,15 +1,15 @@
-from ProductEntity import ProductEntity
-from BrowserControl import BrowserControl
+from entity.ProductEntity import ProductEntity
+from control.BrowserControl import BrowserControl
 from selenium.webdriver.common.by import By
-from ExcelInterface import ExcelInterface
-from HTMLInterface import HTMLInterface
+from utils.ExcelUtils import ExcelUtils
+from utils.HTMLUtils import HTMLUtils
+import asyncio
+from Config import Config
 
 class ProductControl:
     def __init__(self):
         self.product_entity = ProductEntity()
         self.browser_control = BrowserControl()
-        self.excel_interface = ExcelInterface()
-        self.html_interface = HTMLInterface()
 
     async def get_price(self, url):
         # Launch and navigate using the browser control
@@ -27,19 +27,23 @@ class ProductControl:
         self.browser_control.close_browser()
 
         # Save the result to Excel and HTML
-        self.excel_interface.save_data_to_excel([{
+        ExcelUtils.save_data_to_excel([{
             'Timestamp': self.product_entity.get_timestamp(),
             'URL': url,
             'Result': price
         }], 'price_result')
 
-        self.html_interface.save_data_to_html([{
+        HTMLUtils.save_data_to_html([{
             'Timestamp': self.product_entity.get_timestamp(),
             'URL': url,
             'Result': price
         }], 'price_result')
 
         return price
+
+    async def monitor_price(self, url, frequency=1):
+        # Monitoring logic, calling get_price periodically
+        pass
 
 
     async def monitor_price(self, ctx, url, frequency=1):

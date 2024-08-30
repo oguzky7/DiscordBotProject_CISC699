@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from ProductControl import ProductControl
+from control.ProductControl import ProductControl
 
 class StopMonitoringBoundary(commands.Cog):
     def __init__(self, bot):
