@@ -1,11 +1,14 @@
-import sys, os
+import sys
+import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from boundary.AccountBoundary import AccountBoundary
+from control.AccountControl import AccountControl
 
-def test_fetch_user_accounts():
-    account_boundary = AccountBoundary()
-    account_boundary.display_users()
+def test_fetch_accounts():
+    account_control = AccountControl()
+    
+    # Fetching all accounts
+    account_control.fetch_accounts()
 
 if __name__ == "__main__":
-    test_fetch_user_accounts()
+    test_fetch_accounts()

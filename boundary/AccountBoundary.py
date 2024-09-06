@@ -1,23 +1,43 @@
+from discord.ext import commands
 from control.AccountControl import AccountControl
 
-class AccountBoundary:
-    def __init__(self):
+class AccountBoundary(commands.Cog):
+
+    def __init__(self, bot):
+        self.bot = bot
         self.account_control = AccountControl()
 
-    def display_users(self):
-        """Displays all accounts."""
-        users = self.account_control.fetch_users()
-        if users:
-            for user in users:
-                print(f"ID: {user[0]}, Username: {user[1]}")
+
+    @commands.command(name='fetch_accounts')
+    async def fetch_accounts(self, ctx):
+        """Fetch all accounts and display them in Discord."""
+        accounts = self.account_control.fetch_accounts()
+
+        if accounts:
+            # Create a response message for the fetched accounts
+            response = '\n'.join([f"ID: {acc[0]}, Username: {acc[1]}, Password: {acc[2]}" for acc in accounts])
+            await ctx.send(response)
         else:
-            print("No users found.")
+            await ctx.send("No accounts found.")
 
-    def add_new_user(self, username, password):
-        """Collects input for adding a new account."""
-        self.account_control.add_user(username, password)
-        print(f"User {username} added successfully.")
 
-    def delete_existing_user(self, user_id):
-        """Collects input for deleting an account."""
-        self.account_control.delete_user(user_id)
+
+    @commands.command(name="add_account")
+    async def add_account(self, ctx, username: str, password: str):
+        """Add a new user account to the database."""
+        result = self.account_control.add_account(username, password)
+        if result:
+            await ctx.send(f"Account for {username} added successfully.")
+        else:
+            await ctx.send(f"Failed to add account for {username}.")
+
+
+
+    @commands.command(name="delete_account")
+    async def delete_account(self, ctx, user_id: int):
+        """Delete a user account from the database."""
+        result = self.account_control.delete_account(user_id)
+        if result:
+            await ctx.send(f"Account with ID {user_id} deleted successfully.")
+        else:
+            await ctx.send(f"Failed to delete account with ID {user_id}.")

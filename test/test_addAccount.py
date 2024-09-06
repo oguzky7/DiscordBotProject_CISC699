@@ -1,11 +1,14 @@
-import sys, os
+import sys
+import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from boundary.AccountBoundary import AccountBoundary
+from control.AccountControl import AccountControl
 
-def test_add_user_account():
-    account_boundary = AccountBoundary()
-    account_boundary.add_new_user("newUser", "newPassword123")
+def test_add_account():
+    account_control = AccountControl()
+    
+    # Adding a new account
+    account_control.add_account("newUser", "newPassword123")
 
 if __name__ == "__main__":
-    test_add_user_account()
+    test_add_account()
