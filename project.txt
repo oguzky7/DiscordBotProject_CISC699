@@ -188,6 +188,7 @@ Interaction: StopBoundary collects the stop command from the user and forwards i
 DiscordBotProject_CISC699/
 │
 ├── boundary/
+│   ├── AccountBoundary.py
 │   ├── HelpBoundary.py
 │   ├── ChatBoundary.py
 │   ├── LoginBoundary.py
@@ -203,6 +204,7 @@ DiscordBotProject_CISC699/
 │   ├── StopBoundary.py
 │
 ├── control/
+│   ├── AccountControl.py
 │   ├── HelpControl.py
 │   ├── ChatControl.py
 │   ├── LoginControl.py
@@ -231,8 +233,9 @@ DiscordBotProject_CISC699/
 │   ├── DiscordUtils.py
 │
 ├── test/
-│   ├── test_sql_connection.py
-│   ├── test_account.py
+│   ├── test_addAccount.py
+│   ├── test_deleteAccount.py
+│   ├── test_fetchAccounts.py
 │   ├── test_excel_creation.py
 │   ├── test_html_creation.py
 │
