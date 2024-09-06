@@ -1,4 +1,4 @@
-from utils.HelpText import HelpText
+import asyncio
 
 class BotControl:
     def __init__(self, bot):
@@ -10,7 +10,8 @@ class BotControl:
         if channel:
             await channel.send("Hi, I'm online! type '!project_help' to see what I can do")
 
-    async def send_help(self, ctx):
-        """Sends the list of commands by calling HelpText."""
-        help_message = HelpText.get_help()
-        await ctx.send(help_message)
+    async def stop_bot(self):
+        """Stops the bot gracefully, ensuring all connections are closed."""
+        print("Bot is stopping...")
+
+        await self.bot.close()

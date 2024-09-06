@@ -10,15 +10,12 @@ class AccountBoundary(commands.Cog):
 
     @commands.command(name='fetch_accounts')
     async def fetch_accounts(self, ctx):
-        """Fetch all accounts and display them in Discord."""
+        """Fetch and display all accounts."""
         accounts = self.account_control.fetch_accounts()
-
-        if accounts:
-            # Create a response message for the fetched accounts
-            response = '\n'.join([f"ID: {acc[0]}, Username: {acc[1]}, Password: {acc[2]}" for acc in accounts])
-            await ctx.send(response)
-        else:
-            await ctx.send("No accounts found.")
+        
+        # Send each account or the no accounts message to Discord
+        for account in accounts:
+            await ctx.send(account)
 
 
 
