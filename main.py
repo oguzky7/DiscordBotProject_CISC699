@@ -1,17 +1,24 @@
 import discord
 from discord.ext import commands
-from Config import Config  # Importing the configuration (Discord token, etc.)
-from boundary.BotBoundary import BotBoundary  # Importing the boundary for bot commands
+from boundary.BotBoundary import BotBoundary
+from boundary.HelpBoundary import HelpBoundary
+from boundary.ChatBoundary import ChatBoundary
+from Config import Config
 
-# Initialize the Discord bot with appropriate intents
+# Set up the bot's intents
 intents = discord.Intents.default()
-intents.message_content = True  # Allow reading message content
+intents.message_content = True  # Enable reading message content
 
-bot = commands.Bot(command_prefix='!', intents=intents)  # Set up bot with a command prefix
+# Initialize the bot with the correct command prefix and intents
+class MyBot(commands.Bot):
+    async def setup_hook(self):
+        await self.add_cog(BotBoundary(self))  # General bot boundary
+        await self.add_cog(HelpBoundary(self))  # Help-related boundary
+        await self.add_cog(ChatBoundary(self))  # Chat-related boundary
 
-# Registering boundary objects (cogs)
-bot.add_cog(BotBoundary(bot))  # Register the bot boundary for handling commands
-
-# Start the bot using the token from the config file
+# Run the bot
 if __name__ == "__main__":
-    bot.run(Config.DISCORD_TOKEN)
+    bot = MyBot(command_prefix="!", intents=intents)
+    print(f"Bot is starting...")
+    
+    bot.run(Config.DISCORD_TOKEN)   # Run the bot and connect to Discord
