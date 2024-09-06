@@ -21,21 +21,12 @@ class AccountEntity:
                 port=self.port
             )
             self.cursor = self.connection.cursor()
+            print(f"Database Connection Established Successfully ")
         except Exception as error:
             print(f"Error connecting to the database: {error}")
             self.connection = None
             self.cursor = None
-    
-    def clear_users_table(self):
-        """Clear the users table."""
-        try:
-            if self.cursor:
-                self.cursor.execute("DELETE FROM users;")
-                self.connection.commit()
-                print("Users table cleared.")
-        except Exception as error:
-            print(f"Error clearing users table: {error}")
-    
+
     def insert_user(self, username, password):
         """Insert a new user into the users table."""
         try:
@@ -45,11 +36,6 @@ class AccountEntity:
                 print(f"User {username} added successfully.")
         except Exception as error:
             print(f"Error inserting user: {error}")
-    
-    def add_default_accounts(self):
-        """Insert default accounts like EBAY and BESTBUY credentials from Config."""
-        self.insert_user(Config.EBAY_USERNAME, Config.EBAY_PASSWORD)
-        self.insert_user(Config.BESTBUY_USERNAME, Config.BESTBUY_PASSWORD)
     
     def fetch_users(self):
         """Fetch all users from the users table."""
@@ -63,6 +49,32 @@ class AccountEntity:
             print(f"Error fetching users: {error}")
             return None
     
+    def delete_user(self, user_id):
+        """Delete a user by ID and reset the sequence."""
+        try:
+            if self.cursor:
+                # Delete user with the given ID
+                self.cursor.execute("DELETE FROM users WHERE id = %s;", (user_id,))
+                rows_deleted = self.cursor.rowcount  # Get the number of rows affected by the delete
+                self.connection.commit()
+
+                if rows_deleted > 0:
+                    print(f"User with ID {user_id} deleted successfully.")
+                    
+                    # Fetch the maximum ID from the table
+                    self.cursor.execute("SELECT COALESCE(MAX(id), 0) FROM users;")
+                    max_id = self.cursor.fetchone()[0]
+
+                    # Reset the ID sequence based on the maximum ID
+                    self.cursor.execute(f"ALTER SEQUENCE users_id_seq RESTART WITH {max_id + 1};")
+                    self.connection.commit()
+                    print(f"ID sequence reset to {max_id + 1}.")
+                else:
+                    print(f"User with ID {user_id} does not exist. Nothing to delete.")
+                    
+        except Exception as error:
+            print(f"Error deleting user: {error}")
+
     def close(self):
         """Close the database connection."""
         if self.cursor:
