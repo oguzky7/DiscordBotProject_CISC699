@@ -28,7 +28,7 @@ class AccountEntity:
             self.cursor = None
 
     def insert_user(self, username, password):
-        """Insert a new user into the users table."""
+        """Insert a new user into the accounts table."""
         try:
             if self.cursor:
                 self.cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
@@ -43,7 +43,6 @@ class AccountEntity:
             if self.cursor:
                 self.cursor.execute("SELECT * FROM users;")
                 users = self.cursor.fetchall()
-                print(users)
                 return users
         except Exception as error:
             print(f"Error fetching users: {error}")
@@ -71,10 +70,10 @@ class AccountEntity:
                     print(f"ID sequence reset to {max_id + 1}.")
                 else:
                     print(f"User with ID {user_id} does not exist. Nothing to delete.")
-                    
+                
         except Exception as error:
             print(f"Error deleting user: {error}")
-
+    
     def close(self):
         """Close the database connection."""
         if self.cursor:
