@@ -3,7 +3,7 @@ class Config:
     CHANNEL_ID = 1269383349278081054
     SQL_Password = 'postgres'
 
-    # Credentials
+    # Credentials this will move to database
     EBAY_USERNAME = 'oguzky7@gmail.com'
     EBAY_PASSWORD = '438007Sh*'
     BESTBUY_USERNAME = 'oguzky7@gmail.com'

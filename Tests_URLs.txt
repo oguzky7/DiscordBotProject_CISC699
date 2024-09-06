@@ -1,6 +1,6 @@
 database password: postgres
 
-Working Commands:
+Working Commands: Test commands 
 
 !project_help
 

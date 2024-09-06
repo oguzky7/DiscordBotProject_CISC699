@@ -1,0 +1,241 @@
+DiscordBotProject_CISC699 - Project Overview
+
+Introduction
+This project is a Discord bot designed to perform various tasks, including tracking product prices, checking availability, logging into websites, and exporting data. 
+The bot interacts with users via commands sent through Discord and responds based on the requested use case. 
+The project follows a clear structure, adhering to software engineering best practices, and 
+separates the logic into Boundary, Control, and Entity objects to manage the flow of data and logic.
+                        
+                        Scroll all the way down for project outline
+
+
+Objects and Their Roles
+Entity Objects
+Entity objects represent the core business data and operations related to those entities. They store data and perform business logic related to that data. They do not interact directly with the user.
+ProductEntity: Represents product information such as price and features. It handles product-related data (e.g., retrieving the current price).
+
+DateEntity: Handles date and availability logic for booking or checking availability of services.
+
+AccountEntity: Manages user login credentials for websites like BestBuy or eBay.
+
+TrackingHistoryEntity: Stores and tracks historical data on product prices. Helps to compare past prices with current ones.
+
+BrowserEntity: Manages the state of the browser (e.g., if the browser is running, whether it's in incognito mode, etc.).
+
+NotificationEntity: Handles user preferences for receiving notifications, such as when prices change or product availability is updated.
+
+Control Objects
+Control objects are responsible for handling the logic of each use case. They interact with entity objects to manage data and handle business rules. Control objects execute the steps required to fulfill a use case.
+HelpControl: Provides a list of commands available to the user.
+
+ChatControl: Handles basic user interaction, such as greetings and responses to basic phrases like "hi" or "hello."
+
+LoginControl: Manages the process of logging into a website, including retrieving login credentials from the database and passing them to the browser.
+
+BrowserControl: Manages the launch and setup of the browser, including handling incognito mode and configuring the browser.
+
+CloseBrowserControl: Handles the logic for closing the browser when requested by the user.
+
+NavigationControl: Manages the process of navigating to a specific URL in the browser.
+
+ProductTrackingControl: Manages the tracking of a product's price over time, scheduling regular price checks.
+
+ProductControl: Checks the current price of a product and retrieves relevant product data.
+
+AvailabilityControl: Handles checking the availability of a product or service based on user-provided dates.
+
+StopTrackingControl: Stops the tracking process for a product or service.
+
+NotificationControl: Monitors for changes in tracked products and sends notifications when a price or availability change occurs.
+
+DataExtractionControl: Manages the extraction of tracking data, exporting it to Excel or HTML files.
+
+BotControl: Manages the overall lifecycle of the Discord bot, including starting, stopping, and managing the registration of commands.
+
+Boundary Objects
+Boundary objects serve as the bridge between the user (or external actor) and the system. They collect data from the user and forward it to the appropriate control object. Boundary objects are responsible for interacting with the actor but not for executing business logic.
+HelpBoundary: Collects the user’s help request and forwards it to HelpControl.
+
+ChatBoundary: Receives chat commands from the user and forwards them to ChatControl.
+
+LoginBoundary: Collects login credentials from the user and forwards them to LoginControl.
+
+BrowserBoundary: Receives commands to launch the browser and forwards them to BrowserControl.
+
+CloseBrowserBoundary: Receives the user’s request to close the browser and forwards it to CloseBrowserControl.
+
+NavigationBoundary: Receives URL input from the user and forwards it to NavigationControl.
+
+ProductTrackingBoundary: Collects the user’s request to track a product and forwards it to ProductTrackingControl.
+
+ProductBoundary: Receives the user’s request to check a product price and forwards it to ProductControl.
+
+AvailabilityBoundary: Collects the user’s availability check request and forwards it to AvailabilityControl.
+
+StopTrackingBoundary: Receives the user’s request to stop tracking a product and forwards it to StopTrackingControl.
+
+NotificationBoundary: Collects user preferences for receiving notifications and forwards them to NotificationControl.
+
+DataExtractionBoundary: Collects the user’s request to export data and forwards it to DataExtractionControl.
+
+StopBoundary: Receives the request to stop the bot and forwards it to BotControl.
+
+
+
+Capabilities
+Here’s what the bot can do:
+
+1. !project_help
+Description: Provides a list of available commands the user can issue.
+Objects Involved:
+Boundary: HelpBoundary
+Control: HelpControl
+Interaction: HelpBoundary collects the user’s help request and forwards it to HelpControl, which responds with the list of commands.
+2. !chat_with_bot
+Description: Responds to simple greetings (e.g., "hi", "hello") and provides a welcome message.
+Objects Involved:
+Boundary: ChatBoundary
+Control: ChatControl
+Interaction: ChatBoundary collects chat input and forwards it to ChatControl, which sends back a predefined response.
+3. !login_to_website
+Description: Logs into a website using stored credentials (e.g., BestBuy).
+Objects Involved:
+Boundary: LoginBoundary
+Control: LoginControl, BrowserControl, NavigationControl
+Entity: AccountEntity
+Interaction:
+LoginBoundary collects login credentials and forwards them to LoginControl.
+LoginControl works with BrowserControl to launch the browser.
+NavigationControl navigates to the website's login page.
+AccountEntity retrieves the stored credentials from the database and logs the user in.
+4. !launch_browser
+Description: Launches the browser, optionally in incognito mode.
+Objects Involved:
+Boundary: BrowserBoundary
+Control: BrowserControl
+Entity: BrowserEntity
+Interaction: BrowserBoundary collects the user's request to launch the browser and sends it to BrowserControl. BrowserControl uses BrowserEntity to configure and launch the browser.
+5. !close_browser
+Description: Closes the currently open browser session.
+Objects Involved:
+Boundary: CloseBrowserBoundary
+Control: CloseBrowserControl
+Entity: BrowserEntity
+Interaction: CloseBrowserBoundary forwards the user’s request to CloseBrowserControl, which then tells BrowserEntity to close the browser session.
+6. !navigate_to_website
+Description: Navigates to a specific website URL in the browser.
+Objects Involved:
+Boundary: NavigationBoundary
+Control: NavigationControl
+Entity: BrowserEntity
+Interaction: NavigationBoundary collects the URL input from the user and forwards it to NavigationControl. NavigationControl instructs BrowserEntity to navigate to the specified URL.
+7. !track_price
+Description: Tracks the price of a product over time and sends notifications if the price changes.
+Objects Involved:
+Boundary: ProductTrackingBoundary
+Control: ProductTrackingControl, ProductControl, NotificationControl
+Entity: ProductEntity, TrackingHistoryEntity, NotificationEntity
+Interaction:
+ProductTrackingBoundary collects the product URL from the user.
+ProductTrackingControl initiates price tracking and uses ProductControl to fetch the current price.
+The current price is stored in TrackingHistoryEntity.
+If there’s a price change, NotificationControl sends an alert via NotificationEntity.
+8. !check_price
+Description: Manually checks the current price of a product.
+Objects Involved:
+Boundary: ProductBoundary
+Control: ProductControl
+Entity: ProductEntity
+Interaction: ProductBoundary collects the product information from the user, and ProductControl retrieves the current price using ProductEntity.
+9. !check_availability
+Description: Checks the availability of a product or service on a specific date.
+Objects Involved:
+Boundary: AvailabilityBoundary
+Control: AvailabilityControl
+Entity: DateEntity
+Interaction: AvailabilityBoundary collects the date and product/service details. AvailabilityControl checks the availability via DateEntity.
+10. !stop_tracking
+Description: Stops tracking the price or availability of a product.
+Objects Involved:
+Boundary: StopTrackingBoundary
+Control: StopTrackingControl
+Entity: TrackingHistoryEntity
+Interaction: StopTrackingBoundary collects the stop request from the user. StopTrackingControl stops the tracking and updates TrackingHistoryEntity.
+11. !receive_notifications
+Description: Sends notifications when there’s a change in price or availability for tracked products/services.
+Objects Involved:
+Boundary: NotificationBoundary
+Control: NotificationControl
+Entity: NotificationEntity, TrackingHistoryEntity
+Interaction: NotificationBoundary collects the user’s preferences for receiving notifications. NotificationControl monitors for changes and uses NotificationEntity to send alerts when changes occur.
+12. !extract_data
+Description: Extracts the tracked product data and exports it to Excel or HTML format.
+Objects Involved:
+Boundary: DataExtractionBoundary
+Control: DataExtractionControl
+Entity: TrackingHistoryEntity
+Utilities: ExcelUtils, HTMLUtils
+Interaction: DataExtractionBoundary collects the user’s request for data extraction. DataExtractionControl retrieves data from TrackingHistoryEntity and uses ExcelUtils or HTMLUtils to export the data to the desired format.
+13. !stop
+Description: Stops the Discord bot from running.
+Objects Involved:
+Boundary: StopBoundary
+Control: BotControl
+Interaction: StopBoundary collects the stop command from the user and forwards it to BotControl, which gracefully stops the bot.
+
+
+
+DiscordBotProject_CISC699/
+│
+├── boundary/
+│   ├── HelpBoundary.py
+│   ├── ChatBoundary.py
+│   ├── LoginBoundary.py
+│   ├── BrowserBoundary.py
+│   ├── CloseBrowserBoundary.py
+│   ├── NavigationBoundary.py
+│   ├── ProductTrackingBoundary.py
+│   ├── ProductBoundary.py
+│   ├── AvailabilityBoundary.py
+│   ├── StopTrackingBoundary.py
+│   ├── NotificationBoundary.py
+│   ├── DataExtractionBoundary.py
+│   ├── StopBoundary.py
+│
+├── control/
+│   ├── HelpControl.py
+│   ├── ChatControl.py
+│   ├── LoginControl.py
+│   ├── BrowserControl.py
+│   ├── CloseBrowserControl.py
+│   ├── NavigationControl.py
+│   ├── ProductTrackingControl.py
+│   ├── ProductControl.py
+│   ├── AvailabilityControl.py
+│   ├── StopTrackingControl.py
+│   ├── NotificationControl.py
+│   ├── DataExtractionControl.py
+│   ├── BotControl.py
+│
+├── entity/
+│   ├── ProductEntity.py
+│   ├── DateEntity.py
+│   ├── AccountEntity.py
+│   ├── TrackingHistoryEntity.py
+│   ├── BrowserEntity.py
+│   ├── NotificationEntity.py
+│
+├── utils/
+│   ├── ExcelUtils.py
+│   ├── HTMLUtils.py
+│   ├── DiscordUtils.py
+│
+├── test/
+│   ├── test_sql_connection.py
+│   ├── test_account.py
+│   ├── test_excel_creation.py
+│   ├── test_html_creation.py
+│
+├── Config.py
+├── main.py
+└── project.txt
