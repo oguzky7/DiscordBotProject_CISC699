@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from boundary.BotBoundary import BotBoundary
 from boundary.HelpBoundary import HelpBoundary
-from boundary.ChatBoundary import ChatBoundary
 from boundary.AccountBoundary import AccountBoundary  # Add this
 from boundary.StopBoundary import StopBoundary  # Import StopBoundary
 from Config import Config
@@ -16,7 +15,6 @@ class MyBot(commands.Bot):
     async def setup_hook(self):
         await self.add_cog(BotBoundary(self))  # General bot boundary
         await self.add_cog(HelpBoundary(self))  # Help-related boundary
-        await self.add_cog(ChatBoundary(self))  # Chat-related boundary
         await self.add_cog(AccountBoundary(self))  # Account-related boundary
         await self.add_cog(StopBoundary(self))  # Stop command boundary
 
