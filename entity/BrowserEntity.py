@@ -57,10 +57,6 @@ class BrowserEntity:
     async def login(self, site, username, password, incognito=False, retries=1):
         # Get the URL and selectors from css_selectors
         url = Selectors.get_selectors_for_url(site)['url']
-        print(url)
-        print(site)
-        print(username)
-        print("debug4")
         for attempt in range(retries):
             try:
                 self.navigate_to_url(url)
