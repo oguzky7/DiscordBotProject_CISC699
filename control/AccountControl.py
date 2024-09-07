@@ -27,6 +27,14 @@ class AccountControl:
             self.account_entity.close()
             return ["No accounts found."]
 
+  
+    def fetch_account_by_website(self, website):
+            """Fetch the username and password where the website matches."""
+            self.account_entity.connect()
+            account = self.account_entity.fetch_account_by_website(website)  # Call the entity method
+            self.account_entity.close()
+            return account
+
 
     def delete_account(self, account_id):
         self.account_entity.connect()

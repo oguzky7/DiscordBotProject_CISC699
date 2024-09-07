@@ -10,7 +10,7 @@ Working Commands: Test commands
 
 !close_browser
 
-!navigate_to_url https://www.google.com/
+!navigate_to_website https://www.google.com/
 
 !monitor_price https://www.bestbuy.com/site/microsoft-xbox-wireless-controller-for-xbox-series-x-xbox-series-s-xbox-one-windows-devices-sky-cipher-special-edition/6584960.p?skuId=6584960
 

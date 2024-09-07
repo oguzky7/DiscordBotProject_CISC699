@@ -1,7 +1,15 @@
 class Selectors:
     SELECTORS = {
         "trendyol": {
-            "price": ".product-detail-wrapper .prc-dsc"  # Selector for Trendyol price
+            "price": ".featured-prices .prc-dsc"  # Selector for Trendyol price
+        },
+        "ebay": {
+            "url": "https://signin.ebay.com/signin/",
+            "email_field": "#userid",
+            "continue_button": "[data-testid*='signin-continue-btn']",
+            "password_field": "#pass",
+            "login_button": "#sgnBt",
+            "price": ".x-price-primary span"  # CSS selector for Ebay price
         },
         "bestbuy": {
             "url": "https://www.bestbuy.com/signin/",
@@ -16,7 +24,7 @@ class Selectors:
             "url": "https://www.opentable.com/",
             "date_field": "#restProfileSideBarDtpDayPicker-label", 
             "time_field": "#restProfileSideBartimePickerDtpPicker",  
-            #"find_table_button": ".find-table-button",  # Example selector for the Find Table button
+            "find_table_button": ".find-table-button",  # Example selector for the Find Table button
             "availability_result": ".availability-result",  # Example selector for availability results
             "show_next_available_button": "button[data-test='multi-day-availability-button']",  # Show next available button
             "available_dates": "ul[data-test='time-slots'] > li",  # Available dates and times

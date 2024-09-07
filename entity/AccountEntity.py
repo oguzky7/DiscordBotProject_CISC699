@@ -61,6 +61,18 @@ class AccountEntity:
         except Exception as error:
             print(f"Error deleting account: {error}")
 
+
+    def fetch_account_by_website(self, website):
+        """Fetch the username and password where the website matches."""
+        try:
+            self.cursor.execute("SELECT username, password FROM accounts WHERE LOWER(website) = LOWER(%s)", (website,))
+            return self.cursor.fetchone()  # Returns one matching account
+        except Exception as error:
+            print(f"Error fetching account for website {website}: {error}")
+            return None
+
+
+
     def reset_id_sequence(self):
         """Reset the account ID sequence to the next available value."""
         try:
