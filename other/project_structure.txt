@@ -1,0 +1,64 @@
+Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699
+  Folder: boundary
+  Folder: control
+  Folder: entity
+  Folder: test
+  Folder: utils
+  File: Config.py
+  File: main.py
+  File: project.txt
+  File: project_structure.txt
+  File: temporary.py
+  File: Tests_URLs.txt
+Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\boundary
+  File: AccountBoundary.py
+  File: AvailabilityBoundary.py
+  File: BotBoundary.py
+  File: BrowserBoundary.py
+  File: CloseBrowserBoundary.py
+  File: DataExtractionBoundary.py
+  File: HelpBoundary.py
+  File: LoginBoundary.py
+  File: NavigationBoundary.py
+  File: NotificationBoundary.py
+  File: ProductBoundary.py
+  File: ProductTrackingBoundary.py
+  File: StopBoundary.py
+  File: StopTrackingBoundary.py
+  File: __init__.py
+Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\control
+  File: AccountControl.py
+  File: AvailabilityControl.py
+  File: BotControl.py
+  File: BrowserControl.py
+  File: ChatControl.py
+  File: CloseBrowserControl.py
+  File: DataExtractionControl.py
+  File: HelpControl.py
+  File: LoginControl.py
+  File: NavigationControl.py
+  File: NotificationControl.py
+  File: ProductControl.py
+  File: ProductTrackingControl.py
+  File: StopTrackingControl.py
+  File: __init__.py
+Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\entity
+  File: AccountEntity.py
+  File: BrowserEntity.py
+  File: DateEntity.py
+  File: NotificationEntity.py
+  File: ProductEntity.py
+  File: TrackingHistoryEntity.py
+  File: __init__.py
+Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\test
+  File: test_addAccount.py
+  File: test_deleteAccount.py
+  File: test_excel_creation.py
+  File: test_fetchAccounts.py
+  File: test_html_creation.py
+  File: __init__.py
+Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\utils
+  File: css_selectors.py
+  File: DiscordUtils.py
+  File: ExcelUtils.py
+  File: HTMLUtils.py

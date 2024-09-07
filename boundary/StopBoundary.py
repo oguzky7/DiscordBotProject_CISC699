@@ -6,7 +6,7 @@ class StopBoundary(commands.Cog):
         self.bot = bot
         self.bot_control = BotControl(bot)
 
-    @commands.command(name="stop")
+    @commands.command(name="stop_bot")
     async def stop_bot(self, ctx):
         """Handles the stop command and gracefully shuts down the bot."""
         await ctx.send("Stopping the bot...")

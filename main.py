@@ -3,8 +3,13 @@ from discord.ext import commands
 from boundary.BotBoundary import BotBoundary
 from boundary.HelpBoundary import HelpBoundary
 from boundary.AccountBoundary import AccountBoundary
-from boundary.BrowserBoundary import BrowserBoundary  # Add BrowserBoundary
+from boundary.BrowserBoundary import BrowserBoundary  
+from boundary.LoginBoundary import LoginBoundary  
+from boundary.CloseBrowserBoundary import CloseBrowserBoundary  
 from boundary.StopBoundary import StopBoundary
+from boundary.NavigationBoundary import NavigationBoundary 
+from boundary.PriceBoundary import PriceBoundary
+from boundary.MonitorPriceBoundary import MonitorPriceBoundary
 from Config import Config
 
 # Set up the bot's intents
@@ -17,8 +22,13 @@ class MyBot(commands.Bot):
         await self.add_cog(BotBoundary(self))
         await self.add_cog(HelpBoundary(self))
         await self.add_cog(AccountBoundary(self))
-        await self.add_cog(BrowserBoundary(self))  # Add browser-related commands
+        await self.add_cog(BrowserBoundary(self))  
         await self.add_cog(StopBoundary(self))
+        await self.add_cog(LoginBoundary(self))  
+        await self.add_cog(CloseBrowserBoundary(self)) 
+        await self.add_cog(NavigationBoundary(self))  
+        await self.add_cog(PriceBoundary(self))
+        await self.add_cog(MonitorPriceBoundary(self))
 
 # Run the bot
 if __name__ == "__main__":
