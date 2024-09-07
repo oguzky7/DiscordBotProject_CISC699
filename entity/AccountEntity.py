@@ -19,16 +19,17 @@ class AccountEntity:
                 port=self.port
             )
             self.cursor = self.connection.cursor()
+            print("Database Connection Established.")
         except Exception as error:
             print(f"Error connecting to the database: {error}")
             self.connection = None
             self.cursor = None
 
-    def add_account(self, username, password):
+    def add_account(self, username, password, webSite):
         """Insert a new account into the accounts table."""
         try:
             if self.cursor:
-                self.cursor.execute("INSERT INTO accounts (username, password) VALUES (%s, %s)", (username, password))
+                self.cursor.execute("INSERT INTO accounts (username, password, website) VALUES (%s, %s, %s)", (username, password, webSite))
                 self.connection.commit()
                 print(f"Account {username} added successfully.")
         except Exception as error:
@@ -78,4 +79,4 @@ class AccountEntity:
             self.cursor.close()
         if self.connection:
             self.connection.close()
-            print("Connection closed.")
+            print("Database Connection closed.")

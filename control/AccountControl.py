@@ -4,9 +4,9 @@ class AccountControl:
     def __init__(self):
         self.account_entity = AccountEntity()
 
-    def add_account(self, username, password):
+    def add_account(self, username, password, webSite):
         self.account_entity.connect()
-        self.account_entity.add_account(username, password)
+        self.account_entity.add_account(username, password, webSite)
         self.account_entity.close()
 
     def fetch_accounts(self):
@@ -17,7 +17,7 @@ class AccountControl:
         if accounts:
             account_messages = []
             for account in accounts:
-                message = f"ID: {account[0]}, Username: {account[1]}, Password: {account[2]}"
+                message = f"ID: {account[0]}, Username: {account[1]}, Password: {account[2]}, Website: {account[3]}"
                 print(message)  # For terminal output
                 account_messages.append(message)
             self.account_entity.close()

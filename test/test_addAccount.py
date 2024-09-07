@@ -7,7 +7,7 @@ def test_add_account():
     account_control = AccountControl()
     
     # Adding a new account
-    account_control.add_account("newUser", "newPassword123")
+    account_control.add_account("newUser", "newPassword123", "newWebsite")
 
 if __name__ == "__main__":
     test_add_account()
