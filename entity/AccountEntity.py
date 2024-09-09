@@ -9,6 +9,7 @@ class AccountEntity:
         self.port = "5432"
         self.password = Config.DATABASE_PASSWORD
 
+
     def connect(self):
         try:
             self.connection = psycopg2.connect(
@@ -25,6 +26,7 @@ class AccountEntity:
             self.connection = None
             self.cursor = None
 
+
     def add_account(self, username, password, webSite):
         """Insert a new account into the accounts table."""
         try:
@@ -34,6 +36,7 @@ class AccountEntity:
                 print(f"Account {username} added successfully.")
         except Exception as error:
             print(f"Error inserting account: {error}")
+
 
     def fetch_accounts(self):
         """Fetch all accounts from the accounts table."""
@@ -45,6 +48,7 @@ class AccountEntity:
         except Exception as error:
             print(f"Error fetching accounts: {error}")
             return None
+
 
     def delete_account(self, account_id):
         """Delete an account by ID."""
@@ -72,7 +76,6 @@ class AccountEntity:
             return None
 
 
-
     def reset_id_sequence(self):
         """Reset the account ID sequence to the next available value."""
         try:
@@ -84,6 +87,7 @@ class AccountEntity:
                 print(f"ID sequence reset to {next_id}.")
         except Exception as error:
             print(f"Error resetting ID sequence: {error}")
+
 
     def close(self):
         """Close the database connection."""

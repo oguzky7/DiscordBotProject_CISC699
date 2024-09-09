@@ -15,6 +15,7 @@ class BrowserEntity:
             cls._instance.driver = None  # Initialize driver to None
         return cls._instance
 
+
     def launch_browser(self, incognito=False, user=None):
         if self.driver:
             print("Browser is already running. No need to launch a new one.")
@@ -49,6 +50,7 @@ class BrowserEntity:
             print(error_message)
             raise
 
+
     def navigate_to_url(self, url):
         if not self.driver:
             print("Driver is not initialized, launching browser first.")  # Debug
@@ -58,6 +60,7 @@ class BrowserEntity:
             return f"Navigated to URL: {url}"
         except Exception as e:
             raise
+
 
     def close_browser(self):
         print(f"Closing browser. Current driver: {self.driver}")  # Debug: Check the driver status
