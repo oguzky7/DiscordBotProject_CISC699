@@ -1,6 +1,6 @@
 import asyncio
 from entity.PriceEntity import PriceEntity
-from Config import Config
+from utils.Config import Config
 import logging
 
 class PriceControl:

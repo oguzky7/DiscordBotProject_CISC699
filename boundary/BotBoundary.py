@@ -1,6 +1,6 @@
 from discord.ext import commands
 from control.ChatControl import ChatControl
-from Config import Config
+from utils.Config import Config
 
 class BotBoundary(commands.Cog):
     def __init__(self, bot):

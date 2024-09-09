@@ -10,7 +10,7 @@ from boundary.StopBoundary import StopBoundary
 from boundary.NavigationBoundary import NavigationBoundary 
 from boundary.PriceBoundary import PriceBoundary
 from boundary.MonitorPriceBoundary import MonitorPriceBoundary
-from Config import Config
+from utils.Config import Config
 
 # Set up the bot's intents
 intents = discord.Intents.default()

@@ -1,5 +1,5 @@
 import psycopg2
-from Config import Config
+from utils.Config import Config
 
 class AccountEntity:
     def __init__(self):
