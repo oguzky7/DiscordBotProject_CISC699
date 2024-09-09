@@ -57,6 +57,7 @@ class BrowserEntity:
             self.launch_browser()
         try:
             self.driver.get(url)
+            print(f"Navigated to URL: {url}")
             return f"Navigated to URL: {url}"
         except Exception as e:
             raise

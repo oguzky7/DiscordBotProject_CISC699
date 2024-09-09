@@ -55,9 +55,6 @@ class ExportUtils:
         # Ensure the directory exists
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-        # Debug: Print data being passed to HTML
-        print(f"Data being exported to HTML: {data}")
-
         # Check if the file already exists and append rows
         if os.path.exists(file_path):
             # Open the file and append rows
@@ -76,7 +73,6 @@ class ExportUtils:
                     file.write(content)
                     file.truncate()  # Truncate any remaining content
                     file.flush()  # Flush the buffer to ensure it's written
-                    print(f"Appended new rows to existing HTML file at {file_path}.")
         else:
             # If the file doesn't exist, create a new one with table headers
             with open(file_path, "w", encoding="utf-8") as file:

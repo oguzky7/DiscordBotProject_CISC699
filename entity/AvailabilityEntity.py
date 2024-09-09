@@ -11,8 +11,7 @@ class AvailabilityEntity:
 
     async def check_availability(self, ctx, url, date_str=None, time_slot=None, timeout=5):
         # Use BrowserEntity to navigate to the URL
-        navigate_message = self.browser_entity.navigate_to_url(url)
-        print(navigate_message)  # Debugging output to confirm navigation
+        self.browser_entity.navigate_to_url(url)
 
         # Wait for page to load (you can tweak the sleep time based on your page loading behavior)
         await asyncio.sleep(3)
@@ -68,10 +67,6 @@ class AvailabilityEntity:
             no_availability_seen = True  # If found, set the flag to True
         except:
             no_availability_seen = False  # If not found within timeout
-
-        # Debug information
-        print(f"select_time seen: {select_time_seen}")
-        print(f"no_availability seen: {no_availability_seen}")
 
         # Logic to determine availability
         if select_time_seen:

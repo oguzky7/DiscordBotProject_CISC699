@@ -8,9 +8,10 @@ class MonitorAvailabilityControl:
         self.monitoring_task = None  # To store the running task
         self.logger = logging.getLogger("MonitorAvailabilityControl")
 
-    async def start_monitoring(self, ctx, url, date_str=None, time_slot=None, frequency=20):
+    async def start_monitoring(self, ctx, url, date_str=None, time_slot=None, frequency=15):
         """Start monitoring availability at the given frequency (in seconds)."""
         # If a task is already running, notify the user
+        command_name = "monitor_availability"
         if self.monitoring_task:
             await ctx.send("Monitoring is already running.")
             return
@@ -20,7 +21,7 @@ class MonitorAvailabilityControl:
             while True:
                 try:
                     # Reuse the existing check_availability method from AvailabilityControl
-                    result, html_msg, excel_msg = await self.availability_control.handle_availability_check(ctx, url, date_str, time_slot)
+                    result, html_msg, excel_msg = await self.availability_control.handle_availability_check(ctx, url, date_str, time_slot, command_name)
 
                     # Send availability result to the user
                     await ctx.send(result)

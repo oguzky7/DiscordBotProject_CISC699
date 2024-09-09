@@ -9,7 +9,8 @@ class AvailabilityBoundary(commands.Cog):  # Make it a Cog to register as a bot 
     @commands.command(name="check_availability")  # Register the command with this decorator
     async def check_availability(self, ctx, url: str, date_str=None, time_slot=None):
         # Call the control and get the results
-        result, html_msg, excel_msg = await self.control.handle_availability_check(ctx, url, date_str, time_slot)
+        command_name = ctx.command.name
+        result, html_msg, excel_msg = await self.control.handle_availability_check(ctx, url, date_str, time_slot, command_name)
         
         # Send the result first
         await ctx.send(result)
