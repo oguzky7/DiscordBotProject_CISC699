@@ -1,41 +1,78 @@
-from selenium import webdriver
+import asyncio
 from selenium.webdriver.common.by import By
-import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from utils.css_selectors import Selectors
+from entity.BrowserEntity import BrowserEntity  # Import BrowserEntity
 
 class AvailabilityEntity:
     def __init__(self):
-        self.driver = webdriver.Chrome()
+        self.browser_entity = BrowserEntity()  # Initialize BrowserEntity
 
-    async def check_availability(self, ctx, url, date_str=None, time_slot=None):
-        self.driver.get(url)
-        time.sleep(3)  # Wait for page to load
+    async def check_availability(self, ctx, url, date_str=None, time_slot=None, timeout=5):
+        # Use BrowserEntity to navigate to the URL
+        navigate_message = self.browser_entity.navigate_to_url(url)
+        print(navigate_message)  # Debugging output to confirm navigation
+
+        # Wait for page to load (you can tweak the sleep time based on your page loading behavior)
+        await asyncio.sleep(3)
 
         # Get selectors for the given URL
         selectors = Selectors.get_selectors_for_url(url)
         if not selectors:
             return "No valid selectors found for this URL."
 
-        # Date Selection
+        # Perform date and time selection (optional)
         if date_str:
-            date_field = self.driver.find_element(By.CSS_SELECTOR, selectors['date_field'])
-            date_field.click()
-            time.sleep(1)
             try:
-                date_button = self.driver.find_element(By.CSS_SELECTOR, f"{selectors['date_field']}-wrapper button[aria-label*='{date_str}']")
+                date_field = self.browser_entity.driver.find_element(By.CSS_SELECTOR, selectors['date_field'])
+                date_field.click()
+                await asyncio.sleep(1)
+                date_button = self.browser_entity.driver.find_element(By.CSS_SELECTOR, f"{selectors['date_field']}-wrapper button[aria-label*='{date_str}']")
                 date_button.click()
             except Exception as e:
                 return f"Failed to select the date: {str(e)}"
 
-        # Time Selection
         if time_slot:
-            time_field = self.driver.find_element(By.CSS_SELECTOR, selectors['time_field'])
-            time_field.clear()
-            time_field.send_keys(time_slot)
+            try:
+                time_field = self.browser_entity.driver.find_element(By.CSS_SELECTOR, selectors['time_field'])
+                time_field.clear()
+                time_field.send_keys(time_slot)
+            except Exception as e:
+                return f"Failed to select the time: {str(e)}"
 
-        time.sleep(2)  # Wait for updates
+        await asyncio.sleep(2)  # Wait for updates (adjust this time based on page response)
+
+        # Initialize flags for select_time and no_availability elements
+        select_time_seen = False
+        no_availability_seen = False
+
         try:
-            availability_element = self.driver.find_element(By.CSS_SELECTOR, selectors['availability_result'])
-            return f"Date {date_str if date_str else 'current date'} is available!"
+            # Check if 'select_time' is available within the given timeout
+            WebDriverWait(self.browser_entity.driver, timeout).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, selectors['select_time']))
+            )
+            select_time_seen = True  # If found, set the flag to True
         except:
+            select_time_seen = False  # If not found within timeout
+
+        try:
+            # Check if 'no_availability' is available within the given timeout
+            WebDriverWait(self.browser_entity.driver, timeout).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, selectors['no_availability']))
+            )
+            no_availability_seen = True  # If found, set the flag to True
+        except:
+            no_availability_seen = False  # If not found within timeout
+
+        # Debug information
+        print(f"select_time seen: {select_time_seen}")
+        print(f"no_availability seen: {no_availability_seen}")
+
+        # Logic to determine availability
+        if select_time_seen:
+            return f"Selected or default date {date_str if date_str else 'current date'} is available for booking."
+        elif no_availability_seen:
             return "No availability for the selected date."
+        else:
+            return "Unable to determine availability. Please try again."

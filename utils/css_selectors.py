@@ -23,12 +23,14 @@ class Selectors:
         "opentable": {
             "url": "https://www.opentable.com/",
             "date_field": "#restProfileSideBarDtpDayPicker-label", 
-            "time_field": "#restProfileSideBartimePickerDtpPicker",  
+            "time_field": "#restProfileSideBartimePickerDtpPicker",
+            "select_time": "h3[data-test='select-time-header']",
+            "no_availability": "div._8ye6OVzeOuU- span",
             "find_table_button": ".find-table-button",  # Example selector for the Find Table button
             "availability_result": ".availability-result",  # Example selector for availability results
             "show_next_available_button": "button[data-test='multi-day-availability-button']",  # Show next available button
             "available_dates": "ul[data-test='time-slots'] > li",  # Available dates and times
-            "no_availability": "div._8ye6OVzeOuU- span"
+            
         }
     }
 
