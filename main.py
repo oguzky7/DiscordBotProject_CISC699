@@ -11,6 +11,7 @@ from boundary.NavigationBoundary import NavigationBoundary
 from boundary.PriceBoundary import PriceBoundary
 from boundary.MonitorPriceBoundary import MonitorPriceBoundary
 from boundary.AvailabilityBoundary import AvailabilityBoundary
+from boundary.MonitorAvailabilityBoundary import MonitorAvailabilityBoundary
 from utils.Config import Config
 
 # Set up the bot's intents
@@ -31,6 +32,7 @@ class MyBot(commands.Bot):
         await self.add_cog(PriceBoundary(self))
         await self.add_cog(MonitorPriceBoundary(self))
         await self.add_cog(AvailabilityBoundary(self))
+        await self.add_cog(MonitorAvailabilityBoundary(self))
 
 # Run the bot
 if __name__ == "__main__":

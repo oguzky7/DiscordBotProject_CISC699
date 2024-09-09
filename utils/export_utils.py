@@ -7,7 +7,8 @@ class ExportUtils:
     @staticmethod
     def log_to_excel(command, url, result, entered_date=None, entered_time=None):
         # Determine the file path for the Excel file
-        file_path = os.path.join("ExportedFiles", "excelFiles", "command_results.xlsx")
+        file_name = f"{command}.xlsx"
+        file_path = os.path.join("ExportedFiles", "excelFiles", file_name)
         
         # Ensure directory exists
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -42,7 +43,6 @@ class ExportUtils:
         df.to_excel(file_path, index=False)
 
         return f"Data saved to Excel file ({file_path})."
-
 
 
 
