@@ -22,6 +22,10 @@ class AvailabilityEntity:
         if not selectors:
             return "No valid selectors found for this URL."
 
+        # Ensure select_time and no_availability exist in selectors
+        if 'select_time' not in selectors or 'no_availability' not in selectors:
+            return "Missing required selectors for availability check."
+
         # Perform date and time selection (optional)
         if date_str:
             try:
