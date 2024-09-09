@@ -49,6 +49,7 @@ project_text = extract_project_text(directory)
 if project_text:
     create_pdf(project_text, output_pdf_path)
     output_pdf_path
+    print("PDF file created with all project's as text at: " + output_pdf_path)
 else:
     "No project text found."
 

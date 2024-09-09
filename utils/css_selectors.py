@@ -24,6 +24,7 @@ class Selectors:
             "url": "https://www.opentable.com/",
             "date_field": "#restProfileSideBarDtpDayPicker-label", 
             "time_field": "#restProfileSideBartimePickerDtpPicker",
+            "select_date": "#restProfileSideBarDtpDayPicker-wrapper", # button[aria-label*="{}"]
             "select_time": "h3[data-test='select-time-header']",
             "no_availability": "div._8ye6OVzeOuU- span",
             "find_table_button": ".find-table-button",  # Example selector for the Find Table button

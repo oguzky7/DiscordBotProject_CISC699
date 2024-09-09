@@ -31,7 +31,7 @@ class AvailabilityEntity:
                 date_field = self.browser_entity.driver.find_element(By.CSS_SELECTOR, selectors['date_field'])
                 date_field.click()
                 await asyncio.sleep(1)
-                date_button = self.browser_entity.driver.find_element(By.CSS_SELECTOR, f"{selectors['date_field']}-wrapper button[aria-label*='{date_str}']")
+                date_button = self.browser_entity.driver.find_element(By.CSS_SELECTOR, f"{selectors['select_date']} button[aria-label*='{date_str}']")
                 date_button.click()
             except Exception as e:
                 return f"Failed to select the date: {str(e)}"

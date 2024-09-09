@@ -22,9 +22,11 @@ Working Commands: Test commands
 
 !monitor_availability https://www.opentable.com/r/bar-spero-washington/
 
+!monitor_availability https://www.opentable.com/r/bar-spero-washington/ "October 2"
+
 !stop_monitoring_availability
 
-!check_availability https://www.opentable.com/r/bar-spero-washington/ "August 22"
+!check_availability https://www.opentable.com/r/bar-spero-washington/ "October 2"
 
 !stop_bot
 
