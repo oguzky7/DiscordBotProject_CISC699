@@ -2,7 +2,7 @@ import os
 from fpdf import FPDF
 
 # Directory where the project files are located
-directory = r"D:\HARRISBURG\Harrisburg Master's Fifth Term Late Summer\CISC 699\DiscordBotProject_CISC699"
+directory = r"D:\HARRISBURG\Harrisburg Master's Fifth Term Late Summer\CISC 699\DiscordBotProject_CISC699\other"
 output_pdf_path = os.path.join(directory, "project_text.pdf")
 
 # Function to retrieve all text from files, ignoring .git and __pycache__ directories
