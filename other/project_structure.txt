@@ -1,0 +1,6 @@
+Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699/other
+  File: project_structure.py
+  File: project_structure.txt
+  File: project_text.pdf
+  File: project_text.py
+  File: Tests_URLs.txt
