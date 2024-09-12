@@ -15,6 +15,9 @@ class HelpControl:
             "!monitor_availability - Monitor the availability in a restaurant.\n"
             "!stop_monitoring_availability - Stop monitoring availibility.\n"
             "!stop_bot - Stop the bot.\n"
-            "##!receive_notifications - Receive notifications for price changes.\n"
-            "##!extract_data - Export data to Excel or HTML.\n"
+            
         )
+
+
+# "##!receive_notifications - Receive notifications for price changes.\n"
+# "##!extract_data - Export data to Excel or HTML.\n"

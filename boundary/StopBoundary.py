@@ -1,13 +1,13 @@
 from discord.ext import commands
-from control.BotControl import BotControl
+from control.StopControl import StopControl
 
 class StopBoundary(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.bot_control = BotControl(bot)
+        self.control = StopControl()
 
     @commands.command(name="stop_bot")
     async def stop_bot(self, ctx):
-        """Handles the stop command and gracefully shuts down the bot."""
-        await ctx.send("Stopping the bot...")
-        await self.bot_control.stop_bot()
+        """Shut down the bot."""
+        await ctx.send("Command recognized, taking action: Shutting down the bot.")
+        await self.control.stop_bot(ctx, self.bot)  # Call the control's method to stop the bot

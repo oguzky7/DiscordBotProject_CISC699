@@ -1,43 +1,38 @@
-from entity.AccountEntity import AccountEntity
+from DataObjects.AccountDAO import AccountDAO
+from DataObjects.AccountDTO import AccountDTO  # Assuming the DTO file is in the dto folder
 
 class AccountControl:
     def __init__(self):
-        self.account_entity = AccountEntity()
+        self.account_dao = AccountDAO()
 
-    def add_account(self, username, password, webSite):
-        self.account_entity.connect()
-        self.account_entity.add_account(username, password, webSite)
-        self.account_entity.close()
+    def add_account(self, username: str, password: str, website: str):
+        """Add a new account to the database using DTO."""
+        self.account_dao.connect()  # Establish database connection
+        account_dto = AccountDTO(username, password, website)
+        result = self.account_dao.add_account(account_dto)
+        self.account_dao.close()  # Close the connection
+        return result
 
-    def fetch_accounts(self):
-        """Fetch all accounts and return them."""
-        self.account_entity.connect()
-        accounts = self.account_entity.fetch_accounts()
-        
-        if accounts:
-            account_messages = []
-            for account in accounts:
-                message = f"ID: {account[0]}, Username: {account[1]}, Password: {account[2]}, Website: {account[3]}"
-                print(message)  # For terminal output
-                account_messages.append(message)
-            self.account_entity.close()
-            return account_messages
-        else:
-            print("No accounts found.")  # For terminal output
-            self.account_entity.close()
-            return ["No accounts found."]
-
-  
-    def fetch_account_by_website(self, website):
-            """Fetch the username and password where the website matches."""
-            self.account_entity.connect()
-            account = self.account_entity.fetch_account_by_website(website)  # Call the entity method
-            self.account_entity.close()
-            return account
+    
+    def delete_account(self, account_id: int):
+        """Delete an account by ID."""
+        self.account_dao.connect()  # Establish database connection
+        result = self.account_dao.delete_account(account_id)
+        self.account_dao.reset_id_sequence()
+        self.account_dao.close()  # Close the connection
+        return result
 
 
-    def delete_account(self, account_id):
-        self.account_entity.connect()
-        self.account_entity.delete_account(account_id)
-        self.account_entity.reset_id_sequence()
-        self.account_entity.close()
+    def fetch_all_accounts(self):
+        """Fetch all accounts using the DAO."""
+        self.account_dao.connect()  # Establish database connection
+        accounts = self.account_dao.fetch_all_accounts()  # Fetch accounts from DAO
+        self.account_dao.close()  # Close the connection
+        return accounts if accounts else None
+
+    def fetch_account_by_website(self, website: str):
+        """Fetch an account by website."""
+        self.account_dao.connect()  # Establish database connection
+        account = self.account_dao.fetch_account_by_website(website)
+        self.account_dao.close()  # Close the connection
+        return account if account else None

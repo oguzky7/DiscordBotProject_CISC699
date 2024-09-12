@@ -4,13 +4,23 @@ Working Commands: Test commands
 
 !project_help
 
-!login bestbuy
+!fetch_all_accounts
+
+!fetch_account_by_website discordtestWebsite
+
+!add_account discordtestUser discordTestPass  discordtestWebsite
+
+!delete_account 4
+
+!stop_bot
 
 !launch_browser
 
 !close_browser
 
 !navigate_to_website https://www.google.com/
+
+!login bestbuy
 
 !get_price https://www.bestbuy.com/site/microsoft-xbox-wireless-controller-for-xbox-series-x-xbox-series-s-xbox-one-windows-devices-sky-cipher-special-edition/6584960.p?skuId=6584960
 
@@ -25,8 +35,6 @@ Working Commands: Test commands
 !monitor_availability https://www.opentable.com/r/bar-spero-washington/ "October 2"
 
 !stop_monitoring_availability
-
-!check_availability https://www.opentable.com/r/bar-spero-washington/ "October 2"
 
 !stop_bot
 
@@ -48,3 +56,6 @@ https://www.trendyol.com/puma/rebound-v6-low-p-736020132?boutiqueId=61&merchantI
 
 
 !get_price https://www.trendyol.com/puma/rebound-v6-low-p-736020132?boutiqueId=61&merchantId=184734&sav=true
+
+ok, now I want to add !stop_bot using BCE structure and dont forget professor feedbacks.
+Please always check the pdf file I provided to you with all the codes in it for correct code. just put the working code in the correct files/places
