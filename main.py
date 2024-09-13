@@ -9,6 +9,8 @@ from boundary.CloseBrowserBoundary import CloseBrowserBoundary  # Import CloseBr
 from boundary.LoginBoundary import LoginBoundary 
 from boundary.NavigationBoundary import NavigationBoundary  # Import NavigationBoundary for navigating to a URL
 from boundary.GetPriceBoundary import GetPriceBoundary
+from boundary.MonitorPriceBoundary import MonitorPriceBoundary
+from boundary.StopMonitoringBoundary import StopMonitoringBoundary
 from utils.Config import Config
 
 # Set up the bot's intents
@@ -27,6 +29,8 @@ class MyBot(commands.Bot):
         await self.add_cog(CloseBrowserBoundary(self, browser_entity))  # Register CloseBrowserBoundary to close browser
         await self.add_cog(LoginBoundary(self, browser_entity))
         await self.add_cog(GetPriceBoundary(self, browser_entity))
+        await self.add_cog(MonitorPriceBoundary(self, browser_entity))
+        await self.add_cog(StopMonitoringBoundary(self, browser_entity))
 
     async def on_ready(self):
         # Greet the user when the bot is online

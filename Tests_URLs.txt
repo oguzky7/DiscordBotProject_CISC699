@@ -24,7 +24,7 @@ Working Commands: Test commands
 
 !get_price https://www.bestbuy.com/site/microsoft-xbox-wireless-controller-for-xbox-series-x-xbox-series-s-xbox-one-windows-devices-sky-cipher-special-edition/6584960.p?skuId=6584960
 
-!monitor_price https://www.bestbuy.com/site/microsoft-xbox-wireless-controller-for-xbox-series-x-xbox-series-s-xbox-one-windows-devices-sky-cipher-special-edition/6584960.p?skuId=6584960
+!start_monitoring_price https://www.bestbuy.com/site/microsoft-xbox-wireless-controller-for-xbox-series-x-xbox-series-s-xbox-one-windows-devices-sky-cipher-special-edition/6584960.p?skuId=6584960
 
 !stop_monitoring
 
@@ -58,3 +58,6 @@ https://www.trendyol.com/puma/rebound-v6-low-p-736020132?boutiqueId=61&merchantI
 Conclusion:
 Control objects: Orchestrate the flow, decide which entities to use, and manage interactions between boundary and entity objects.
 Entity objects: Contain the business logic (like logging in, updating prices, managing accounts).
+
+stop monitoring did not stop.
+monitor price did not work without url
