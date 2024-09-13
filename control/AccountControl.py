@@ -1,27 +1,23 @@
 from DataObjects.AccountDAO import AccountDAO
-from DataObjects.AccountDTO import AccountDTO  # Assuming the DTO file is in the dto folder
 
 class AccountControl:
     def __init__(self):
-        self.account_dao = AccountDAO()
+        self.account_dao = AccountDAO()  # DAO for database operations
 
     def add_account(self, username: str, password: str, website: str):
-        """Add a new account to the database using DTO."""
+        """Add a new account to the database."""
         self.account_dao.connect()  # Establish database connection
-        account_dto = AccountDTO(username, password, website)
-        result = self.account_dao.add_account(account_dto)
+        result = self.account_dao.add_account(username, password, website)  # Call DAO to add account
         self.account_dao.close()  # Close the connection
         return result
 
-    
     def delete_account(self, account_id: int):
         """Delete an account by ID."""
         self.account_dao.connect()  # Establish database connection
         result = self.account_dao.delete_account(account_id)
-        self.account_dao.reset_id_sequence()
+        self.account_dao.reset_id_sequence()  # Reset the ID sequence
         self.account_dao.close()  # Close the connection
         return result
-
 
     def fetch_all_accounts(self):
         """Fetch all accounts using the DAO."""

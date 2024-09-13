@@ -1,6 +1,5 @@
 import psycopg2
 from utils.Config import Config
-from DataObjects.AccountDTO import AccountDTO
 
 class AccountDAO:
     def __init__(self):
@@ -27,19 +26,19 @@ class AccountDAO:
             self.connection = None
             self.cursor = None
 
-    def add_account(self, account_dto: AccountDTO):
-        """Add a new account to the database using DTO."""
+    def add_account(self, username: str, password: str, website: str):
+        """Add a new account to the database using structured data."""
         try:
+            # Combine DTO logic here by directly using the parameters
             query = "INSERT INTO accounts (username, password, website) VALUES (%s, %s, %s)"
-            values = (account_dto.username, account_dto.password, account_dto.website)
+            values = (username, password, website)
             self.cursor.execute(query, values)
             self.connection.commit()
-            print(f"Account {account_dto.username} added successfully.")
+            print(f"Account {username} added successfully.")
             return True
         except Exception as error:
             print(f"Error inserting account: {error}")
             return False
-
 
     def fetch_account_by_website(self, website):
         """Fetch account credentials for a specific website."""
@@ -61,7 +60,6 @@ class AccountDAO:
             print(f"Error fetching accounts: {error}")
             return []
         
-
     def delete_account(self, account_id):
         """Delete an account by its ID."""
         try:
@@ -86,7 +84,6 @@ class AccountDAO:
             print("ID sequence reset successfully.")
         except Exception as error:
             print(f"Error resetting ID sequence: {error}")
-
 
     def close(self):
         """Close the database connection."""

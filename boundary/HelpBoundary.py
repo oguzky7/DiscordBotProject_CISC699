@@ -9,6 +9,6 @@ class HelpBoundary(commands.Cog):  # Cog to register with the bot
     @commands.command(name="project_help")
     async def project_help(self, ctx):
         """Send a message with all the available commands."""
-        await ctx.send("Command recognized, taking action.")  # Acknowledge the command
-        help_message = self.control.get_help_message()  # Get help message from control
-        await ctx.send(help_message)  # Send help message to Discord
+        await ctx.send("Command recognized, taking action.")
+        response = self.control.get_help_message()
+        await ctx.send(response)
