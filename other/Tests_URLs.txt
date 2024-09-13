@@ -6,9 +6,9 @@ Working Commands: Test commands
 
 !fetch_all_accounts
 
-!fetch_account_by_website discordtestWebsite
-
 !add_account discordtestUser discordTestPass  discordtestWebsite
+
+!fetch_account_by_website discordtestWebsite
 
 !delete_account 4
 
