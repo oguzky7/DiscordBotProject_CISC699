@@ -1,6 +1,11 @@
+import asyncio
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from utils.css_selectors import Selectors  # Assuming this is your css_selectors.py file
+from utils.css_selectors import Selectors
+
 
 class BrowserEntity:
     def __init__(self):
@@ -44,12 +49,7 @@ class BrowserEntity:
             return "No browser is currently open."
 
 
-    def navigate_to_url(self, site_name: str):
-        # Fetch the URL from the CSS selectors file
-        selectors = Selectors.SELECTORS.get(site_name.lower())
-        if selectors and 'url' in selectors:
-            url = selectors['url']
-
+    def navigate_to_url(self, url):       
             # Ensure the browser is launched before navigating
             if not self.is_browser_open():
                 launch_message = self.launch_browser()
@@ -61,5 +61,31 @@ class BrowserEntity:
                 return f"Navigated to {url}"
             else:
                 return "Failed to open browser."
-        else:
-            return "URL not found for the specified site."
+        
+
+    async def perform_login(self, url, username, password):
+        # Navigate to the website
+        self.navigate_to_url(url)
+        await asyncio.sleep(3)
+
+        # Enter the username
+        email_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['email_field'])
+        email_field.send_keys(username)
+        await asyncio.sleep(3)
+
+        # Enter the password
+        password_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['password_field'])
+        password_field.send_keys(password)
+        await asyncio.sleep(3)
+
+        # Click the login button
+        sign_in_button = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['SignIn_button'])
+        sign_in_button.click()
+        await asyncio.sleep(5)
+
+        # Wait for the homepage to load
+        try:
+            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['homePage'])))
+            return f"Logged in to {url} successfully with username: {username}"
+        except Exception as e:
+            return f"Failed to log in: {str(e)}"

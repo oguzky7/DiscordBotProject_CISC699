@@ -6,7 +6,7 @@ from boundary.AccountBoundary import AccountBoundary
 from boundary.StopBoundary import StopBoundary  # Import StopBoundary
 from boundary.LaunchBrowserBoundary import LaunchBrowserBoundary  # Import BrowserBoundary for browser launch
 from boundary.CloseBrowserBoundary import CloseBrowserBoundary  # Import CloseBrowserBoundary for closing browser
-#from boundary.LoginBoundary import LoginBoundary 
+from boundary.LoginBoundary import LoginBoundary 
 from boundary.NavigationBoundary import NavigationBoundary  # Import NavigationBoundary for navigating to a URL
 from utils.Config import Config
 
@@ -24,7 +24,7 @@ class MyBot(commands.Bot):
         await self.add_cog(LaunchBrowserBoundary(self, browser_entity))
         await self.add_cog(NavigationBoundary(self, browser_entity))
         await self.add_cog(CloseBrowserBoundary(self, browser_entity))  # Register CloseBrowserBoundary to close browser
-        #await self.add_cog(LoginBoundary(self))
+        await self.add_cog(LoginBoundary(self, browser_entity))
 
     async def on_ready(self):
         # Greet the user when the bot is online
