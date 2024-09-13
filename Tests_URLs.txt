@@ -30,7 +30,9 @@ Working Commands: Test commands
 
 !check_availability https://www.opentable.com/r/bar-spero-washington/
 
-!monitor_availability https://www.opentable.com/r/bar-spero-washington/
+!check_availability https://www.opentable.com/r/bar-spero-washington/ "September 20"
+
+!monitor_availability https://www.opentable.com/r/bar-spero-washington/ 
 
 !monitor_availability https://www.opentable.com/r/bar-spero-washington/ "October 2"
 

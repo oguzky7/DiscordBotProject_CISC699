@@ -23,6 +23,8 @@ class Selectors:
         },
         "opentable": {
             "url": "https://www.opentable.com/",
+            "unavailableUrl": "https://www.opentable.com/r/bar-spero-washington/",
+            "availableUrl": "https://www.opentable.com/r/the-rux-nashville",
             "date_field": "#restProfileSideBarDtpDayPicker-label", 
             "time_field": "#restProfileSideBartimePickerDtpPicker",
             "select_date": "#restProfileSideBarDtpDayPicker-wrapper", # button[aria-label*="{}"]
