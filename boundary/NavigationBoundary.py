@@ -1,12 +1,11 @@
 import discord
 from discord.ext import commands
 from control.NavigationControl import NavigationControl
-from entity.BrowserEntity import BrowserEntity
 
 class NavigationBoundary(commands.Cog):
     def __init__(self, bot, browser_entity):
         self.bot = bot
-        self.navigation_control = NavigationControl(browser_entity)  # Pass the same BrowserEntity instance
+        self.navigation_control = NavigationControl(browser_entity)
 
     @commands.command(name='navigate_to_website')
     async def navigate_to_website(self, ctx, site_name: str):
