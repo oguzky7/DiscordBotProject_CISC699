@@ -1,11 +1,12 @@
 import discord
 from discord.ext import commands
+from entity.BrowserEntity import BrowserEntity
 from boundary.HelpBoundary import HelpBoundary
 from boundary.AccountBoundary import AccountBoundary
 from boundary.StopBoundary import StopBoundary  # Import StopBoundary
-from boundary.BrowserBoundary import BrowserBoundary  # Import BrowserBoundary for browser launch
+from boundary.LaunchBrowserBoundary import LaunchBrowserBoundary  # Import BrowserBoundary for browser launch
 from boundary.CloseBrowserBoundary import CloseBrowserBoundary  # Import CloseBrowserBoundary for closing browser
-from boundary.LoginBoundary import LoginBoundary 
+#from boundary.LoginBoundary import LoginBoundary 
 from boundary.NavigationBoundary import NavigationBoundary  # Import NavigationBoundary for navigating to a URL
 from utils.Config import Config
 
@@ -16,13 +17,14 @@ intents.message_content = True  # Enable reading message content
 # Initialize the bot with the correct command prefix and intents
 class MyBot(commands.Bot):
     async def setup_hook(self):
+        browser_entity = BrowserEntity()
         await self.add_cog(HelpBoundary(self))  # Register HelpBoundary
         await self.add_cog(AccountBoundary(self))  # Register AccountBoundary
         await self.add_cog(StopBoundary(self))  # Register StopBoundary
-        await self.add_cog(BrowserBoundary(self))  # Register BrowserBoundary for browser commands
-        await self.add_cog(CloseBrowserBoundary(self))  # Register CloseBrowserBoundary to close browser
-        await self.add_cog(LoginBoundary(self))
-        await self.add_cog(NavigationBoundary(self))  # Register NavigationBoundary for navigating to a URL
+        await self.add_cog(LaunchBrowserBoundary(self, browser_entity))
+        await self.add_cog(NavigationBoundary(self, browser_entity))
+        await self.add_cog(CloseBrowserBoundary(self, browser_entity))  # Register CloseBrowserBoundary to close browser
+        #await self.add_cog(LoginBoundary(self))
 
     async def on_ready(self):
         # Greet the user when the bot is online

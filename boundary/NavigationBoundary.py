@@ -1,14 +1,15 @@
+import discord
 from discord.ext import commands
 from control.NavigationControl import NavigationControl
+from entity.BrowserEntity import BrowserEntity
 
 class NavigationBoundary(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot, browser_entity):
         self.bot = bot
-        self.navigation_control = NavigationControl()
+        self.navigation_control = NavigationControl(browser_entity)  # Pass the same BrowserEntity instance
 
     @commands.command(name='navigate_to_website')
-    async def navigate_to_website(self, ctx, url: str):
-        """Command to navigate to a specified URL."""
-        await ctx.send("Command recognized, taking action.")  # Acknowledge the command
-        response = self.navigation_control.navigate_to_url(url)
-        await ctx.send(response)
+    async def navigate_to_website(self, ctx, site_name: str):
+        await ctx.send("Command recognized, taking action.")
+        result = self.navigation_control.navigate_to_website(site_name)
+        await ctx.send(result)
