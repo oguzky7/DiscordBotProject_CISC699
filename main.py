@@ -3,6 +3,10 @@ from discord.ext import commands
 from boundary.HelpBoundary import HelpBoundary
 from boundary.AccountBoundary import AccountBoundary
 from boundary.StopBoundary import StopBoundary  # Import StopBoundary
+from boundary.BrowserBoundary import BrowserBoundary  # Import BrowserBoundary for browser launch
+from boundary.CloseBrowserBoundary import CloseBrowserBoundary  # Import CloseBrowserBoundary for closing browser
+from boundary.LoginBoundary import LoginBoundary 
+from boundary.NavigationBoundary import NavigationBoundary  # Import NavigationBoundary for navigating to a URL
 from utils.Config import Config
 
 # Set up the bot's intents
@@ -15,6 +19,10 @@ class MyBot(commands.Bot):
         await self.add_cog(HelpBoundary(self))  # Register HelpBoundary
         await self.add_cog(AccountBoundary(self))  # Register AccountBoundary
         await self.add_cog(StopBoundary(self))  # Register StopBoundary
+        await self.add_cog(BrowserBoundary(self))  # Register BrowserBoundary for browser commands
+        await self.add_cog(CloseBrowserBoundary(self))  # Register CloseBrowserBoundary to close browser
+        await self.add_cog(LoginBoundary(self))
+        await self.add_cog(NavigationBoundary(self))  # Register NavigationBoundary for navigating to a URL
 
     async def on_ready(self):
         # Greet the user when the bot is online
