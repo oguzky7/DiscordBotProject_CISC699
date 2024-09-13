@@ -12,11 +12,14 @@ class BrowserEntity:
         self.driver = None
         self.browser_open = False
 
+
     def set_browser_open(self, is_open: bool):
         self.browser_open = is_open
 
+
     def is_browser_open(self) -> bool:
         return self.browser_open
+
 
     def launch_browser(self):
         if not self.browser_open:
@@ -89,3 +92,14 @@ class BrowserEntity:
             return f"Logged in to {url} successfully with username: {username}"
         except Exception as e:
             return f"Failed to log in: {str(e)}"
+        
+
+    def get_price_from_page(self, url: str):
+            selectors = Selectors.get_selectors_for_url(url)
+            self.navigate_to_url(url)
+            try:
+                price_element = self.driver.find_element(By.CSS_SELECTOR, selectors['price'])
+                price = price_element.text
+                return f"Price found: {price}"
+            except Exception as e:
+                return f"Error fetching price: {str(e)}"

@@ -55,7 +55,6 @@ https://www.ebay.com/itm/314411766963?_trkparms=amclksrc%3DITM%26aid%3D777008%26
 https://www.trendyol.com/puma/rebound-v6-low-p-736020132?boutiqueId=61&merchantId=184734&sav=true
 
 
-!get_price https://www.trendyol.com/puma/rebound-v6-low-p-736020132?boutiqueId=61&merchantId=184734&sav=true
-
-ok, now I want to add !stop_bot using BCE structure and dont forget professor feedbacks.
-Please always check the pdf file I provided to you with all the codes in it for correct code. just put the working code in the correct files/places
+Conclusion:
+Control objects: Orchestrate the flow, decide which entities to use, and manage interactions between boundary and entity objects.
+Entity objects: Contain the business logic (like logging in, updating prices, managing accounts).
