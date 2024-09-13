@@ -5,10 +5,11 @@ class NavigationControl:
     def __init__(self, browser_entity):
         self.browser_entity = browser_entity
 
-    def navigate_to_website(self, site: str):
-        # Fetch URL in the control
-        url = Selectors.get_selectors_for_url(site).get('url')
+    def navigate_to_website(self, url: str = None):
         if not url:
-            return f"URL for {site} not found."
-
+            selectors = Selectors.get_selectors_for_url("google")
+            url = selectors.get('url')
+            if not url:
+                return "No URL provided, and default URL for google could not be found."
+            print("URL not provided, default URL for Google is: " + url)
         return self.browser_entity.navigate_to_url(url)

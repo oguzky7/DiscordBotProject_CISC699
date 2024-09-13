@@ -1,7 +1,7 @@
 class Selectors:
     SELECTORS = {
-        "trendyol": {
-            "price": ".featured-prices .prc-dsc"  # Selector for Trendyol price
+        "google": {
+            "url": "https://www.google.com/"  
         },
         "ebay": {
             "url": "https://signin.ebay.com/signin/",

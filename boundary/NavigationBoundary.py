@@ -8,7 +8,7 @@ class NavigationBoundary(commands.Cog):
         self.navigation_control = NavigationControl(browser_entity)
 
     @commands.command(name='navigate_to_website')
-    async def navigate_to_website(self, ctx, site_name: str):
+    async def navigate_to_website(self, ctx, url: str = None):
         await ctx.send("Command recognized, taking action.")
-        result = self.navigation_control.navigate_to_website(site_name)
+        result = self.navigation_control.navigate_to_website(url)
         await ctx.send(result)
