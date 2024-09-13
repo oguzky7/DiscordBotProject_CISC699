@@ -93,14 +93,4 @@ class BrowserEntity:
         except Exception as e:
             return f"Failed to log in: {str(e)}"
         
-"""
-    def get_price_from_page(self, url: str):
-            selectors = Selectors.get_selectors_for_url(url)
-            self.navigate_to_url(url)
-            try:
-                price_element = self.driver.find_element(By.CSS_SELECTOR, selectors['price'])
-                price = price_element.text
-                return f"Price found: {price}"
-            except Exception as e:
-                return f"Error fetching price: {str(e)}"
-"""
+    

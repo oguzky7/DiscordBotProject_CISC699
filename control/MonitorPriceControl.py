@@ -1,4 +1,5 @@
 from entity.PriceEntity import PriceEntity
+from utils.css_selectors import Selectors 
 import asyncio
 
 class MonitorPriceControl:
@@ -17,7 +18,18 @@ class MonitorPriceControl:
 
         try:
             while self.is_monitoring:
+                if not url:
+                    selectors = Selectors.get_selectors_for_url("bestbuy")
+                    url = selectors.get('priceUrl')  # Get the price URL
+                    if not url:
+                        return "No URL provided, and default URL for BestBuy could not be found."
+                    print("URL not provided, default URL for BestBuy is: " + url)
+
                 current_price = self.price_entity.get_price_from_page(url)
+
+                # Exit the loop if monitoring has been stopped
+                if not self.is_monitoring:
+                    break
                 if current_price:
                     if previous_price is None:
                         await ctx.send(f"Starting price monitoring. Current price: {current_price}")
@@ -30,7 +42,10 @@ class MonitorPriceControl:
                     previous_price = current_price
                 else:
                     await ctx.send("Failed to retrieve the price.")
-                await asyncio.sleep(frequency)  # Wait for the next check
+                
+                # Short sleep between checks to avoid missing stop command
+                await asyncio.sleep(frequency)
+                
         except Exception as e:
             return f"Failed to monitor price: {str(e)}"
 

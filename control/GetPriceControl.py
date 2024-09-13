@@ -1,11 +1,9 @@
-from entity.BrowserEntity import BrowserEntity
-from selenium.webdriver.common.by import By
+from entity.PriceEntity import PriceEntity
 from utils.css_selectors import Selectors 
-import asyncio
 
 class GetPriceControl:
     def __init__(self, browser_entity):
-        self.browser_entity = browser_entity
+        self.price_entity = PriceEntity(browser_entity)
 
     async def get_price(self, url: str):
         # Fetch the url using the correct CSS selector
@@ -17,6 +15,6 @@ class GetPriceControl:
             print("URL not provided, default URL for BestBuy is: " + url)
    
         # Step 3: Call the entity to get the price
-        price = self.browser_entity.get_price_from_page(url)
+        price = self.price_entity.get_price_from_page(url)
         return price
 
