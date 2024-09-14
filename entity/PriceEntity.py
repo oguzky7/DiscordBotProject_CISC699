@@ -36,19 +36,21 @@ class PriceEntity:
         entered_time = dto.get('entered_time')  # Optional, could be None
 
         # Call the Excel export method from ExportUtils
-        ExportUtils.log_to_excel(
+        excelResult = ExportUtils.log_to_excel(
             command=command,
             url=url,
             result=result,
             entered_date=entered_date,  # Pass the optional entered_date
             entered_time=entered_time   # Pass the optional entered_time
         )
+        print(excelResult)
 
         # Call the HTML export method from ExportUtils
-        ExportUtils.export_to_html(
+        htmlResult = ExportUtils.export_to_html(
             command=command,
             url=url,
             result=result,
             entered_date=entered_date,  # Pass the optional entered_date
             entered_time=entered_time   # Pass the optional entered_time
         )
+        print(htmlResult)

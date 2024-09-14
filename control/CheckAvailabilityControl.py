@@ -9,26 +9,18 @@ class CheckAvailabilityControl:
         """Handle the availability check and pass results for export."""
         # Get availability info from the entity layer
         availability_info = await self.availability_entity.check_availability(url, date_str)
+        # Prepare the result message
+        result = f"Checked availability: {availability_info}"
 
-        # Get current timestamp
-        current_timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-        # Use current date/time if not provided
-        entered_date = date_str if date_str else datetime.now().strftime('%Y-%m-%d')
-        entered_time = datetime.now().strftime('%H:%M:%S')
-
-        # Export results to HTML and Excel
+        # Create a DTO (Data Transfer Object) to organize the data for export
         data_dto = {
-            "command": "check_availability",
-            "url": url,
-            "result": availability_info,
-            "entered_date": entered_date,
-            "entered_time": entered_time
+            "command": "start_monitoring_availability",  # Command executed
+            "url": url,  # URL of the availability being monitored
+            "result": result,  # Result of the availability check
+            "entered_date": datetime.now().strftime('%Y-%m-%d'),  # Current date
+            "entered_time": datetime.now().strftime('%H:%M:%S')  # Current time
         }
 
-        # Call the export methods from the entity layer
-        html_msg = self.availability_entity.export_to_html(data_dto)
-        excel_msg = self.availability_entity.export_to_excel(data_dto)
-
-        # Return the availability result, along with HTML and Excel export messages
-        return availability_info, html_msg, excel_msg
+        # Pass the DTO to AvailabilityEntity to handle export to Excel and HTML
+        self.availability_entity.export_data(data_dto)
+        return result
