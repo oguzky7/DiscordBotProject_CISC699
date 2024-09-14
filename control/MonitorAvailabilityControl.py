@@ -1,32 +1,51 @@
 import asyncio
-from control.CheckAvailabilityControl import CheckAvailabilityControl
 from entity.AvailabilityEntity import AvailabilityEntity
+from datetime import datetime
 
 class MonitorAvailabilityControl:
     def __init__(self, browser_entity):
         self.availability_entity = AvailabilityEntity(browser_entity)  # Reuse check control logic
-        self.monitoring_task = None  # Store the running task
+        self.is_monitoring = False  # Store the running task
+        self.results = [] 
 
     async def start_monitoring_availability(self, ctx, url: str, date_str=None, frequency=15):
         """Start monitoring availability at the given frequency."""
-        if self.monitoring_task:
-            await ctx.send("Monitoring is already running.")
-            return
+        if self.is_monitoring:
+            return "Already monitoring prices."
+        self.is_monitoring = True  # Set monitoring state to true
+        try:
+            while self.is_monitoring:
+                availability_info  = await self.availability_entity.check_availability(ctx, url, date_str)
 
-        async def monitor():
-            while True:
-                result, html_msg, excel_msg = await self.availability_entity.check_availability(ctx, url, date_str)
-                await ctx.send(result)
-                if html_msg:
-                    await ctx.send(html_msg)
-                if excel_msg:
-                    await ctx.send(excel_msg)
+                # Prepare the result message
+                result = f"Checked availability: {availability_info}"
+
+                # Append the result to the results list
+                self.results.append(result)
+
+                # Create a DTO (Data Transfer Object) to organize the data for export
+                data_dto = {
+                    "command": "start_monitoring_availability",  # Command executed
+                    "url": url,  # URL of the availability being monitored
+                    "result": result,  # Result of the availability check
+                    "entered_date": datetime.now().strftime('%Y-%m-%d'),  # Current date
+                    "entered_time": datetime.now().strftime('%H:%M:%S')  # Current time
+                }
+
+                # Pass the DTO to AvailabilityEntity to handle export to Excel and HTML
+                self.availability_entity.export_data(data_dto)
+
+                # Sleep for the specified frequency before the next check
                 await asyncio.sleep(frequency)
 
-        self.monitoring_task = asyncio.create_task(monitor())
+        except Exception as e:
+            self.results.append(f"Failed to monitor availability: {str(e)}")
+            return f"Error: {str(e)}"
+        
+        return result
 
     def stop_monitoring(self):
-        """Stop the ongoing monitoring task."""
-        if self.monitoring_task:
-            self.monitoring_task.cancel()
-            self.monitoring_task = None
+        """Stop the availability monitoring loop."""
+        self.is_monitoring = False  # Set monitoring state to false
+        # Return all the results collected during the monitoring period
+        return self.results if self.results else ["No data collected."]

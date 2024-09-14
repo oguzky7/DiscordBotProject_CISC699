@@ -10,26 +10,6 @@ class AvailabilityEntity:
     def __init__(self, browser_entity):
         self.browser_entity = browser_entity
 
-    def export_to_html(self, dto):
-        """Export the data to HTML using ExportUtils."""
-        return ExportUtils.export_to_html(
-            command=dto["command"],
-            url=dto["url"],
-            result=dto["result"],
-            entered_date=dto["entered_date"],
-            entered_time=dto["entered_time"]
-        )
-
-    def export_to_excel(self, dto):
-        """Export the data to Excel using ExportUtils."""
-        return ExportUtils.log_to_excel(
-            command=dto["command"],
-            url=dto["url"],
-            result=dto["result"],
-            entered_date=dto["entered_date"],
-            entered_time=dto["entered_time"]
-        )
-
 
     async def check_availability(self, url: str, date_str=None, timeout=5):
         # Use BrowserEntity to navigate to the URL
@@ -88,4 +68,36 @@ class AvailabilityEntity:
             return "No availability for the selected date."
         else:
             return "Unable to determine availability. Please try again."
+
+
+
+    def export_data(self, dto):
+        """Export price data to both Excel and HTML using ExportUtils.
+        
+        dto: This is a Data Transfer Object (DTO) that contains the command, URL, result, date, and time.
+        """
+        # Extract the data from the DTO
+        command = dto.get('command')
+        url = dto.get('url')
+        result = dto.get('result')
+        entered_date = dto.get('entered_date')  # Optional, could be None
+        entered_time = dto.get('entered_time')  # Optional, could be None
+
+        # Call the Excel export method from ExportUtils
+        ExportUtils.log_to_excel(
+            command=command,
+            url=url,
+            result=result,
+            entered_date=entered_date,  # Pass the optional entered_date
+            entered_time=entered_time   # Pass the optional entered_time
+        )
+
+        # Call the HTML export method from ExportUtils
+        ExportUtils.export_to_html(
+            command=command,
+            url=url,
+            result=result,
+            entered_date=entered_date,  # Pass the optional entered_date
+            entered_time=entered_time   # Pass the optional entered_time
+        )
 
