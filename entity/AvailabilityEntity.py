@@ -19,12 +19,9 @@ class AvailabilityEntity:
         selectors = Selectors.get_selectors_for_url(url)
         if not selectors:
             return "No valid selectors found for this URL."
-        print("debug")
         # Perform date and time selection (optional)
         if date_str:
-            print("debug2")
             try:
-                print("debug3")
                 date_field = self.browser_entity.driver.find_element(By.CSS_SELECTOR, selectors['date_field'])
                 date_field.click()
                 await asyncio.sleep(1)
@@ -38,9 +35,7 @@ class AvailabilityEntity:
         # Initialize flags for select_time and no_availability elements
         select_time_seen = False
         no_availability_seen = False
-        print("debug4")
         try:
-            print("debug5")
             # Check if 'select_time' is available within the given timeout
             WebDriverWait(self.browser_entity.driver, timeout).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, selectors['select_time']))
@@ -48,17 +43,13 @@ class AvailabilityEntity:
             select_time_seen = True  # If found, set the flag to True
         except:
             select_time_seen = False  # If not found within timeout
-
-        print("debug6")
         try:
             # Check if 'no_availability' is available within the given timeout
             WebDriverWait(self.browser_entity.driver, timeout).until(
                 lambda driver: len(driver.find_elements(By.CSS_SELECTOR, selectors['show_next_available_button'])) > 0
             )
             no_availability_seen = True  # If found, set the flag to True
-            print("debug7")
         except:
-            print("debug8")
             no_availability_seen = False  # If not found within timeout
 
         # Logic to determine availability

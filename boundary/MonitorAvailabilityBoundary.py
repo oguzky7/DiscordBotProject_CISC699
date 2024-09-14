@@ -11,7 +11,8 @@ class MonitorAvailabilityBoundary(commands.Cog):
         """Command to monitor availability at the given frequency."""
         await ctx.send("Command recognized, taking action.")
         await ctx.send(f"Monitoring availability at {url} every {frequency} second(s).")
-        await self.monitor_availibility_control.start_monitoring_availability(url, date_str, frequency)
+        response = await self.monitor_availibility_control.start_monitoring_availability(url, date_str, frequency)
+        await ctx.send(response)
 
     @commands.command(name="stop_monitoring_availability")
     async def stop_monitoring(self, ctx):

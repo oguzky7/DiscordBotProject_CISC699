@@ -41,8 +41,7 @@ class MonitorAvailabilityControl:
         except Exception as e:
             self.results.append(f"Failed to monitor availability: {str(e)}")
             return f"Error: {str(e)}"
-        
-        return result
+        return self.results
 
     def stop_monitoring(self):
         """Stop the availability monitoring loop."""

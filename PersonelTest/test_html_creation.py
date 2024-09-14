@@ -1,8 +1,7 @@
 import sys, os
 from datetime import datetime
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from DataObjects.DataExportDTO import DataExportDTO  # Importing the DTO
-from utils.exportUtils import ExportUtils
+from utils.exportUtils import ExportUtils  # Import the ExportUtils class for HTML export
 
 def test_html_creation():
     # Mock data that simulates the data received from a website
@@ -14,29 +13,13 @@ def test_html_creation():
     mock_entered_date = datetime.now().strftime('%Y-%m-%d')
     mock_entered_time = datetime.now().strftime('%H:%M:%S')
 
-    # Create DTO object
-    data_dto = DataExportDTO(
+    # Export data to HTML (passing individual parameters)
+    result_message = ExportUtils.export_to_html(
         command=mock_command,
         url=mock_url,
         result=mock_result,
         entered_date=mock_entered_date,
         entered_time=mock_entered_time
-    )
-
-    # Validate the DTO
-    try:
-        data_dto.validate()
-    except ValueError as ve:
-        print(f"Validation Error: {ve}")
-        return
-
-    # Prepare the data for HTML export
-    mock_data = [data_dto.to_dict()]
-    
-    # Export data to HTML using the DTO
-    result_message = ExportUtils.export_to_html(
-        data=mock_data,
-        command_name=data_dto.command
     )
     
     # Output the result of the HTML file creation

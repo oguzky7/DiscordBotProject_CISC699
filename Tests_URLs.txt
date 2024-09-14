@@ -1,8 +1,8 @@
 Working Commands: Test commands 
 
-!project_help
-
 !stop_bot
+
+!project_help
 
 !fetch_all_accounts
 
@@ -11,8 +11,6 @@ Working Commands: Test commands
 !fetch_account_by_website discordtestWebsite
 
 !delete_account 4
-
-!stop_bot
 
 !launch_browser
 
