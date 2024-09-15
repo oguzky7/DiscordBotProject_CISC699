@@ -1,0 +1,34 @@
+Commands/ use cases
+
+!stop_bot
+
+!project_help
+
+!fetch_all_accounts
+
+!add_account 
+
+!fetch_account_by_website
+
+!delete_account 
+
+!launch_browser
+
+!close_browser
+
+!navigate_to_website
+
+!login bestbuy
+
+!get_price
+
+!start_monitoring_price
+
+!stop_monitoring_price
+
+!check_availability 
+
+!monitor_availability 
+
+!stop_monitoring_availability
+
