@@ -15,7 +15,7 @@ class BrowserBoundary(commands.Cog):
         
         # Pass data to the control object
         command_data = "launch_browser"
-        result = self.browser_control.process_command(command_data)
+        result = self.browser_control.dataBridge(command_data)
         
         # Send the result back to the user
         await ctx.send(result)
@@ -28,7 +28,7 @@ class BrowserBoundary(commands.Cog):
 
         # Pass data to the control object
         command_data = "close_browser"
-        result = self.browser_control.process_command(command_data)
+        result = self.browser_control.dataBridge(command_data)
         
         # Send the result back to the user
         await ctx.send(result)

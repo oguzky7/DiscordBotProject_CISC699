@@ -6,7 +6,7 @@ class BrowserControl:
         # Initialize the entity object inside the control layer
         self.browser_entity = BrowserEntity()
 
-    def process_command(self, command_data):
+    def dataBridge(self, command_data):
         # Validate the command
         if command_data == "launch_browser":
             # Call the entity to perform the actual operation
