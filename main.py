@@ -4,8 +4,7 @@ from entity.BrowserEntity import BrowserEntity
 from boundary.HelpBoundary import HelpBoundary
 from boundary.AccountBoundary import AccountBoundary
 from boundary.StopBoundary import StopBoundary  # Import StopBoundary
-from boundary.LaunchBrowserBoundary import LaunchBrowserBoundary  # Import BrowserBoundary for browser launch
-from boundary.CloseBrowserBoundary import CloseBrowserBoundary  # Import CloseBrowserBoundary for closing browser
+from boundary.BrowserBoundary import BrowserBoundary  # Import BrowserBoundary for browser launch
 from boundary.LoginBoundary import LoginBoundary 
 from boundary.NavigationBoundary import NavigationBoundary  # Import NavigationBoundary for navigating to a URL
 from boundary.GetPriceBoundary import GetPriceBoundary
@@ -31,9 +30,8 @@ class MyBot(commands.Bot):
         await self.add_cog(HelpBoundary(self))  # Register HelpBoundary
         await self.add_cog(AccountBoundary(self))  # Register AccountBoundary
         await self.add_cog(StopBoundary(self))  # Register StopBoundary
-        await self.add_cog(LaunchBrowserBoundary(self, browser_entity))
+        await self.add_cog(BrowserBoundary(self))
         await self.add_cog(NavigationBoundary(self, browser_entity))
-        await self.add_cog(CloseBrowserBoundary(self, browser_entity))  # Register CloseBrowserBoundary to close browser
         await self.add_cog(LoginBoundary(self, browser_entity))
         await self.add_cog(GetPriceBoundary(self, browser_entity)) 
         await self.add_cog(MonitorPriceBoundary(self, monitor_price_control))
