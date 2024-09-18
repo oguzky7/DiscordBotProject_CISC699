@@ -7,13 +7,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class AvailabilityEntity:
-    def __init__(self, browser_entity):
-        self.browser_entity = browser_entity
+    def __init__(self):
+        self.browser_entity = BrowserEntity()
 
 
     async def check_availability(self, url: str, date_str=None, timeout=5):
         # Use BrowserEntity to navigate to the URL
-        self.browser_entity.navigate_to_url(url)
+        self.browser_entity.navigate_to_website(url)
 
         # Get selectors for the given URL
         selectors = Selectors.get_selectors_for_url(url)

@@ -2,7 +2,7 @@ from discord.ext import commands
 from control.PriceControl import PriceControl
 
 class PriceBoundary(commands.Cog):
-    def __init__(self, browser_entity):
+    def __init__(self):
         # Initialize control objects directly
         self.price_control = PriceControl()
 

@@ -6,6 +6,9 @@ from boundary.HelpBoundary import HelpBoundary
 from boundary.StopBoundary import StopBoundary  
 from boundary.LoginBoundary import LoginBoundary    
 from boundary.AccountBoundary import AccountBoundary
+from boundary.AvailabilityBoundary import AvailabilityBoundary
+from boundary.PriceBoundary import PriceBoundary
+
 
 
 class MyBot(commands.Bot):
@@ -17,6 +20,8 @@ class MyBot(commands.Bot):
         await self.add_cog(StopBoundary())
         await self.add_cog(LoginBoundary())
         await self.add_cog(AccountBoundary())
+        await self.add_cog(AvailabilityBoundary())
+        await self.add_cog(PriceBoundary())
 
     async def on_ready(self):
         print(f"Logged in as {self.user}")

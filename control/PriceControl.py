@@ -4,8 +4,8 @@ from entity.PriceEntity import PriceEntity
 from utils.css_selectors import Selectors
 
 class PriceControl:
-    def __init__(self, browser_entity):
-        self.price_entity = PriceEntity(browser_entity)  # Initialize PriceEntity for fetching and export
+    def __init__(self):
+        self.price_entity = PriceEntity()  # Initialize PriceEntity for fetching and export
         self.is_monitoring = False  # Monitoring flag
         self.results = []  # Store monitoring results
 
@@ -40,6 +40,17 @@ class PriceControl:
 
         # Fetch the price from the entity
         price = self.price_entity.get_price_from_page(url)
+
+        data_dto = {
+                    "command": "monitor_price",
+                    "url": url,
+                    "result": price,
+                    "entered_date": datetime.now().strftime('%Y-%m-%d'),
+                    "entered_time": datetime.now().strftime('%H:%M:%S')
+                }
+
+                # Pass the DTO to PriceEntity to handle export
+        self.price_entity.export_data(data_dto)
         return price
 
     async def start_monitoring_price(self, url: str = None, frequency=20):
