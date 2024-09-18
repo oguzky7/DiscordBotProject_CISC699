@@ -31,7 +31,7 @@ class MyBot(commands.Bot):
         await self.add_cog(AccountBoundary(self))  # Register AccountBoundary
         await self.add_cog(StopBoundary(self))  # Register StopBoundary
         await self.add_cog(BrowserBoundary(self))
-        await self.add_cog(NavigationBoundary(self, browser_entity))
+        await self.add_cog(NavigationBoundary(self))
         await self.add_cog(LoginBoundary(self, browser_entity))
         await self.add_cog(GetPriceBoundary(self, browser_entity)) 
         await self.add_cog(MonitorPriceBoundary(self, monitor_price_control))
