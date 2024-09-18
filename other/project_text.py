@@ -13,7 +13,7 @@ def extract_project_text(directory):
         dirs[:] = [d for d in dirs if d not in ['.git', '__pycache__']]
         
         for file in files:
-            if file.endswith('.py') or file.endswith('.txt') or file.endswith('.md'):  # Only considering relevant file types
+            if file.endswith('.py'):  # Only considering relevant file types #or file.endswith('.txt') or file.endswith('.md')
                 file_path = os.path.join(root, file)
                 try:
                     with open(file_path, 'r', encoding='utf-8') as f:
