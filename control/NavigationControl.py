@@ -19,7 +19,6 @@ class NavigationControl:
                 print("URL not provided, default URL for Google is: " + url)
 
             result = self.browser_entity.navigate_to_website(url)                # Call the entity to navigate to the given URL
-            print(result)
             return result
         else:
             return "Invalid command."

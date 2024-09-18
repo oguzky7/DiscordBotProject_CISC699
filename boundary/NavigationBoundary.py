@@ -9,7 +9,6 @@ class NavigationBoundary(commands.Cog):
 
     @commands.command(name='navigate_to_website')
     async def navigate_to_website(self, ctx, url: str=None):
-        
         await ctx.send("Command recognized, passing the data to control object.")       # Inform the user that the command is recognized
         
         commandToPass = "navigate_to_website"
