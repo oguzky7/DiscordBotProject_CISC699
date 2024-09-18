@@ -19,10 +19,8 @@ class BrowserEntity:
         self.driver = None
         self.browser_open = False
 
-
     def set_browser_open(self, is_open: bool):
         self.browser_open = is_open
-
 
     def is_browser_open(self) -> bool:
         return self.browser_open
@@ -45,32 +43,43 @@ class BrowserEntity:
 
             self.driver = webdriver.Chrome(service=Service(), options=options)
             self.browser_open = True
-            return "Browser launched."
+            result = "Browser launched."
+            print(result)
+            return result
         else:
-            return "Browser is already running."
+            result = "Browser is already running."
+            print(result)
+            return result
 
 
     def close_browser(self):
         if self.browser_open and self.driver:
             self.driver.quit()
             self.browser_open = False
-            return "Browser closed."
+            result = "Browser closed."
+            print(result)
+            return result
         else:
-            return "No browser is currently open."
+            result = "No browser is currently open."
+            print(result)
+            return result
 
 
-    def navigate_to_url(self, url):       
+    def navigate_to_website(self, url):       
             # Ensure the browser is launched before navigating
             if not self.is_browser_open():
-                launch_message = self.launch_browser()
-                print(launch_message)
+                self.launch_browser()
 
             # Navigate to the URL if browser is open
             if self.driver:
                 self.driver.get(url)
-                return f"Navigated to {url}"
+                result = f"Navigated to {url}"
+                print(result)
+                return result
             else:
-                return "Failed to open browser."
+                result = "Failed to open browser."
+                print(result)
+                return result
         
 
     async def perform_login(self, url, username, password):
@@ -96,8 +105,13 @@ class BrowserEntity:
         # Wait for the homepage to load
         try:
             WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['homePage'])))
-            return f"Logged in to {url} successfully with username: {username}"
+
+            result = f"Logged in to {url} successfully with username: {username}"
+            print(result)
+            return result
         except Exception as e:
-            return f"Failed to log in: {str(e)}"
+            result = f"Failed to log in: {str(e)}"
+            print(result)
+            return result
         
     

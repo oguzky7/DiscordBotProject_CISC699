@@ -7,8 +7,9 @@ class NavigationControl:
         # Initialize the entity object inside the control layer
         self.browser_entity = BrowserEntity()
 
-    def process_command(self, command_data, url=None):
+    def receive_command(self, command_data, url=None):
         # Validate the command
+        print("Data Received from boundary object: ", command_data)
         if command_data == "navigate_to_website":
             if not url:
                 selectors = Selectors.get_selectors_for_url("google")
@@ -16,8 +17,9 @@ class NavigationControl:
                 if not url:
                     return "No URL provided, and default URL for google could not be found."
                 print("URL not provided, default URL for Google is: " + url)
-                # Call the entity to navigate to the given URL
-            result = self.browser_entity.navigate_to_url(url)
+
+            result = self.browser_entity.navigate_to_website(url)                # Call the entity to navigate to the given URL
+            print(result)
             return result
         else:
-            return "Invalid command or URL."
+            return "Invalid command."
