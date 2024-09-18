@@ -2,8 +2,7 @@ from discord.ext import commands
 from control.BrowserControl import BrowserControl
 
 class BrowserBoundary(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self):
         self.browser_control = BrowserControl() # Initialize the control object
 
     @commands.command(name='launch_browser')

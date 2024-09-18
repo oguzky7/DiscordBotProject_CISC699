@@ -45,7 +45,9 @@ class AccountDAO:
         try:
             query = "SELECT username, password FROM accounts WHERE LOWER(website) = LOWER(%s)"
             self.cursor.execute(query, (website,))
-            return self.cursor.fetchone()
+            result = self.cursor.fetchone()
+            print(result)
+            return result
         except Exception as error:
             print(f"Error fetching account for website {website}: {error}")
             return None
@@ -55,7 +57,9 @@ class AccountDAO:
         try:
             query = "SELECT id, username, password, website FROM accounts"
             self.cursor.execute(query)
-            return self.cursor.fetchall()
+            result = self.cursor.fetchall()
+            print(result)
+            return result
         except Exception as error:
             print(f"Error fetching accounts: {error}")
             return []

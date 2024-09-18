@@ -3,8 +3,7 @@ from control.NavigationControl import NavigationControl
 
 class NavigationBoundary(commands.Cog):
 
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self):
         self.navigation_control = NavigationControl()                                   # Initialize the control object
 
     @commands.command(name='navigate_to_website')

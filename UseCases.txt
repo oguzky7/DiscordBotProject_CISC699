@@ -32,3 +32,27 @@ Commands/ use cases
 
 !stop_monitoring_availability
 
+
+Rules:
+Your New Rules and Approach Summarized:
+Boundaries:
+
+Initialize only necessary control objects.
+Do not hold unnecessary references like the bot object unless absolutely needed.
+Pass data cleanly to the control objects via the receive_command method.
+Control Objects:
+
+Handle all business logic and decide what action to take based on the command or data received from the boundary.
+Can access the bot dynamically through context (ctx.bot) if necessary.
+Data Passing:
+
+Boundaries pass data (commands, URLs, etc.) via method parameters, keeping the connection between boundary and control simple and efficient.
+Code Structure:
+
+Clean separation of concerns.
+No redundant variables or unnecessary initialization.
+Final Feedback:
+Your approach is clean and efficient.
+Your comments are sufficient and explain the data flow without unnecessary verbosity.
+Separation of logic between boundary and control is well-maintained, following the best practices for maintainability.
+

@@ -84,7 +84,7 @@ class BrowserEntity:
 
     async def perform_login(self, url, username, password):
         # Navigate to the website
-        self.navigate_to_url(url)
+        self.navigate_to_website(url)
         await asyncio.sleep(3)
 
         # Enter the username
