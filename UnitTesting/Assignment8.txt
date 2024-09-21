@@ -13,6 +13,27 @@ Comments Next to Code
 Explanation/Documentation at the Beginning or End of the File
 
 
+**
+ok lets go ahead and create test for !launch_browser use case.
+
+I'm uploading the latest versions of the project as a pdf file. 
+that way you can keep up with the updates and look at other test for to get idea, or just to see where the files are located and everything.
+
+don't forget to 11 rules and BCE structure:
+
+No Database Access
+Focus on Methods
+Fast and Isolated Tests
+Mocking External Dependencies
+Positive and Negative Testing
+Detailed Test Structure
+Clear Logging
+Custom Success Output
+Avoid Redundancy
+Comments Next to Code
+Explanation/Documentation at the Beginning or End of the File
+**
+
 assignment 8
 Explanation of What the Professor Said About Testing
 In your conversation with Professor Abdel Ejnioui, here's a summary of what was discussed regarding unit testing:
