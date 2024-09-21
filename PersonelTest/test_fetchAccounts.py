@@ -11,7 +11,8 @@ def test_fetch_accounts():
     
     if accounts:
         for account in accounts:
-            print(f"ID: {account[0]}, Username: {account[1]}, Password: {account[2]}, Website: {account[3]}")
+            if isinstance(account, tuple) and len(account) == 4:
+                print(f"ID: {account[0]}, Username: {account[1]}, Password: {account[2]}, Website: {account[3]}")
     else:
         print("No accounts found.")
 
@@ -22,8 +23,12 @@ def test_fetch_account_by_website(website):
     account = account_control.fetch_account_by_website(website)
     
     if account:
-        username, password = account  # Unpack the returned tuple
-        print(f"Website: {website}, Username: {username}, Password: {password}")
+        # Check if the account is a valid tuple with the correct length
+        if isinstance(account, tuple) and len(account) == 2:
+            username, password = account  # Unpack the returned tuple
+            print(f"Website: {website}, Username: {username}, Password: {password}")
+        else:
+            print(f"Unexpected data format for account: {account}")
     else:
         print(f"No account found for website: {website}")
 

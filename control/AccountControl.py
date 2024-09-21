@@ -30,57 +30,60 @@ class AccountControl:
 
     def add_account(self, username: str, password: str, website: str):
         """Add a new account to the database."""
-        self.account_dao.connect()  # Establish database connection
-        result = self.account_dao.add_account(username, password, website)  # Call DAO to add account
-        self.account_dao.close()  # Close the connection
-        
-        # Prepare the result and print it
+        self.account_dao.connect()
+        result = self.account_dao.add_account(username, password, website)
+        self.account_dao.close()
+
         result_message = f"Account for {website} added successfully." if result else f"Failed to add account for {website}."
         print(result_message)
         return result_message
 
     def delete_account(self, account_id: int):
         """Delete an account by ID."""
-        self.account_dao.connect()  # Establish database connection
-        result = self.account_dao.delete_account(account_id)
-        self.account_dao.reset_id_sequence()  # Reset the ID sequence
-        self.account_dao.close()  # Close the connection
-        
-        # Prepare the result and print it
+        self.account_dao.connect()
+        try:
+            result = self.account_dao.delete_account(account_id)
+        except Exception as e:
+            print(f"Error deleting account: {e}")
+            return "Error deleting account."
+        self.account_dao.reset_id_sequence()
+        self.account_dao.close()
+
         result_message = f"Account with ID {account_id} deleted successfully." if result else f"Failed to delete account with ID {account_id}."
         print(result_message)
         return result_message
 
     def fetch_all_accounts(self):
         """Fetch all accounts using the DAO."""
-        self.account_dao.connect()  # Establish database connection
+        self.account_dao.connect()
         try:
             accounts = self.account_dao.fetch_all_accounts()
         except Exception as e:
             return "Error fetching accounts."
-        self.account_dao.close()  # Close the connection
+        self.account_dao.close()
 
-        # Prepare the result and print it
         if accounts:
             account_list = "\n".join([f"ID: {acc[0]}, Username: {acc[1]}, Password: {acc[2]}, Website: {acc[3]}" for acc in accounts])
             result_message = f"Accounts:\n{account_list}"
         else:
             result_message = "No accounts found."
-        
+
         print(result_message)
         return result_message
 
     def fetch_account_by_website(self, website: str):
         """Fetch an account by website."""
-        self.account_dao.connect()  # Establish database connection
-        account = self.account_dao.fetch_account_by_website(website)  # Fetch the account details from the DAO
-        self.account_dao.close()  # Close the connection
+        self.account_dao.connect()
+        try:
+            account = self.account_dao.fetch_account_by_website(website)
+        except Exception as e:
+            print(f"Error fetching account for {website}: {e}")
+            return None
+        self.account_dao.close()
 
-        # Check if the account exists and return the raw data
         if account:
             print(f"Account found for {website}: Username: {account[0]}, Password: {account[1]}")
-            return account  # Return the raw account tuple (username, password)
+            return account  # Returning the raw account tuple
         else:
             print(f"No account found for {website}.")
-            return None  # Return None if no account was found
-
+            return None
