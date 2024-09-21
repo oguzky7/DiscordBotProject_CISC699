@@ -37,7 +37,10 @@ class AvailabilityControl:
         availability_info = await self.availability_entity.check_availability(url, date_str)
 
         # Prepare the result
-        result = f"Checked availability: {availability_info}"
+        try:
+            result = f"Checked availability: {availability_info}"
+        except Exception as e:
+            result = f"Failed to check availability: {str(e)}"
         print(result)
 
         # Create a DTO (Data Transfer Object) for export
@@ -52,6 +55,7 @@ class AvailabilityControl:
         # Export data to Excel/HTML via the entity
         self.availability_entity.export_data(data_dto)
         return result
+
 
     async def start_monitoring_availability(self, url: str, date_str=None, frequency=15):
         """Start monitoring availability at a specified frequency."""
@@ -94,9 +98,14 @@ class AvailabilityControl:
 
         return self.results
 
+
     def stop_monitoring(self):
         """Stop monitoring availability."""
         self.is_monitoring = False  # Set monitoring to inactive
-        result = "Monitoring stopped. Collected results:" if self.results else "No data collected."
+            
+        try:
+            result = "Monitoring stopped. Collected results:" if self.results else "No data collected."
+        except Exception as e:
+            result = f"Failed to stop monitoring: {str(e)}"
         print(result)
         return self.results if self.results else [result]

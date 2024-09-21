@@ -27,7 +27,10 @@ class LoginControl:
                 return f"URL for {site} not found."
 
             # Perform the login process via the entity
-            result = await self.browser_entity.perform_login(url, username, password)
+            try:
+                result = await self.browser_entity.perform_login(url, username, password)
+            except Exception as e:
+                result = str(e)
             return result
         else:
             return "Invalid command or site."

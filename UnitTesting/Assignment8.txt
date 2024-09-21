@@ -16,8 +16,7 @@ Explanation/Documentation at the Beginning or End of the File
 **
 ok lets go ahead and create test for !launch_browser use case.
 
-I'm uploading the latest versions of the project as a pdf file. 
-that way you can keep up with the updates and look at other test for to get idea, or just to see where the files are located and everything.
+Look at necessary code from projectToText.pdf. and look at the structure from project_structure.txt if needed.
 
 don't forget to 11 rules and BCE structure:
 

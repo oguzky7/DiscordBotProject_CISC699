@@ -39,19 +39,23 @@ class PriceControl:
             print("URL not provided, default URL for BestBuy is: " + url)
 
         # Fetch the price from the entity
-        price = self.price_entity.get_price_from_page(url)
+        try:
+            result = self.price_entity.get_price_from_page(url)
+        except Exception as e:
+            result = f"Failed to fetch price: {str(e)}"
 
         data_dto = {
                     "command": "monitor_price",
                     "url": url,
-                    "result": price,
+                    "result": result,
                     "entered_date": datetime.now().strftime('%Y-%m-%d'),
                     "entered_time": datetime.now().strftime('%H:%M:%S')
                 }
 
                 # Pass the DTO to PriceEntity to handle export
         self.price_entity.export_data(data_dto)
-        return price
+        return result
+
 
     async def start_monitoring_price(self, url: str = None, frequency=20):
         """Start monitoring the price at a given interval."""
@@ -110,6 +114,9 @@ class PriceControl:
 
     def stop_monitoring(self):
         """Stop monitoring the price."""
-        self.is_monitoring = False
-        result = self.results if self.results else ["No data collected."]
+        try:
+            self.is_monitoring = False
+            result = self.results
+        except Exception as e:
+            result = f"Failed to stop monitoring: {str(e)}"
         return result

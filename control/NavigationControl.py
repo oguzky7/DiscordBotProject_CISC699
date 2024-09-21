@@ -17,8 +17,10 @@ class NavigationControl:
                 if not url:
                     return "No URL provided, and default URL for google could not be found."
                 print("URL not provided, default URL for Google is: " + url)
-
-            result = self.browser_entity.navigate_to_website(url)                # Call the entity to navigate to the given URL
+            try:
+                result = self.browser_entity.navigate_to_website(url) # Call the entity to perform the actual operation
+            except Exception as e:
+                result = str(e)  
             return result
         else:
             return "Invalid command."

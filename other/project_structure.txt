@@ -15,7 +15,7 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
   File: UseCases.txt
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\boundary
   File: AccountBoundary.py
-  File: All_boundary_files_text.pdf
+  File: All_files_in_boundary_folder_toText.pdf
   File: AvailabilityBoundary.py
   File: BrowserBoundary.py
   File: HelpBoundary.py
@@ -26,7 +26,7 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
   File: __init__.py
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\control
   File: AccountControl.py
-  File: All_control_files_text.pdf
+  File: All_files_in_control_folder_toText.pdf
   File: AvailabilityControl.py
   File: BrowserControl.py
   File: HelpControl.py
@@ -37,9 +37,9 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
   File: __init__.py
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\DataObjects
   File: AccountDAO.py
-  File: All_DataObjects_files_text.pdf
+  File: All_files_in_DataObjects_folder_toText.pdf
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\entity
-  File: All_entity_files_text.pdf
+  File: All_files_in_entity_folder_toText.pdf
   File: AvailabilityEntity.py
   File: BrowserEntity.py
   File: PriceEntity.py
@@ -63,6 +63,7 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
   File: start_monitoring_availability.html
   File: start_monitoring_price.html
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\other
+  File: All_files_in_other_folder_toText.pdf
   File: projectToText.py
   File: project_structure.py
   File: project_structure.txt
@@ -74,10 +75,21 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
   File: test_html_creation.py
   File: __init__.py
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\UnitTesting
+  File: All_files_in_UnitTesting_folder_toText.pdf
+  File: Assignment8.txt
+  File: test_!add_account.py
+  File: test_!close_browser.py
+  File: test_!delete_account.py
+  File: test_!fetch_account_by_website.py
+  File: test_!fetch_all_accounts.py
+  File: test_!launch_browser.py
+  File: test_!navigate_to_website.py
   File: test_!project_help.py
   File: test_!stop_bot.py
+  File: test_init.py
   File: __init__.py
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\utils
+  File: All_files_in_utils_folder_toText.pdf
   File: All_utils_files_text.pdf
   File: Config.py
   File: css_selectors.py
