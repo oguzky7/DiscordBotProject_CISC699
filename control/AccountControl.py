@@ -73,17 +73,16 @@ class AccountControl:
 
     def fetch_account_by_website(self, website: str):
         """Fetch an account by website."""
-        self.account_dao.connect()
         try:
+            self.account_dao.connect()
             account = self.account_dao.fetch_account_by_website(website)
-        except Exception as e:
-            print(f"Error fetching account for {website}: {e}")
-            return None
-        self.account_dao.close()
+            self.account_dao.close()
 
-        if account:
-            print(f"Account found for {website}: Username: {account[0]}, Password: {account[1]}")
-            return account  # Returning the raw account tuple
-        else:
-            print(f"No account found for {website}.")
-            return None
+            # Logic to format the result within the control layer
+            if account:
+                return f"Account found for {website}: Username: {account[0]}, Password: {account[1]}"
+            else:
+                return f"No account found for {website}."
+
+        except Exception as e:
+            return f"Error: {str(e)}"

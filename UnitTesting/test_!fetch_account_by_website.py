@@ -1,11 +1,10 @@
-import unittest
-from unittest.mock import patch, AsyncMock
-import logging
+import unittest, logging
+from unittest.mock import patch
 from test_init import BaseTestSetup, CustomTextTestRunner
 
 class TestFetchAccountByWebsiteCommand(BaseTestSetup):
     
-    @patch('AccountDAO.AccountDAO.fetch_account_by_website')
+    @patch('DataObjects.AccountDAO.AccountDAO.fetch_account_by_website')
     async def test_fetch_account_by_website_success(self, mock_fetch_account_by_website):
         """Test the fetch_account_by_website command when it succeeds."""
         logging.info("Starting test: test_fetch_account_by_website_success")
@@ -20,7 +19,7 @@ class TestFetchAccountByWebsiteCommand(BaseTestSetup):
         self.ctx.send.assert_called_with(expected_message)
         logging.info("Verified successful account fetch.")
 
-    @patch('AccountDAO.AccountDAO.fetch_account_by_website')
+    @patch('DataObjects.AccountDAO.AccountDAO.fetch_account_by_website')
     async def test_fetch_account_by_website_error(self, mock_fetch_account_by_website):
         """Test the fetch_account_by_website command when it encounters an error."""
         logging.info("Starting test: test_fetch_account_by_website_error")
