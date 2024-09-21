@@ -11,13 +11,19 @@ class BrowserControl:
         print("Data Received from boundary object: ", command_data)
         if command_data == "launch_browser":
             # Call the entity to perform the actual operation
-            result = self.browser_entity.launch_browser()
-            return result
+            try:
+                result = self.browser_entity.launch_browser()
+                return result
+            except Exception as e:
+                return str(e)  # Return the error message
         
         elif command_data == "close_browser":
             # Call the entity to perform the close operation
-            result = self.browser_entity.close_browser()
-            return result
-        
+            try:
+                result = self.browser_entity.close_browser()
+                return result
+            except Exception as e:
+                return str(e)  # Return the error message
+            
         else:
             return "Invalid command."
