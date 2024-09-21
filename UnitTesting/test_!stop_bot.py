@@ -1,13 +1,19 @@
-import sys, os
+import sys, os, discord, logging, unittest
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import unittest
 from unittest.mock import MagicMock, AsyncMock, call, patch
-from utils.MyBot import MyBot 
-import discord
-import logging
+from utils.MyBot import MyBot
 
 # Setup logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+"""
+File: test_!stop_bot.py
+Purpose: This file contains unit tests for the !stop_bot command in the Discord bot.
+The tests validate both successful and error scenarios, ensuring the bot correctly shuts down or handles errors during shutdown.
+Tests:
+- Positive: Simulates the !stop_bot command and verifies the bot shuts down correctly.
+- Negative: Simulates an error during shutdown and ensures it is handled gracefully.
+"""
 
 class CustomTextTestResult(unittest.TextTestResult):
     """Custom test result to output 'Unit test passed' instead of 'ok'."""
@@ -16,11 +22,9 @@ class CustomTextTestResult(unittest.TextTestResult):
         self.stream.write("Unit test passed\n")  # Custom success message
         self.stream.flush()
 
-
 class CustomTextTestRunner(unittest.TextTestRunner):
     """Custom test runner that uses the custom result class."""
     resultclass = CustomTextTestResult
-
 
 class TestStopBotCommand(unittest.IsolatedAsyncioTestCase):
     
@@ -46,15 +50,15 @@ class TestStopBotCommand(unittest.IsolatedAsyncioTestCase):
             # Simulate calling the stop_bot command
             logging.info("Simulating the stop_bot command call.")
             command = self.bot.get_command("stop_bot")
-            self.assertIsNotNone(command, "stop_bot command is not registered.")  # Check that the command is not None
+            self.assertIsNotNone(command, "stop_bot command is not registered.")  # Ensure the command is registered
             await command(self.ctx)
 
             # Check if the correct messages were sent
             expected_calls = [
-                call('Command recognized, passing data to control.'),
-                call('The bot is shutting down...')
+                call('Command recognized, passing data to control.'),  # First message sent by the bot
+                call('The bot is shutting down...')  # Second message confirming the shutdown
             ]
-            self.ctx.send.assert_has_calls(expected_calls, any_order=False)
+            self.ctx.send.assert_has_calls(expected_calls, any_order=False)  # Ensure the messages are sent in the correct order
             logging.info("Verified that both expected messages were sent to the user.")
 
             # Check if bot.close() was called on the ctx.bot
@@ -72,7 +76,7 @@ class TestStopBotCommand(unittest.IsolatedAsyncioTestCase):
             # Simulate calling the stop_bot command
             logging.info("Simulating the stop_bot command call.")
             command = self.bot.get_command("stop_bot")
-            self.assertIsNotNone(command, "stop_bot command is not registered.")
+            self.assertIsNotNone(command, "stop_bot command is not registered.")  # Ensure the command is registered
             
             # Act & Assert: Expect the exception to be raised
             with self.assertRaises(Exception):
@@ -89,10 +93,10 @@ class TestStopBotCommand(unittest.IsolatedAsyncioTestCase):
             logging.info("Verified that the bot's close method was called even though it raised an error.")
 
 
-
 if __name__ == "__main__":
     # Use the custom test runner to display 'Unit test passed'
     unittest.main(testRunner=CustomTextTestRunner(verbosity=2))
+
 
 
 """Explanation:

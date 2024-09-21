@@ -68,7 +68,7 @@ def create_folder_specific_pdfs(directory, ignore_files=None, ignore_folders=Non
         if os.path.isdir(folder_path) and folder not in ignore_folders:
             folder_text = extract_project_text(folder_path, ignore_files, ignore_folders)
             if folder_text:
-                folder_pdf_path = os.path.join(folder_path, f"All_{folder}_files_text.pdf")
+                folder_pdf_path = os.path.join(folder_path, f"All_files_in_{folder}_folder_toText.pdf")
                 create_pdf(folder_text, folder_pdf_path)
                 print(f"PDF created for folder {folder} at: {folder_pdf_path}")
 

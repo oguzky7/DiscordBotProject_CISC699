@@ -56,3 +56,66 @@ Your approach is clean and efficient.
 Your comments are sufficient and explain the data flow without unnecessary verbosity.
 Separation of logic between boundary and control is well-maintained, following the best practices for maintainability.
 
+****
+assignment 8
+Explanation of What the Professor Said About Testing
+In your conversation with Professor Abdel Ejnioui, here's a summary of what was discussed regarding unit testing:
+
+No Database Access in Unit Testing:
+
+Unit tests should not access the database directly. That is considered integration testing, which is not the focus of your current assignment.
+Instead of connecting to an actual SQL database, you should use mock objects or fakes to simulate the database interactions. This allows you to focus on testing specific units of code (e.g., methods, functions) without introducing external dependencies like databases.
+Use of Fakes:
+
+When unit testing, you should fake the database interactions. The database will be simulated to return predefined values that you can control.
+This is done by creating mock objects that act like the database but don't perform real database operations. You define the expected output of the mock (e.g., returning a specific dataset) and test how your code responds to it.
+Testing Methods:
+
+Focus on testing the methods in your entity classes. These methods should call the repository (repo) layer or the DTO (Data Transfer Object) layer, but for unit testing, the database interaction should be faked. The point is to test whether the methods perform correctly with predefined data, not whether the database interaction works.
+For instance, when testing login functionality, rather than querying the actual database for user credentials, you'd use mock data that the login method processes.
+Speed and Scope of Unit Testing:
+
+Unit testing should be fast and focused on small, isolated parts of the application. You should test individual methods or classes without involving larger systems like databases or external services.
+Integration testing (which involves testing the interaction between different components, including databases) is a separate task from unit testing.
+Use Fakes for Testing Files:
+
+If your project involves reading from or writing to files (e.g., generating HTML or Excel reports), you should also use fakes for those files in unit tests. The idea is to simulate file operations rather than accessing real files.
+Key Takeaways for Your Testing:
+No real database connections: Use fakes or mocks to simulate database interactions.
+Mock data for testing: When unit testing your login or other functionalities, mock the data that would come from the database.
+Focus on methods: Test whether individual methods in your code (e.g., login, fetch data) return the expected results when provided with predefined mock data.
+Unit tests should be fast: They should test small, isolated parts of your code, without touching databases, file systems, or external APIs.
+
+
+No Database Access:
+
+Unit tests should not interact with real databases. Use mock objects or fakes to simulate database operations.
+Focus on Methods:
+
+Unit tests should target specific methods, ensuring logic and functionality work in isolation without external dependencies like databases or files.
+Fast and Isolated Tests:
+
+Tests must be small, fast, and focused on isolated components. Avoid integration testing (which involves testing the interaction of multiple systems).
+Mocking External Dependencies:
+
+Use mocks or fakes for external dependencies (e.g., Discord’s ctx, file systems, databases) to simulate behavior without interacting with actual systems.
+Positive and Negative Testing:
+
+Always include tests for both positive (successful) and negative (error/failure) scenarios to verify the robustness of your methods.
+Detailed Test Structure:
+
+Each test must include explanations of what is being tested, the expected outcome, and comments explaining the purpose and functionality of each test.
+Clear Logging:
+
+Include logging to provide visibility into each test, showing the start, simulated commands, and verification of results. The terminal output should clearly explain what happened and why.
+Custom Success Output:
+
+Modify the test runner output to display “Unit test passed” instead of the default “ok” for clearer confirmation when tests pass.
+Avoid Redundancy:
+
+Ensure the code is efficient, avoiding unnecessary initializations or passing variables that are not needed.
+Comments Next to Code:
+
+Add comments directly next to code or specific lines to explain what each part of the code is doing.
+Explanation/Documentation at the Beginning or End of the File:
+Include a section at the beginning or end of the file that explains what the file/test does and how it works, providing a summary of the purpose and functionality.

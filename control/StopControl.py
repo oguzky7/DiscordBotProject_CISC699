@@ -12,6 +12,7 @@ class StopControl:
             print("Bot is shutting down...")
             await bot.close()  # Close the bot
             result = "Bot has been shut down."
+            print(result)
             return result
         else:
             result = "Invalid command."
