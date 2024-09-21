@@ -15,12 +15,15 @@ class BrowserEntity:
             cls._instance = super(BrowserEntity, cls).__new__(cls, *args, **kwargs)
         return cls._instance
 
+
     def __init__(self):
         self.driver = None
         self.browser_open = False
 
+
     def set_browser_open(self, is_open: bool):
         self.browser_open = is_open
+
 
     def is_browser_open(self) -> bool:
         return self.browser_open
@@ -82,7 +85,7 @@ class BrowserEntity:
                 return result
         
 
-    async def perform_login(self, url, username, password):
+    async def login(self, url, username, password):
         # Navigate to the website
         self.navigate_to_website(url)
         await asyncio.sleep(3)

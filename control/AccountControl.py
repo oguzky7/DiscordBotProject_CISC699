@@ -80,7 +80,7 @@ class AccountControl:
 
             # Logic to format the result within the control layer
             if account:
-                return f"Account found for {website}: Username: {account[0]}, Password: {account[1]}"
+                return account
             else:
                 return f"No account found for {website}."
 

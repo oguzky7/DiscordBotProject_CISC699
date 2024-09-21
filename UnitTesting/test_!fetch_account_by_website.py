@@ -15,7 +15,7 @@ class TestFetchAccountByWebsiteCommand(BaseTestSetup):
 
         await command(self.ctx, 'example.com')
         
-        expected_message = 'Account found for example.com: Username: testuser, Password: password123'
+        expected_message = 'testuser', 'password123'
         self.ctx.send.assert_called_with(expected_message)
         logging.info("Verified successful account fetch.")
 
