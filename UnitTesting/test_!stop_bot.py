@@ -1,10 +1,6 @@
-import sys, os, discord, logging, unittest
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from unittest.mock import MagicMock, AsyncMock, call, patch
-from utils.MyBot import MyBot
-
-# Setup logging configuration
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+import logging, unittest
+from unittest.mock import AsyncMock, call, patch
+from test_init import BaseTestSetup, CustomTextTestRunner
 
 """
 File: test_!stop_bot.py
@@ -15,31 +11,7 @@ Tests:
 - Negative: Simulates an error during shutdown and ensures it is handled gracefully.
 """
 
-class CustomTextTestResult(unittest.TextTestResult):
-    """Custom test result to output 'Unit test passed' instead of 'ok'."""
-    def addSuccess(self, test):
-        super().addSuccess(test)
-        self.stream.write("Unit test passed\n")  # Custom success message
-        self.stream.flush()
-
-class CustomTextTestRunner(unittest.TextTestRunner):
-    """Custom test runner that uses the custom result class."""
-    resultclass = CustomTextTestResult
-
-class TestStopBotCommand(unittest.IsolatedAsyncioTestCase):
-    
-    async def asyncSetUp(self):
-        """Setup the bot and mock context before each test."""
-        logging.info("Setting up the bot and mock context for testing...")
-        intents = discord.Intents.default()  # Create default intents
-        intents.message_content = True  # Ensure the bot can read message content
-        self.bot = MyBot(command_prefix="!", intents=intents)  # Initialize the bot with intents
-        self.ctx = AsyncMock()  # Mock context (ctx)
-        self.ctx.send = AsyncMock()  # Mock the send method to capture responses
-        self.ctx.bot = self.bot  # Mock the bot property in the context
-
-        # Call setup_hook to ensure commands are registered
-        await self.bot.setup_hook()
+class TestStopBotCommand(BaseTestSetup):
 
     async def test_stop_bot_success(self):
         """Test the stop bot command when it successfully shuts down."""

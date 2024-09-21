@@ -54,7 +54,10 @@ class AccountControl:
     def fetch_all_accounts(self):
         """Fetch all accounts using the DAO."""
         self.account_dao.connect()  # Establish database connection
-        accounts = self.account_dao.fetch_all_accounts()  # Fetch accounts from DAO
+        try:
+            accounts = self.account_dao.fetch_all_accounts()
+        except Exception as e:
+            return "Error fetching accounts."
         self.account_dao.close()  # Close the connection
 
         # Prepare the result and print it
