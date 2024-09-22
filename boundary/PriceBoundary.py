@@ -20,7 +20,7 @@ class PriceBoundary(commands.Cog):
         """Command to monitor price at given frequency."""
         await ctx.send(f"Command recognized, starting price monitoring at {url} every {frequency} second(s).")
         # Pass the command and data to the control layer
-        command_to_pass = "monitor_price"
+        command_to_pass = "start_monitoring_price"
         response = await self.price_control.receive_command(command_to_pass, url, frequency)
         await ctx.send(response)
 
@@ -30,5 +30,5 @@ class PriceBoundary(commands.Cog):
         await ctx.send("Command recognized, passing data to control.")
         # Pass the command to the control layer
         command_to_pass = "stop_monitoring_price"
-        response = self.price_control.receive_command(command_to_pass)
+        response = await self.price_control.receive_command(command_to_pass)
         await ctx.send(response)

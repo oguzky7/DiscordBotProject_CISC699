@@ -9,6 +9,7 @@ class PriceControl:
         self.is_monitoring = False  # Monitoring flag
         self.results = []  # Store monitoring results
 
+
     async def receive_command(self, command_data, *args):
         """Handle all price-related commands and process business logic."""
         print("Data received from boundary:", command_data)
@@ -17,16 +18,17 @@ class PriceControl:
             url = args[0] if args else None
             return await self.get_price(url)
 
-        elif command_data == "monitor_price":
+        elif command_data == "start_monitoring_price":
             url = args[0] if args else None
             frequency = args[1] if len(args) > 1 else 20
             return await self.start_monitoring_price(url, frequency)
 
         elif command_data == "stop_monitoring_price":
-            return self.stop_monitoring()
+            return self.stop_monitoring_price()
 
         else:
             return "Invalid command."
+
 
     async def get_price(self, url: str):
         """Handle fetching the price from the entity."""
@@ -40,20 +42,22 @@ class PriceControl:
 
             # Fetch the price from the entity
             
-                result = self.price_entity.get_price_from_page(url)
+            result = self.price_entity.get_price_from_page(url)
+
+            data_dto = {
+                        "command": "monitor_price",
+                        "url": url,
+                        "result": result,
+                        "entered_date": datetime.now().strftime('%Y-%m-%d'),
+                        "entered_time": datetime.now().strftime('%H:%M:%S')
+                    }
+
+                    # Pass the DTO to PriceEntity to handle export
+            self.price_entity.export_data(data_dto)
+            
         except Exception as e:
             result = f"Failed to fetch price: {str(e)}"
-
-        data_dto = {
-                    "command": "monitor_price",
-                    "url": url,
-                    "result": result,
-                    "entered_date": datetime.now().strftime('%Y-%m-%d'),
-                    "entered_time": datetime.now().strftime('%H:%M:%S')
-                }
-
-                # Pass the DTO to PriceEntity to handle export
-        self.price_entity.export_data(data_dto)
+        
         return result
 
 
@@ -92,6 +96,7 @@ class PriceControl:
                 else:
                     result = "Failed to retrieve the price."
 
+                print(result)
                 # Add the result to the results list
                 self.results.append(result)
 
@@ -113,12 +118,24 @@ class PriceControl:
             self.results.append(f"Failed to monitor price: {str(e)}")
 
 
-    def stop_monitoring(self):
-        """Stop monitoring the price."""
+    def stop_monitoring_price(self):
+        """Stop the price monitoring loop."""
+        result = None
         try:
-            self.is_monitoring = False
-            self.results
-            result = "Monitoring stopped."
+            if not self.is_monitoring:
+                # If no monitoring session is active
+                result = "There was no active price monitoring session. Nothing to stop."
+            else:
+                # Stop monitoring and collect results
+                self.is_monitoring = False
+                result = "Results for price monitoring:\n"
+                result += "\n".join(self.results)
+                result = result + "\n" +"\nPrice monitoring stopped successfully!"
+                print(result)
         except Exception as e:
-            result = f"Failed to stop monitoring: {str(e)}"
+            # Handle any error that occurs
+            result = f"Error stopping price monitoring: {str(e)}"
+        
         return result
+
+

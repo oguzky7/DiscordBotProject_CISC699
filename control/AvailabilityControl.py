@@ -99,7 +99,7 @@ class AvailabilityControl:
         return self.results
 
 
-    def stop_monitoring(self):
+    def stop_monitoring_availability(self):
         """Stop monitoring availability."""
         self.is_monitoring = False  # Set monitoring to inactive
             
