@@ -114,6 +114,7 @@ class PriceControl:
 
                 await asyncio.sleep(frequency)
 
+            print(self.results)
         except Exception as e:
             self.results.append(f"Failed to monitor price: {str(e)}")
 
