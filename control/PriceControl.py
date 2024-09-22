@@ -30,17 +30,17 @@ class PriceControl:
 
     async def get_price(self, url: str):
         """Handle fetching the price from the entity."""
-        # If no URL is provided, default to BestBuy
-        if not url:
-            selectors = Selectors.get_selectors_for_url("bestbuy")
-            url = selectors.get('priceUrl')
-            if not url:
-                return "No URL provided, and default URL for BestBuy could not be found."
-            print("URL not provided, default URL for BestBuy is: " + url)
-
-        # Fetch the price from the entity
         try:
-            result = self.price_entity.get_price_from_page(url)
+            if not url:
+                selectors = Selectors.get_selectors_for_url("bestbuy")
+                url = selectors.get('priceUrl')
+                if not url:
+                    return "No URL provided, and default URL for BestBuy could not be found."
+                print("URL not provided, default URL for BestBuy is: " + url)
+
+            # Fetch the price from the entity
+            
+                result = self.price_entity.get_price_from_page(url)
         except Exception as e:
             result = f"Failed to fetch price: {str(e)}"
 
@@ -112,11 +112,13 @@ class PriceControl:
         except Exception as e:
             self.results.append(f"Failed to monitor price: {str(e)}")
 
+
     def stop_monitoring(self):
         """Stop monitoring the price."""
         try:
             self.is_monitoring = False
-            result = self.results
+            self.results
+            result = "Monitoring stopped."
         except Exception as e:
             result = f"Failed to stop monitoring: {str(e)}"
         return result
