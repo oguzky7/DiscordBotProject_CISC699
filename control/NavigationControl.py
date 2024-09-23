@@ -7,10 +7,10 @@ class NavigationControl:
         # Initialize the entity object inside the control layer
         self.browser_entity = BrowserEntity()
 
-    def receive_command(self, command_data, url=None):
+    def receive_command(self, command, url=None):
         # Validate the command
-        print("Data Received from boundary object: ", command_data)
-        if command_data == "navigate_to_website":
+        print("Data Received from boundary object: ", command)
+        if command == "navigate_to_website":
             if not url:
                 selectors = Selectors.get_selectors_for_url("google")
                 url = selectors.get('url')

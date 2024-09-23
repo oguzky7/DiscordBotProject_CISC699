@@ -30,9 +30,7 @@ class MyBot(commands.Bot):
             await message.channel.send("Hi, how can I help you?") 
 
         elif GlobalState.user_message.startswith("!"):
-            print("User_message starts with '!'")
-            GlobalState.user_message = GlobalState.user_message.replace("!", "")
-            print(f"User_message after replacing '!' with empty string: {GlobalState.user_message}")
+            print("User message: ", GlobalState.user_message)
 
         else:
             await message.channel.send("I'm sorry, I didn't understand that. Type !project_help to see the list of commands.")
