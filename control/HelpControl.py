@@ -19,7 +19,7 @@ class HelpControl:
                 "!start_monitoring_price 'url' 'frequency' - Start monitoring a product's price at a specific interval (frequency in minutes).\n"
                 "!stop_monitoring_price - Stop monitoring the product's price.\n"
                 "!check_availability 'url' - Check availability for a restaurant or service.\n"
-                "!monitor_availability 'url' 'frequency' - Monitor availability at a specific interval.\n"
+                "!start_monitoring_availability 'url' 'frequency' - Monitor availability at a specific interval.\n"
                 "!stop_monitoring_availability - Stop monitoring availability.\n"
                 "!stop_bot - Stop the bot.\n"
             )

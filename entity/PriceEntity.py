@@ -18,7 +18,6 @@ class PriceEntity:
             # Find the price element on the page using the selector
             price_element = self.browser_entity.driver.find_element(By.CSS_SELECTOR, selectors['price'])
             result = price_element.text
-            print(f"Price found: {result}")
             return result
         except Exception as e:
             return f"Error fetching price: {str(e)}"    

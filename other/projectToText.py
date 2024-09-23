@@ -7,7 +7,7 @@ output_pdf_path = os.path.join(directory, "projectToText.pdf")
 
 # Lists for files and folders to ignore
 filesToIgnore = ['ignore_this.py', 'Tests_URLs.txt', 'UseCases.txt', 'Read.md', '*.pdf']  # Example file names to ignore
-foldersToIgnore = ['ignore_folder', '.git', '__pycache__', 'PersonelTest', 'MockTesting', 'ExportedFiles']  # Folders to ignore
+foldersToIgnore = ['ignore_folder', '.git', '__pycache__', 'PersonelTest', 'MockTesting', 'ExportedFiles', 'other']  # Folders to ignore
 
 # Function to retrieve all text from files, ignoring specific folders and files
 def extract_project_text(directory, ignore_files=None, ignore_folders=None):

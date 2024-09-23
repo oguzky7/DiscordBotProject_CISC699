@@ -28,7 +28,7 @@ Commands/ use cases
 
 !check_availability 
 
-!monitor_availability 
+!start_monitoring_availability 
 
 !stop_monitoring_availability
 

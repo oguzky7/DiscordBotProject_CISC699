@@ -14,20 +14,17 @@ class AvailabilityControl:
         print("Data received from boundary:", command_data)
 
         if command_data == "check_availability":
-            print("checking availability")
             url = args[0]
             date_str = args[1] if len(args) > 1 else None
             return await self.check_availability(url, date_str)
 
         elif command_data == "start_monitoring_availability":
-            print("Monitoring availability")
             url = args[0]
             date_str = args[1] if len(args) > 1 else None
             frequency = args[2] if len(args) > 2 else 15
             return await self.start_monitoring_availability(url, date_str, frequency)
 
         elif command_data == "stop_monitoring_availability":
-            print("Stopping availability monitoring.")
             return self.stop_monitoring_availability()
 
         else:
@@ -37,6 +34,7 @@ class AvailabilityControl:
 
     async def check_availability(self, url: str, date_str=None):
         """Handle availability check and export results."""
+        print("Checking availability...")
         # Call the entity to check availability
         try:
             if not url:
@@ -70,6 +68,7 @@ class AvailabilityControl:
 
     async def start_monitoring_availability(self, url: str, date_str=None, frequency=15):
         """Start monitoring availability at a specified frequency."""
+        print("Monitoring availability")
         if self.is_monitoring:
             result = "Already monitoring availability."
             print(result)
@@ -80,12 +79,9 @@ class AvailabilityControl:
             while self.is_monitoring:
                 # Call entity to check availability
                 result = await self.check_availability(url, date_str)
-                self.results.append(result)
+                self.results.append(result) # Store the result in the list
+                await asyncio.sleep(frequency)  # Wait for the specified frequency before checking again
 
-                # Wait for the specified frequency before checking again
-                await asyncio.sleep(frequency)
-            print(self.results) 
-            
         except Exception as e:
             error_message = f"Failed to monitor availability: {str(e)}"
             print(error_message)
@@ -96,6 +92,7 @@ class AvailabilityControl:
 
     def stop_monitoring_availability(self):
         """Stop monitoring availability."""
+        print("Stopping availability monitoring...")
         result = None
         try:
             if not self.is_monitoring:

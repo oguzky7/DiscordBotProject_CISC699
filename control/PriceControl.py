@@ -32,6 +32,7 @@ class PriceControl:
 
     async def get_price(self, url: str):
         """Handle fetching the price from the entity."""
+        print("getting price...")
         try:
             if not url:
                 selectors = Selectors.get_selectors_for_url("bestbuy")
@@ -43,7 +44,7 @@ class PriceControl:
             # Fetch the price from the entity
             
             result = self.price_entity.get_price_from_page(url)
-
+            print(f"Price found: {result}")
             data_dto = {
                         "command": "monitor_price",
                         "url": url,
@@ -56,22 +57,23 @@ class PriceControl:
             self.price_entity.export_data(data_dto)
             
         except Exception as e:
-            result = f"Failed to fetch price: {str(e)}"
-        print(result)
+            return f"Failed to fetch price: {str(e)}"
+    
         return result
 
 
-    async def start_monitoring_price(self, url: str = None, frequency=20):
+    async def start_monitoring_price(self, url: str, frequency=20):
         """Start monitoring the price at a given interval."""
-        if self.is_monitoring:
-            return "Already monitoring prices."
-        
-        self.is_monitoring = True
-        previous_price = None
-
+        print("Starting price monitoring...")
         try:
+            if self.is_monitoring:
+                return "Already monitoring prices."
+            
+            self.is_monitoring = True
+            previous_price = None
+        
             while self.is_monitoring:
-                current_price = self.get_price(url)
+                current_price = await self.get_price(url)
                 # Determine price changes and prepare the result
                 result = ""
                 if current_price:
@@ -89,16 +91,15 @@ class PriceControl:
 
                 # Add the result to the results list
                 self.results.append(result)
-
                 await asyncio.sleep(frequency)
 
-            print(self.results)
         except Exception as e:
             self.results.append(f"Failed to monitor price: {str(e)}")
 
 
     def stop_monitoring_price(self):
         """Stop the price monitoring loop."""
+        print("Stopping price monitoring...")
         result = None
         try:
             if not self.is_monitoring:
