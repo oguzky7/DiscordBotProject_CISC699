@@ -26,6 +26,8 @@ class MyBot(commands.Bot):
         user_message = message.content.lower()
         if user_message in ["hi", "hey", "hello"]:
             await message.channel.send("Hi, how can I help you?")  
+        elif user_message.startswith("!"):
+            print("Message starts with '!'")
         else:
             await message.channel.send("I'm sorry, I didn't understand that. Type !project_help to see the list of commands.")
           
@@ -51,6 +53,7 @@ class MyBot(commands.Bot):
         if isinstance(error, commands.CommandNotFound):
             print("Command not recognized:")
             print(error)
+            await ctx.channel.send("I'm sorry, I didn't understand that. Type !project_help to see the list of commands.")
 
 # Initialize the bot instance
 bot = MyBot(command_prefix="!", intents=intents, case_insensitive=True)
