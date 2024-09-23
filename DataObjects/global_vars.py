@@ -23,7 +23,7 @@ class GlobalState:
         #print(f"Parts after splitting: {parts}")
 
          # Ensure we always return 6 variables (command + 5 parts), even if some are empty
-        result = [parts[i] if len(parts) > i else "" for i in range(6)]  # List comprehension to handle missing parts
+        result = [parts[i].strip('"') if len(parts) > i else "" for i in range(6)]  # List comprehension to handle missing parts
         
         #print(f"Result: {result}")
         return result  # Return the list (or tuple if needed)
