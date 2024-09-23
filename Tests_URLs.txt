@@ -58,6 +58,8 @@ https://www.bestbuy.com/site/microsoft-xbox-wireless-controller-for-xbox-series-
 
 https://www.google.com/
 
+https://www.opentable.com/r/hals-the-steakhouse-nashville
+
 
 Conclusion:
 Control objects: Orchestrate the flow, decide which entities to use, and manage interactions between boundary and entity objects.

@@ -15,6 +15,7 @@ class PriceBoundary(commands.Cog):
         result = await self.price_control.receive_command(command_to_pass, url)
         await ctx.send(result)
 
+
     @commands.command(name='start_monitoring_price')
     async def start_monitoring_price(self, ctx, url: str = None, frequency: int = 20):
         """Command to monitor price at given frequency."""
@@ -23,6 +24,7 @@ class PriceBoundary(commands.Cog):
         command_to_pass = "start_monitoring_price"
         response = await self.price_control.receive_command(command_to_pass, url, frequency)
         await ctx.send(response)
+
 
     @commands.command(name='stop_monitoring_price')
     async def stop_monitoring_price(self, ctx):

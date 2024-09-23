@@ -57,7 +57,7 @@ class PriceControl:
             
         except Exception as e:
             result = f"Failed to fetch price: {str(e)}"
-        
+        print(result)
         return result
 
 
@@ -71,16 +71,7 @@ class PriceControl:
 
         try:
             while self.is_monitoring:
-                # Fetch the current price
-                if not url:
-                    selectors = Selectors.get_selectors_for_url("bestbuy")
-                    url = selectors.get('priceUrl')
-                    if not url:
-                        return "No URL provided, and default URL for BestBuy could not be found."
-                    print("URL not provided, default URL for BestBuy is: " + url)
-
-                current_price = self.price_entity.get_price_from_page(url)
-
+                current_price = self.get_price(url)
                 # Determine price changes and prepare the result
                 result = ""
                 if current_price:
@@ -96,21 +87,8 @@ class PriceControl:
                 else:
                     result = "Failed to retrieve the price."
 
-                print(result)
                 # Add the result to the results list
                 self.results.append(result)
-
-                # Create a DTO (Data Transfer Object) for export
-                data_dto = {
-                    "command": "monitor_price",
-                    "url": url,
-                    "result": result,
-                    "entered_date": datetime.now().strftime('%Y-%m-%d'),
-                    "entered_time": datetime.now().strftime('%H:%M:%S')
-                }
-
-                # Pass the DTO to PriceEntity to handle export
-                self.price_entity.export_data(data_dto)
 
                 await asyncio.sleep(frequency)
 

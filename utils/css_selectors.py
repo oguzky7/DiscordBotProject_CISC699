@@ -25,6 +25,7 @@ class Selectors:
             "url": "https://www.opentable.com/",
             "unavailableUrl": "https://www.opentable.com/r/bar-spero-washington/",
             "availableUrl": "https://www.opentable.com/r/the-rux-nashville",
+            "availableUrl2": "https://www.opentable.com/r/hals-the-steakhouse-nashville",
             "date_field": "#restProfileSideBarDtpDayPicker-label", 
             "time_field": "#restProfileSideBartimePickerDtpPicker",
             "select_date": "#restProfileSideBarDtpDayPicker-wrapper", # button[aria-label*="{}"]

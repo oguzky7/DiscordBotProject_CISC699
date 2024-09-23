@@ -1,6 +1,7 @@
 import asyncio
 from entity.AvailabilityEntity import AvailabilityEntity
 from datetime import datetime
+from utils.css_selectors import Selectors
 
 class AvailabilityControl:
     def __init__(self):
@@ -13,31 +14,41 @@ class AvailabilityControl:
         print("Data received from boundary:", command_data)
 
         if command_data == "check_availability":
+            print("checking availability")
             url = args[0]
             date_str = args[1] if len(args) > 1 else None
             return await self.check_availability(url, date_str)
 
-        elif command_data == "monitor_availability":
-            print(f"Monitoring availability at {url} every {frequency} second(s).")
+        elif command_data == "start_monitoring_availability":
+            print("Monitoring availability")
             url = args[0]
             date_str = args[1] if len(args) > 1 else None
             frequency = args[2] if len(args) > 2 else 15
             return await self.start_monitoring_availability(url, date_str, frequency)
 
         elif command_data == "stop_monitoring_availability":
-            return self.stop_monitoring()
+            print("Stopping availability monitoring.")
+            return self.stop_monitoring_availability()
 
         else:
+            print("Invalid command.")
             return "Invalid command."
 
 
     async def check_availability(self, url: str, date_str=None):
         """Handle availability check and export results."""
         # Call the entity to check availability
-        availability_info = await self.availability_entity.check_availability(url, date_str)
+        try:
+            if not url:
+                selectors = Selectors.get_selectors_for_url("opentable")
+                url = selectors.get('availableUrl')
+                if not url:
+                    return "No URL provided, and default URL for openTable could not be found."
+                print("URL not provided, default URL for openTable is: " + url)
+                
+            availability_info = await self.availability_entity.check_availability(url, date_str)
 
         # Prepare the result
-        try:
             result = f"Checked availability: {availability_info}"
         except Exception as e:
             result = f"Failed to check availability: {str(e)}"
@@ -68,32 +79,16 @@ class AvailabilityControl:
         try:
             while self.is_monitoring:
                 # Call entity to check availability
-                availability_info = await self.availability_entity.check_availability(url, date_str)
-
-                # Prepare and log the result
-                result = f"Checked availability: {availability_info}"
-                print(result)
+                result = await self.check_availability(url, date_str)
                 self.results.append(result)
-
-                # Create a DTO (Data Transfer Object) for export
-                data_dto = {
-                    "command": "start_monitoring_availability",
-                    "url": url,
-                    "result": result,
-                    "entered_date": datetime.now().strftime('%Y-%m-%d'),
-                    "entered_time": datetime.now().strftime('%H:%M:%S')
-                }
-
-                # Export data to Excel/HTML via the entity
-                self.availability_entity.export_data(data_dto)
 
                 # Wait for the specified frequency before checking again
                 await asyncio.sleep(frequency)
-
+            print(self.results) 
+            
         except Exception as e:
             error_message = f"Failed to monitor availability: {str(e)}"
             print(error_message)
-            self.results.append(error_message)
             return error_message
 
         return self.results
@@ -101,11 +96,21 @@ class AvailabilityControl:
 
     def stop_monitoring_availability(self):
         """Stop monitoring availability."""
-        self.is_monitoring = False  # Set monitoring to inactive
-            
+        result = None
         try:
-            result = "Monitoring stopped. Collected results:" if self.results else "No data collected."
+            if not self.is_monitoring:
+                # If no monitoring session is active
+                result = "There was no active availability monitoring session. Nothing to stop."
+            else:
+                # Stop monitoring and collect results
+                self.is_monitoring = False
+                result = "Results for availability monitoring:\n"
+                result += "\n".join(self.results)
+                result = result + "\n" + "\nAvailability monitoring stopped successfully!"
+                print(result)
         except Exception as e:
-            result = f"Failed to stop monitoring: {str(e)}"
-        print(result)
-        return self.results if self.results else [result]
+            # Handle any error that occurs
+            result = f"Error stopping availability monitoring: {str(e)}"
+        
+        return result
+

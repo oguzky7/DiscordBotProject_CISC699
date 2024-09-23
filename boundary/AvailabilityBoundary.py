@@ -7,7 +7,7 @@ class AvailabilityBoundary(commands.Cog):
         self.availability_control = AvailabilityControl()  
 
     @commands.command(name="check_availability")
-    async def check_availability(self, ctx, url: str, date_str=None):
+    async def check_availability(self, ctx, url: str = None, date_str=None):
         await ctx.send("Command recognized, passing data to control.")
         
         # Pass the command and data to the control layer using receive_command
@@ -17,24 +17,24 @@ class AvailabilityBoundary(commands.Cog):
         # Send the result back to the user
         await ctx.send(result)
 
-    @commands.command(name="monitor_availability")
-    async def monitor_availability(self, ctx, url: str, date_str=None, frequency: int = 15):
+
+    @commands.command(name="start_monitoring_availability")
+    async def start_monitoring_availability(self, ctx, url: str = None, date_str=None, frequency: int = 15):
         await ctx.send("Command recognized, passing data to control.")
         
         # Pass the command and data to the control layer using receive_command
-        command_to_pass = "monitor_availability"
+        command_to_pass = "start_monitoring_availability"
         response = await self.availability_control.receive_command(command_to_pass, url, date_str, frequency)
         
         # Send the result back to the user
         await ctx.send(response)
 
-    @commands.command(name="stop_monitoring_availability")
-    async def stop_monitoring(self, ctx):
+
+    @commands.command(name='stop_monitoring_availability')
+    async def stop_monitoring_availability(self, ctx):
+        """Command to stop monitoring the price."""
         await ctx.send("Command recognized, passing data to control.")
-        
-        # Pass the command to the control layer using receive_command
+        # Pass the command to the control layer
         command_to_pass = "stop_monitoring_availability"
-        response = self.availability_control.receive_command(command_to_pass)
-        
-        # Send the result back to the user
+        response = await self.availability_control.receive_command(command_to_pass)
         await ctx.send(response)
