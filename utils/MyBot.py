@@ -8,6 +8,7 @@ from boundary.LoginBoundary import LoginBoundary
 from boundary.AccountBoundary import AccountBoundary
 from boundary.AvailabilityBoundary import AvailabilityBoundary
 from boundary.PriceBoundary import PriceBoundary
+from DataObjects.global_vars import GlobalState  # Import the global variable
 
 # Bot initialization
 intents = discord.Intents.default()
@@ -23,15 +24,22 @@ class MyBot(commands.Bot):
             return
         
         print(f"Message received: {message.content}")
-        user_message = message.content.lower()
-        if user_message in ["hi", "hey", "hello"]:
-            await message.channel.send("Hi, how can I help you?")  
-        elif user_message.startswith("!"):
-            print("Message starts with '!'")
+        GlobalState.user_message = message.content.lower()
+
+        if GlobalState.user_message in ["hi", "hey", "hello"]:
+            await message.channel.send("Hi, how can I help you?") 
+
+        elif GlobalState.user_message.startswith("!"):
+            print("User_message starts with '!'")
+            GlobalState.user_message = GlobalState.user_message.replace("!", "")
+            print(f"User_message after replacing '!' with empty string: {GlobalState.user_message}")
+
         else:
             await message.channel.send("I'm sorry, I didn't understand that. Type !project_help to see the list of commands.")
           
         await self.process_commands(message)
+        GlobalState.reset_user_message()  # Reset the global user_message variable
+        print("User_message reset to empty string")
 
     async def setup_hook(self):
         await self.add_cog(BrowserBoundary())  # Add your boundary objects
