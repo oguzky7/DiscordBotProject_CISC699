@@ -1,31 +1,37 @@
 import asyncio
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from utils.css_selectors import Selectors  # Import CSS selectors for the website
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from utils.css_selectors import Selectors
+
 
 class BrowserEntity:
-    _instance = None  # Singleton instance
+    _instance = None
 
     def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super(BrowserEntity, cls).__new__(cls)
-            cls._instance.driver = None  # Initialize driver to None
+        if not cls._instance:
+            cls._instance = super(BrowserEntity, cls).__new__(cls, *args, **kwargs)
         return cls._instance
 
 
-    def launch_browser(self, incognito=False, user=None):
-        if self.driver:
-            print("Browser is already running. No need to launch a new one.")
-            return "Browser is already running."
+    def __init__(self):
+        self.driver = None
+        self.browser_open = False
 
-        try:
-            # Special launch options as per your original implementation
+
+    def set_browser_open(self, is_open: bool):
+        self.browser_open = is_open
+
+
+    def is_browser_open(self) -> bool:
+        return self.browser_open
+
+
+    def launch_browser(self):
+        if not self.browser_open:
             options = webdriver.ChromeOptions()
-
-            # Add options to avoid crashing and improve performance
             options.add_argument("--remote-debugging-port=9222")
             options.add_experimental_option("excludeSwitches", ["enable-automation"])
             options.add_experimental_option('useAutomationExtension', False)
@@ -38,75 +44,77 @@ class BrowserEntity:
             options.add_argument("--disable-webrtc")
             options.add_argument("--disable-rtc-smoothing")
 
-            if incognito:
-                options.add_argument("--incognito")
-
             self.driver = webdriver.Chrome(service=Service(), options=options)
-            success_message = "Chrome browser launched successfully in incognito mode." if incognito else "Chrome browser launched successfully."
-            print(f"Driver initialized: {self.driver}")  # Debug: Print the driver
-            return success_message
-        except Exception as e:
-            error_message = f"Failed to launch browser: {e}"
-            print(error_message)
-            raise
-
-
-    def navigate_to_url(self, url):
-        if not self.driver:
-            print("Driver is not initialized, launching browser first.")  # Debug
-            self.launch_browser()
-        try:
-            self.driver.get(url)
-            print(f"Navigated to URL: {url}")
-            return f"Navigated to URL: {url}"
-        except Exception as e:
-            raise
+            self.browser_open = True
+            result = "Browser launched."
+            print(result)
+            return result
+        else:
+            result = "Browser is already running."
+            print(result)
+            return result
 
 
     def close_browser(self):
-        print(f"Closing browser. Current driver: {self.driver}")  # Debug: Check the driver status
-        if self.driver:
-            self.driver.quit()  # Close the browser session
-            self.driver = None  # Set to None after closing
-            print("Browser closed successfully.")
-            return "Browser closed successfully."
+        if self.browser_open and self.driver:
+            self.driver.quit()
+            self.browser_open = False
+            result = "Browser closed."
+            print(result)
+            return result
         else:
-            print("No browser is currently open.")
-            return "No browser is currently open."
+            result = "No browser is currently open."
+            print(result)
+            return result
 
 
-    async def login(self, site, username, password, incognito=False, retries=1):
-        # Get the URL and selectors from css_selectors
-        url = Selectors.get_selectors_for_url(site)['url']
-        for attempt in range(retries):
-            try:
-                self.navigate_to_url(url)
-                await asyncio.sleep(3)
+    def navigate_to_website(self, url):       
+            # Ensure the browser is launched before navigating
+            if not self.is_browser_open():
+                self.launch_browser()
 
-                # Enter the email address
-                email_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(site)['email_field'])
-                email_field.click()
-                email_field.send_keys(username)
-                await asyncio.sleep(3)
+            # Navigate to the URL if browser is open
+            if self.driver:
+                self.driver.get(url)
+                result = f"Navigated to {url}"
+                print(result)
+                return result
+            else:
+                result = "Failed to open browser."
+                print(result)
+                return result
+        
 
-                # Enter the password
-                password_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(site)['password_field'])
-                password_field.click()
-                password_field.send_keys(password)
-                await asyncio.sleep(3)
+    async def login(self, url, username, password):
+        # Navigate to the website
+        self.navigate_to_website(url)
+        await asyncio.sleep(3)
 
-                # Click the login button
-                sign_in_button = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(site)['SignIn_button'])
-                sign_in_button.click()
-                await asyncio.sleep(5)
+        # Enter the username
+        email_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['email_field'])
+        email_field.send_keys(username)
+        await asyncio.sleep(3)
 
-                # Wait for the homepage to load after login
-                WebDriverWait(self.driver, 30).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, Selectors.get_selectors_for_url(site)['homePage'])))
-                
-                return f"Logged in to {url} successfully with username: {username}"
-            except Exception as e:
-                if attempt < retries - 1:
-                    await asyncio.sleep(3)
-                else:
-                    raise e
+        # Enter the password
+        password_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['password_field'])
+        password_field.send_keys(password)
+        await asyncio.sleep(3)
+
+        # Click the login button
+        sign_in_button = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['SignIn_button'])
+        sign_in_button.click()
+        await asyncio.sleep(5)
+
+        # Wait for the homepage to load
+        try:
+            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['homePage'])))
+
+            result = f"Logged in to {url} successfully with username: {username}"
+            print(result)
+            return result
+        except Exception as e:
+            result = f"Failed to log in: {str(e)}"
+            print(result)
+            return result
+        
+    

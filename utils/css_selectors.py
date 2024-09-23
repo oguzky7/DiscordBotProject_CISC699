@@ -1,7 +1,7 @@
 class Selectors:
     SELECTORS = {
-        "trendyol": {
-            "price": ".featured-prices .prc-dsc"  # Selector for Trendyol price
+        "google": {
+            "url": "https://www.google.com/"  
         },
         "ebay": {
             "url": "https://signin.ebay.com/signin/",
@@ -12,6 +12,7 @@ class Selectors:
             "price": ".x-price-primary span"  # CSS selector for Ebay price
         },
         "bestbuy": {
+            "priceUrl": "https://www.bestbuy.com/site/microsoft-xbox-wireless-controller-for-xbox-series-x-xbox-series-s-xbox-one-windows-devices-sky-cipher-special-edition/6584960.p?skuId=6584960",
             "url": "https://www.bestbuy.com/signin/",
             "email_field": "#fld-e",
             #"continue_button": ".cia-form__controls  button",
@@ -22,6 +23,9 @@ class Selectors:
         },
         "opentable": {
             "url": "https://www.opentable.com/",
+            "unavailableUrl": "https://www.opentable.com/r/bar-spero-washington/",
+            "availableUrl": "https://www.opentable.com/r/the-rux-nashville",
+            "availableUrl2": "https://www.opentable.com/r/hals-the-steakhouse-nashville",
             "date_field": "#restProfileSideBarDtpDayPicker-label", 
             "time_field": "#restProfileSideBartimePickerDtpPicker",
             "select_date": "#restProfileSideBarDtpDayPicker-wrapper", # button[aria-label*="{}"]

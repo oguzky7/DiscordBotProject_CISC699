@@ -14,7 +14,7 @@ def list_files_and_folders(directory, output_file):
 
 # Update the directory path to your project folder
 project_directory = "D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699"
-output_file = os.path.join(project_directory, "project_structure.txt")
+output_file = os.path.join(project_directory, "other/project_structure.txt")
 
 # Call the function to list files and save output to .txt
 list_files_and_folders(project_directory, output_file)
