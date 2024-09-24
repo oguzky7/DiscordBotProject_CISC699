@@ -24,9 +24,9 @@ class MyBot(commands.Bot):
             return
         
         print(f"Message received: {message.content}")
-        GlobalState.user_message = message.content.lower()
+        GlobalState.user_message = message.content
 
-        if GlobalState.user_message in ["hi", "hey", "hello"]:
+        if GlobalState.user_message.lower() in ["hi", "hey", "hello"]:
             await message.channel.send("Hi, how can I help you?") 
 
         elif GlobalState.user_message.startswith("!"):

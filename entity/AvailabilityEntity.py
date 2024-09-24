@@ -11,7 +11,7 @@ class AvailabilityEntity:
         self.browser_entity = BrowserEntity()
 
 
-    async def check_availability(self, url: str, date_str=None, timeout=5):
+    async def check_availability(self, url: str, date_str=None, timeout=15):
         try:
             # Use BrowserEntity to navigate to the URL
             self.browser_entity.navigate_to_website(url)
@@ -22,10 +22,12 @@ class AvailabilityEntity:
             # Perform date selection (optional)
             if date_str:
                 try:
+                    await asyncio.sleep(3)  # Wait for updates to load
+                    print(selectors['date_field'])
                     date_field = self.browser_entity.driver.find_element(By.CSS_SELECTOR, selectors['date_field'])
                     date_field.click()
-                    await asyncio.sleep(1)
-                    date_button = self.browser_entity.driver.find_element(By.CSS_SELECTOR, f"{selectors['select_date']} button[aria-label*='{date_str}']")
+                    await asyncio.sleep(3)
+                    date_button = self.browser_entity.driver.find_element(By.CSS_SELECTOR, f"{selectors['select_date']} button[aria-label*=\"{date_str}\"]")
                     date_button.click()
                 except Exception as e:
                     return f"Failed to select the date: {str(e)}"
