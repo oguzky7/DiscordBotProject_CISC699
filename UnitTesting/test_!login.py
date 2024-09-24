@@ -14,10 +14,14 @@ Tests:
 
 class TestLoginCommand(BaseTestSetup):
 
+    @patch('DataObjects.global_vars.GlobalState.parse_user_message')
     @patch('control.LoginControl.LoginControl.receive_command')
-    async def test_login_success(self, mock_receive_command):
+    async def test_login_success(self, mock_receive_command, mock_parse_user_message):
         """Test the login command when it succeeds."""
         logging.info("Starting test: test_login_success")
+
+        # Mock the parsed message to return the expected command and arguments
+        mock_parse_user_message.return_value = ["login", "ebay"]
 
         # Simulate a successful login
         mock_receive_command.return_value = "Login successful."
@@ -26,18 +30,22 @@ class TestLoginCommand(BaseTestSetup):
         command = self.bot.get_command("login")
         self.assertIsNotNone(command)
 
-        # Call the command with a valid site (e.g., ebay)
-        await command(self.ctx, "ebay")
+        # Call the command without arguments (since GlobalState is mocked)
+        await command(self.ctx)
 
         # Verify the expected message was sent to the user
         expected_message = "Login successful."
         self.ctx.send.assert_called_with(expected_message)
         logging.info("Verified successful login.")
 
+    @patch('DataObjects.global_vars.GlobalState.parse_user_message')
     @patch('control.LoginControl.LoginControl.receive_command')
-    async def test_login_error(self, mock_receive_command):
+    async def test_login_error(self, mock_receive_command, mock_parse_user_message):
         """Test the login command when it encounters an error."""
         logging.info("Starting test: test_login_error")
+
+        # Mock the parsed message to return the expected command and arguments
+        mock_parse_user_message.return_value = ["login", "nonexistent.com"]
 
         # Simulate a failure during login
         mock_receive_command.return_value = "Failed to login. No account found."
@@ -46,13 +54,13 @@ class TestLoginCommand(BaseTestSetup):
         command = self.bot.get_command("login")
         self.assertIsNotNone(command)
 
-        # Call the command with a non-existent site (e.g., nonexistent.com)
-        await command(self.ctx, "nonexistent.com")
+        # Call the command without arguments (since GlobalState is mocked)
+        await command(self.ctx)
 
         # Verify the correct error message is sent
-        self.ctx.send.assert_called_with("Failed to login. No account found.")
+        expected_message = "Failed to login. No account found."
+        self.ctx.send.assert_called_with(expected_message)
         logging.info("Verified error handling during login.")
 
 if __name__ == "__main__":
-    # Use the custom test runner to display 'Unit test passed'
     unittest.main(testRunner=CustomTextTestRunner(verbosity=2))

@@ -1,42 +1,47 @@
-# File: test_!fetch_all_accounts.py
-# Purpose: Unit tests for the !fetch_all_accounts command.
-from unittest.mock import patch
 import logging, unittest
+from unittest.mock import patch
 from test_init import BaseTestSetup, CustomTextTestRunner
 
-class TestFetchAllAccountsCommand(BaseTestSetup):
-    @patch('DataObjects.AccountDAO.AccountDAO.fetch_all_accounts')
-    async def test_fetch_all_accounts_success(self, mock_fetch_all_accounts):
-        """Test the fetch_all_accounts command when it succeeds."""
-        logging.info("Starting test: test_fetch_all_accounts_success")
+"""
+File: test_!fetch_account_by_website.py
+Purpose: Unit tests for the !fetch_account_by_website command in the Discord bot.
+"""
 
-        mock_fetch_all_accounts.return_value = [("1", "testuser", "password", "example.com")]
-        
-        command = self.bot.get_command("fetch_all_accounts")
+class TestFetchAccountByWebsiteCommand(BaseTestSetup):
+
+    @patch('DataObjects.global_vars.GlobalState.parse_user_message')
+    @patch('DataObjects.AccountDAO.AccountDAO.fetch_account_by_website')
+    async def test_fetch_account_by_website_success(self, mock_fetch_account_by_website, mock_parse_user_message):
+        """Test the fetch_account_by_website command when it succeeds."""
+        logging.info("Starting test: test_fetch_account_by_website_success")
+
+        mock_fetch_account_by_website.return_value = ("testuser", "password123")
+        mock_parse_user_message.return_value = ["fetch_account_by_website", "example.com"]
+
+        command = self.bot.get_command("fetch_account_by_website")
         self.assertIsNotNone(command)
+
         await command(self.ctx)
-        
-        # Correct the expected message
-        expected_message = "Accounts:\nID: 1, Username: testuser, Password: password, Website: example.com"
+        expected_message = "testuser", "password123"
         self.ctx.send.assert_called_with(expected_message)
-        logging.info("Verified successful fetch.")
+        logging.info("Verified successful account fetch.")
 
+    @patch('DataObjects.global_vars.GlobalState.parse_user_message')
+    @patch('DataObjects.AccountDAO.AccountDAO.fetch_account_by_website')
+    async def test_fetch_account_by_website_error(self, mock_fetch_account_by_website, mock_parse_user_message):
+        """Test the fetch_account_by_website command when it encounters an error."""
+        logging.info("Starting test: test_fetch_account_by_website_error")
 
-    @patch('DataObjects.AccountDAO.AccountDAO.fetch_all_accounts')  # Correct path
-    async def test_fetch_all_accounts_error(self, mock_fetch_all_accounts):
-        """Test the fetch_all_accounts command when it encounters an error."""
-        logging.info("Starting test: test_fetch_all_accounts_error")
+        mock_fetch_account_by_website.return_value = None
+        mock_parse_user_message.return_value = ["fetch_account_by_website", "nonexistent.com"]
 
-        # Simulate an error
-        mock_fetch_all_accounts.side_effect = Exception("Database error")
-        
-        command = self.bot.get_command("fetch_all_accounts")
+        command = self.bot.get_command("fetch_account_by_website")
+        self.assertIsNotNone(command)
+
         await command(self.ctx)
-        
-        # Verify that the correct error message is sent
-        self.ctx.send.assert_called_with("Error fetching accounts.")
-        logging.info("Verified error handling.")
-
+        expected_message = "No account found for nonexistent.com."
+        self.ctx.send.assert_called_with(expected_message)
+        logging.info("Verified error handling for nonexistent account.")
 
 if __name__ == "__main__":
     unittest.main(testRunner=CustomTextTestRunner(verbosity=2))

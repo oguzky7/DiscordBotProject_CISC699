@@ -16,32 +16,42 @@ Tests:
 
 class TestAddAccountCommand(BaseTestSetup):
 
+    @patch('DataObjects.global_vars.GlobalState.parse_user_message')
     @patch('DataObjects.AccountDAO.AccountDAO.add_account')
-    async def test_add_account_success(self, mock_add_account):
+    async def test_add_account_success(self, mock_add_account, mock_parse_user_message):
         """Test the add_account command when it succeeds."""
         logging.info("Starting test: test_add_account_success")
+
+        # Mock the parsed message to return the expected command and arguments
+        mock_parse_user_message.return_value = ["add_account", "testuser", "password123", "example.com"]
 
         # Mock the DAO method to simulate successful account addition
         mock_add_account.return_value = True
         
         command = self.bot.get_command("add_account")
         self.assertIsNotNone(command)
-        await command(self.ctx, "testuser", "password123", "example.com")
+
+        # Call the command without arguments (since GlobalState is mocked)
+        await command(self.ctx)
         
         expected_message = "Account for example.com added successfully."
         self.ctx.send.assert_called_with(expected_message)
         logging.info("Verified successful account addition.")
 
+    @patch('DataObjects.global_vars.GlobalState.parse_user_message')
     @patch('DataObjects.AccountDAO.AccountDAO.add_account')
-    async def test_add_account_error(self, mock_add_account):
+    async def test_add_account_error(self, mock_add_account, mock_parse_user_message):
         """Test the add_account command when it encounters an error."""
         logging.info("Starting test: test_add_account_error")
+
+        # Mock the parsed message to return the expected command and arguments
+        mock_parse_user_message.return_value = ["add_account", "testuser", "password123", "example.com"]
 
         # Mock the DAO method to simulate an error during account addition
         mock_add_account.return_value = False
         
         command = self.bot.get_command("add_account")
-        await command(self.ctx, "testuser", "password123", "example.com")
+        await command(self.ctx)
         
         self.ctx.send.assert_called_with("Failed to add account for example.com.")
         logging.info("Verified error handling during account addition.")
