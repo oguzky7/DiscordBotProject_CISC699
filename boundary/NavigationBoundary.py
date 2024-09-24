@@ -14,9 +14,7 @@ class NavigationBoundary(commands.Cog):
         list = GlobalState.parse_user_message(GlobalState.user_message) # Parse the message into command and up to 6 variables
 
         command = list[0]  # First element is the command
-        url = list[1]  # Second element is the URL
-        print("Parsed command: ", command)
-        print("Parsed URL: ", url)
+        website = list[1]  # Second element is the URL
         
-        result = self.navigation_control.receive_command(command, url) # Pass the parsed variables to the control object
+        result = self.navigation_control.receive_command(command, website) # Pass the parsed variables to the control object
         await ctx.send(result)                                                          # Send the result back to the user

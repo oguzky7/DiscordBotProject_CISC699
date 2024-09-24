@@ -4,22 +4,22 @@ class AccountControl:
     def __init__(self):
         self.account_dao = AccountDAO()  # DAO for database operations
 
-    def receive_command(self, command_data, *args):
+    def receive_command(self, command, *args):
         """Handle all account-related commands and process business logic."""
-        print("Data received from boundary:", command_data)
+        print("Data received from boundary:", command)
 
-        if command_data == "fetch_all_accounts":
+        if command == "fetch_all_accounts":
             return self.fetch_all_accounts()
         
-        elif command_data == "fetch_account_by_website":
+        elif command == "fetch_account_by_website":
             website = args[0] if args else None
             return self.fetch_account_by_website(website)
         
-        elif command_data == "add_account":
+        elif command == "add_account":
             username, password, website = args if args else (None, None, None)
             return self.add_account(username, password, website)
         
-        elif command_data == "delete_account":
+        elif command == "delete_account":
             account_id = args[0] if args else None
             return self.delete_account(account_id)
         

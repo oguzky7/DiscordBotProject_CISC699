@@ -30,6 +30,8 @@ Working Commands: Test commands
 
 !check_availability https://www.opentable.com/r/bar-spero-washington/ "September 20"
 
+!start_monitoring_availability https://www.opentable.com/r/hals-the-steakhouse-nashville
+
 !start_monitoring_availability https://www.opentable.com/r/bar-spero-washington/ 
 
 !start_monitoring_availability https://www.opentable.com/r/bar-spero-washington/ "October 2"

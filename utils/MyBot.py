@@ -37,7 +37,7 @@ class MyBot(commands.Bot):
           
         await self.process_commands(message)
         GlobalState.reset_user_message()  # Reset the global user_message variable
-        print("User_message reset to empty string")
+        #print("User_message reset to empty string")
 
     async def setup_hook(self):
         await self.add_cog(BrowserBoundary())  # Add your boundary objects

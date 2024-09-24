@@ -14,7 +14,7 @@ class GlobalState:
         Parses a user message by splitting it into command and up to 6 variables.
         Handles quoted substrings so that quoted parts (e.g., "October 2") remain intact.
         """
-        print(f"User_message before parsing: {message}")
+        #print(f"User_message before parsing: {message}")
         message = message.replace("!", "").strip()  # Remove "!" and strip spaces
         #print(f"User_message after replacing '!' with empty string: {message}")
 

@@ -10,12 +10,18 @@ class BrowserBoundary(commands.Cog):
     async def launch_browser(self, ctx):
         await ctx.send(f"Command recognized, passing to control object.")
         
-        result = self.browser_control.receive_command(GlobalState.user_message)     # Pass the updated user_message to the control object
+        list = GlobalState.parse_user_message(GlobalState.user_message) # Parse the message into command and up to 6 variables
+        command = list[0]  # First element is the command
+
+        result = self.browser_control.receive_command(command)     # Pass the updated user_message to the control object
         await ctx.send(result)                                                      # Send the result back to the user
 
     @commands.command(name="close_browser")
     async def stop_bot(self, ctx):
         await ctx.send(f"Command recognized, passing to control object.")
         
-        result = self.browser_control.receive_command(GlobalState.user_message)
+        list = GlobalState.parse_user_message(GlobalState.user_message) # Parse the message into command and up to 6 variables
+        command = list[0]  # First element is the command
+        
+        result = self.browser_control.receive_command(command)
         await ctx.send(result)

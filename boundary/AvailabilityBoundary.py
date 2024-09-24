@@ -18,9 +18,6 @@ class AvailabilityBoundary(commands.Cog):
         command = list[0]  # First element is the command
         url = list[1]  # Second element is the URL
         date_str = list[2]  # Third element is the date
-        print("Parsed command: ", command)
-        print("Parsed URL: ", url)
-        print("Parsed date: ", date_str)
 
         # Pass the command and data to the control layer using receive_command
         result = await self.availability_control.receive_command(command, url, date_str)
@@ -39,10 +36,6 @@ class AvailabilityBoundary(commands.Cog):
         url = list[1]  # Second element is the URL
         date_str = list[2]  # Third element is the date
         frequency = list[3] # Fourth element is the frequency
-        print("Parsed command: ", command)
-        print("Parsed URL: ", url)
-        print("Parsed date: ", date_str)
-        print("Parsed frequency: ", frequency)
 
         response = await self.availability_control.receive_command(command, url, date_str, frequency)
         
@@ -58,7 +51,6 @@ class AvailabilityBoundary(commands.Cog):
         list = GlobalState.parse_user_message(GlobalState.user_message) # Parse the message into command and up to 6 variables
 
         command = list[0]  # First element is the command
-        print("Parsed command: ", command)
-
+        
         response = await self.availability_control.receive_command(command)        # Pass the command to the control layer
         await ctx.send(response)
