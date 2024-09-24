@@ -26,15 +26,15 @@ Working Commands: Test commands
 
 !stop_monitoring_price
 
-!check_availability https://www.opentable.com/r/bar-spero-washington/
+!check_availability https://www.opentable.com/r/hals-the-steakhouse-nashville
 
-!check_availability https://www.opentable.com/r/bar-spero-washington/ "September 20"
+!check_availability https://www.opentable.com/r/hals-the-steakhouse-nashville "September 27"
 
 !start_monitoring_availability https://www.opentable.com/r/hals-the-steakhouse-nashville
 
-!start_monitoring_availability https://www.opentable.com/r/bar-spero-washington/ 
+!start_monitoring_availability https://www.opentable.com/r/sinatra-bar-and-lounge-nashville
 
-!start_monitoring_availability https://www.opentable.com/r/bar-spero-washington/ "October 2"
+!start_monitoring_availability https://www.opentable.com/r/the-hampton-social-nashville "September 30"
 
 !stop_monitoring_availability
 
