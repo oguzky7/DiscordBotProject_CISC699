@@ -8,6 +8,8 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
   Folder: PersonelTest
   Folder: UnitTesting
   Folder: utils
+  File: .gitignore
+  File: BCE_Notes
   File: main.py
   File: projectToText.pdf
   File: Read.md
@@ -38,6 +40,7 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\DataObjects
   File: AccountDAO.py
   File: All_files_in_DataObjects_folder_toText.pdf
+  File: global_vars.py
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\entity
   File: All_files_in_entity_folder_toText.pdf
   File: AvailabilityEntity.py
@@ -87,9 +90,9 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
   File: test_!get_price.py
   File: test_!launch_browser.py
   File: test_!login.py
-  File: test_!monitor_availability.py
   File: test_!navigate_to_website.py
   File: test_!project_help.py
+  File: test_!start_monitoring_availability.py
   File: test_!start_monitoring_price.py
   File: test_!stop_bot.py
   File: test_!stop_monitoring_availability.py
@@ -97,6 +100,7 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
   File: test_init.py
   File: __init__.py
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\utils
+  File: .gitignore
   File: All_files_in_utils_folder_toText.pdf
   File: All_utils_files_text.pdf
   File: Config.py

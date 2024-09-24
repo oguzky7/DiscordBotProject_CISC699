@@ -20,7 +20,7 @@ class PriceControl:
 
         elif command_data == "start_monitoring_price":
             url = args[0] if args else None
-            frequency = args[1] if len(args) > 1 else 20
+            frequency = args[1] if len(args) > 1 and args[1] not in [None, ""] else 20
             return await self.start_monitoring_price(url, frequency)
 
         elif command_data == "stop_monitoring_price":

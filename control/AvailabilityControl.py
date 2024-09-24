@@ -21,7 +21,7 @@ class AvailabilityControl:
         elif command_data == "start_monitoring_availability":
             url = args[0]
             date_str = args[1] if len(args) > 1 else None
-            frequency = args[2] if len(args) > 2 else 15
+            frequency = args[2] if len(args) > 2 and args[2] not in [None, ""] else 15
             return await self.start_monitoring_availability(url, date_str, frequency)
 
         elif command_data == "stop_monitoring_availability":

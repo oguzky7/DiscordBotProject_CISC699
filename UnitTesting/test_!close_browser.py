@@ -14,10 +14,14 @@ Tests:
 
 class TestCloseBrowserCommand(BaseTestSetup):
 
+    @patch('DataObjects.global_vars.GlobalState.parse_user_message')  # Mock the global state parsing
     @patch('entity.BrowserEntity.BrowserEntity.close_browser')
-    async def test_close_browser_success(self, mock_close_browser):
+    async def test_close_browser_success(self, mock_close_browser, mock_parse_user_message):
         """Test the close_browser command when it succeeds."""
         logging.info("Starting test: test_close_browser_success")
+
+        # Mock the parsed user message
+        mock_parse_user_message.return_value = ["close_browser"]
 
         # Simulate successful browser closure
         mock_close_browser.return_value = "Browser closed."
@@ -34,10 +38,14 @@ class TestCloseBrowserCommand(BaseTestSetup):
         self.ctx.send.assert_called_with(expected_message)
         logging.info("Verified successful browser closure.")
 
+    @patch('DataObjects.global_vars.GlobalState.parse_user_message')  # Mock the global state parsing
     @patch('entity.BrowserEntity.BrowserEntity.close_browser')
-    async def test_close_browser_error(self, mock_close_browser):
+    async def test_close_browser_error(self, mock_close_browser, mock_parse_user_message):
         """Test the close_browser command when it encounters an error."""
         logging.info("Starting test: test_close_browser_error")
+
+        # Mock the parsed user message
+        mock_parse_user_message.return_value = ["close_browser"]
 
         # Simulate a failure during browser closure
         mock_close_browser.side_effect = Exception("Failed to close browser")

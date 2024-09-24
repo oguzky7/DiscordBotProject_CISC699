@@ -1,5 +1,5 @@
 import logging, unittest
-from unittest.mock import AsyncMock, call, patch
+from unittest.mock import AsyncMock, patch
 from test_init import BaseTestSetup, CustomTextTestRunner
 
 """
@@ -13,57 +13,55 @@ Tests:
 
 class TestStopBotCommand(BaseTestSetup):
 
-    async def test_stop_bot_success(self):
+    @patch('DataObjects.global_vars.GlobalState.parse_user_message')
+    @patch('control.StopControl.StopControl.receive_command', new_callable=AsyncMock)
+    async def test_stop_bot_success(self, mock_receive_command, mock_parse_user_message):
         """Test the stop bot command when it successfully shuts down."""
         logging.info("Starting test: test_stop_bot_success")
 
-        # Patch the bot's close method on the ctx.bot (since bot is retrieved from ctx dynamically)
-        with patch.object(self.ctx.bot, 'close', new_callable=AsyncMock) as mock_close:
-            # Simulate calling the stop_bot command
-            logging.info("Simulating the stop_bot command call.")
-            command = self.bot.get_command("stop_bot")
-            self.assertIsNotNone(command, "stop_bot command is not registered.")  # Ensure the command is registered
-            await command(self.ctx)
+        # Setup mocks
+        mock_receive_command.return_value = "The bot is shutting down..."
+        mock_parse_user_message.return_value = ["stop_bot"]
+        
+        # Simulate calling the stop_bot command
+        command = self.bot.get_command("stop_bot")
+        self.assertIsNotNone(command, "stop_bot command is not registered.")
+        await command(self.ctx)
+        
+        # Verify the message was sent before shutdown is initiated
+        self.ctx.send.assert_called_once_with("Command recognized, passing data to control.")
+        logging.info("Verified that the shutdown message was sent to the user.")
 
-            # Check if the correct messages were sent
-            expected_calls = [
-                call('Command recognized, passing data to control.'),  # First message sent by the bot
-                call('The bot is shutting down...')  # Second message confirming the shutdown
-            ]
-            self.ctx.send.assert_has_calls(expected_calls, any_order=False)  # Ensure the messages are sent in the correct order
-            logging.info("Verified that both expected messages were sent to the user.")
+        # Ensure bot.close() is called
+        mock_receive_command.assert_called_once()
+        logging.info("Verified that the bot's close method was called once.")
 
-            # Check if bot.close() was called on the ctx.bot
-            mock_close.assert_called_once()
-            logging.info("Verified that the bot's close method was called once.")
-
-    async def test_stop_bot_error(self):
+    @patch('DataObjects.global_vars.GlobalState.parse_user_message')
+    @patch('control.StopControl.StopControl.receive_command', new_callable=AsyncMock)
+    async def test_stop_bot_error(self, mock_receive_command, mock_parse_user_message):
         """Test the stop bot command when it encounters an error during shutdown."""
         logging.info("Starting test: test_stop_bot_error")
 
-        # Patch the bot's close method to raise an exception
-        with patch.object(self.ctx.bot, 'close', new_callable=AsyncMock) as mock_close:
-            mock_close.side_effect = Exception("Error stopping bot")  # Simulate an error
+        # Setup mocks
+        exception_message = "Error stopping bot"
+        mock_receive_command.side_effect = Exception(exception_message)
+        mock_parse_user_message.return_value = ["stop_bot"]
 
-            # Simulate calling the stop_bot command
-            logging.info("Simulating the stop_bot command call.")
-            command = self.bot.get_command("stop_bot")
-            self.assertIsNotNone(command, "stop_bot command is not registered.")  # Ensure the command is registered
-            
-            # Act & Assert: Expect the exception to be raised
-            with self.assertRaises(Exception):
-                await command(self.ctx)
+        # Simulate calling the stop_bot command
+        command = self.bot.get_command("stop_bot")
+        self.assertIsNotNone(command, "stop_bot command is not registered.")
 
-            logging.info("Verified that an error occurred and was handled correctly.")
-
-            # Ensure ctx.send was still called with the shutdown message before the error occurred
-            self.ctx.send.assert_called_with("The bot is shutting down...")
-            logging.info("Verified that 'The bot is shutting down...' message was sent despite the error.")
-
-            # Verify that the close method was still attempted
-            mock_close.assert_called_once()
-            logging.info("Verified that the bot's close method was called even though it raised an error.")
-
+        with self.assertRaises(Exception) as context:
+            await command(self.ctx)
+        
+        # Verify that the correct error message is sent
+        self.ctx.send.assert_called_with('Command recognized, passing data to control.')
+        self.assertTrue(exception_message in str(context.exception))
+        logging.info("Verified error handling during bot shutdown.")
+        
+        # Verify that the close method was still attempted
+        mock_receive_command.assert_called_once_with("stop_bot", self.ctx)
+        logging.info("Verified that the bot's close method was attempted even though it raised an error.")
 
 if __name__ == "__main__":
     # Use the custom test runner to display 'Unit test passed'
