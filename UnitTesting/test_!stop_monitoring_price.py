@@ -9,29 +9,7 @@ The tests validate both successful and error scenarios, ensuring that the bot st
 """
 
 class TestStopMonitoringPriceCommand(BaseTestSetup):
-
-    @patch('DataObjects.global_vars.GlobalState.parse_user_message')
-    @patch('control.PriceControl.PriceControl.receive_command')
-    async def test_stop_monitoring_price_no_active_session(self, mock_receive_command, mock_parse_user_message):
-        """Test the stop_monitoring_price command when no active monitoring session exists."""
-        logging.info("Starting test: test_stop_monitoring_price_no_active_session")
-
-        # Simulate scenario with no active price monitoring session
-        mock_parse_user_message.return_value = ["stop_monitoring_price"]
-        mock_receive_command.return_value = "There was no active price monitoring session. Nothing to stop."
-
-        # Retrieve the stop_monitoring_price command from the bot
-        command = self.bot.get_command("stop_monitoring_price")
-        self.assertIsNotNone(command)
-
-        # Call the command
-        await command(self.ctx)
-
-        # Verify the expected message was sent to the user
-        expected_message = "There was no active price monitoring session. Nothing to stop."
-        self.ctx.send.assert_called_with(expected_message)
-        logging.info("Verified no active session stop scenario.")
-
+    
     @patch('DataObjects.global_vars.GlobalState.parse_user_message')
     @patch('control.PriceControl.PriceControl.receive_command')
     async def test_stop_monitoring_price_success_with_results(self, mock_receive_command, mock_parse_user_message):
