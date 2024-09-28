@@ -1,20 +1,7 @@
-import sys, os, discord, logging, unittest
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import unittest
-from unittest.mock import patch, AsyncMock
-import logging
-# Setting up logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-# Import your BrowserControl class
-from control.BrowserControl import BrowserControl
+from test_init import BaseTestCase, patch, logging, unittest
 
-class TestBrowserFunctionality(unittest.TestCase):
+class TestBrowserFunctionality(BaseTestCase):
     
-    def setUp(self):
-        """Set up BrowserControl and context for each test."""
-        self.control = BrowserControl()
-        self.ctx = AsyncMock()  # Mocking the context to use in the control object
-
     @patch('entity.BrowserEntity.BrowserEntity.launch_browser')
     def test_launch_browser_success(self, mock_launch):
         """Test successful browser launch."""
