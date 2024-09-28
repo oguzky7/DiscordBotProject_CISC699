@@ -7,6 +7,7 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
   Folder: other
   Folder: PersonelTest
   Folder: UnitTesting
+  Folder: UnitTesting_Attempt2
   Folder: utils
   File: .gitignore
   File: BCE_Notes
@@ -81,6 +82,9 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\UnitTesting
   File: All_files_in_UnitTesting_folder_toText.pdf
   File: Assignment8.txt
+  File: Assignment8_OguzKaanYildirim.docx
+  File: Assignment8_OguzKaanYildirim.pdf
+  File: Assignment8_requirements.docx
   File: test_!add_account.py
   File: test_!check_availability.py
   File: test_!close_browser.py
@@ -99,10 +103,16 @@ Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/Dis
   File: test_!stop_monitoring_price.py
   File: test_init.py
   File: __init__.py
+Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\UnitTesting_Attempt2
+  File: Assignment8_Attempt2_OguzKaanYildirim.docx
+  File: test_!launch_browser.py
+  File: test_!stop_monitoring_availability.py
+  File: test_!stop_monitoring_price.py
+  File: test_init.py
+  File: __init__.py
 Directory: D:/HARRISBURG/Harrisburg Master's Fifth Term Late Summer/CISC 699/DiscordBotProject_CISC699\utils
   File: .gitignore
   File: All_files_in_utils_folder_toText.pdf
-  File: All_utils_files_text.pdf
   File: Config.py
   File: css_selectors.py
   File: exportUtils.py

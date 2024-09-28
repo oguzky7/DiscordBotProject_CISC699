@@ -3,27 +3,20 @@ from entity.BrowserEntity import BrowserEntity
 class BrowserControl:
     
     def __init__(self):
-        # Initialize the entity object inside the control layer
         self.browser_entity = BrowserEntity()
 
     def receive_command(self, command_data):
-        # Validate the command
         print("Data Received from boundary object: ", command_data)
-        if command_data == "launch_browser":
-            # Call the entity to perform the actual operation
-            try:
+        try:
+            if command_data == "launch_browser":
                 result = self.browser_entity.launch_browser()
-                return result
-            except Exception as e:
-                return str(e)  # Return the error message
-        
-        elif command_data == "close_browser":
-            # Call the entity to perform the close operation
-            try:
+            elif command_data == "close_browser":
                 result = self.browser_entity.close_browser()
-                return result
-            except Exception as e:
-                return str(e)  # Return the error message
-            
-        else:
-            return "Invalid command."
+            else:
+                result = "Invalid command."
+            print(f"Control Layer Output: {result}")
+            return f"Control Object Result: {result}"
+        except Exception as e:
+            error_msg = f"Control Layer Exception: {str(e)}"
+            print(error_msg)
+            return error_msg

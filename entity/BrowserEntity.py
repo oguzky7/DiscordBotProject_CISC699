@@ -30,30 +30,34 @@ class BrowserEntity:
 
 
     def launch_browser(self):
-        if not self.browser_open:
-            options = webdriver.ChromeOptions()
-            options.add_argument("--remote-debugging-port=9222")
-            options.add_experimental_option("excludeSwitches", ["enable-automation"])
-            options.add_experimental_option('useAutomationExtension', False)
-            options.add_argument("--start-maximized")
-            options.add_argument("--disable-notifications")
-            options.add_argument("--disable-popup-blocking")
-            options.add_argument("--disable-infobars")
-            options.add_argument("--disable-extensions")
-            options.add_argument("--disable-webgl")
-            options.add_argument("--disable-webrtc")
-            options.add_argument("--disable-rtc-smoothing")
+        try:
+            if not self.browser_open:
+                options = webdriver.ChromeOptions()
+                options.add_argument("--remote-debugging-port=9222")
+                options.add_experimental_option("excludeSwitches", ["enable-automation"])
+                options.add_experimental_option('useAutomationExtension', False)
+                options.add_argument("--start-maximized")
+                options.add_argument("--disable-notifications")
+                options.add_argument("--disable-popup-blocking")
+                options.add_argument("--disable-infobars")
+                options.add_argument("--disable-extensions")
+                options.add_argument("--disable-webgl")
+                options.add_argument("--disable-webrtc")
+                options.add_argument("--disable-rtc-smoothing")
 
-            self.driver = webdriver.Chrome(service=Service(), options=options)
-            self.browser_open = True
-            result = "Browser launched."
+                self.driver = webdriver.Chrome(service=Service(), options=options)
+                self.browser_open = True
+                result = "Browser launched."
+                print(result)
+                return result
+            else:
+                result = "Browser is already running."
+                print(result)
+                return result
+        except Exception as e:
+            result = f"Failed to launch browser: {str(e)}"
             print(result)
             return result
-        else:
-            result = "Browser is already running."
-            print(result)
-            return result
-
 
     def close_browser(self):
         if self.browser_open and self.driver:
