@@ -1,9 +1,10 @@
-import pytest
+import pytest, logging
 from unittest.mock import patch
-from test_init import base_test_case, logging, log_test_start_end
+from test_init import base_test_case, log_test_start_end, setup_logging
 
 # Enable asyncio for all tests in this file
 pytestmark = pytest.mark.asyncio
+setup_logging()
 
 async def test_launch_browser_success(base_test_case):
     with patch('entity.BrowserEntity.BrowserEntity.launch_browser') as mock_launch:

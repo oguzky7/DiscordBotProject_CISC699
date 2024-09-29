@@ -4,11 +4,12 @@ from unittest.mock import patch, MagicMock
 # Ensure all necessary paths are included for modules that tests need to access
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Setting up logging without timestamp
-logger = logging.getLogger()
-if not logger.hasHandlers():
-    logging.basicConfig(level=logging.INFO, format='%(message)s')
-
+def setup_logging():
+    """Set up logging without timestamp and other unnecessary information."""
+    logger = logging.getLogger()
+    if not logger.hasHandlers():
+        logging.basicConfig(level=logging.INFO, format='%(message)s')
+        
 # Custom fixture for logging test start and end
 @pytest.fixture(autouse=True)
 def log_test_start_end(request):

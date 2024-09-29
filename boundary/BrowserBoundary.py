@@ -14,7 +14,7 @@ class BrowserBoundary(commands.Cog):
         list = GlobalState.parse_user_message(GlobalState.user_message)  # Parse the message into command and up to 6 variables
         command = list[0]  # First element is the command
 
-        result = self.browser_control.receive_command(command)  # Pass the updated user_message to the control object
+        result = await self.browser_control.receive_command(command)  # Pass the updated user_message to the control object
         await ctx.send(result)  # Send the result back to the user
 
     @commands.command(name="close_browser")
@@ -24,7 +24,7 @@ class BrowserBoundary(commands.Cog):
         list = GlobalState.parse_user_message(GlobalState.user_message)  # Parse the message into command and up to 6 variables
         command = list[0]  # First element is the command
         
-        result = self.browser_control.receive_command(command)
+        result = await self.browser_control.receive_command(command)
         await ctx.send(result)
 
     # Login-related commands
@@ -51,5 +51,5 @@ class BrowserBoundary(commands.Cog):
         command = list[0]  # First element is the command
         website = list[1]  # Second element is the URL
         
-        result = self.browser_control.receive_command(command, website)  # Pass the parsed variables to the control object
+        result = await self.browser_control.receive_command(command, website)  # Pass the parsed variables to the control object
         await ctx.send(result)  # Send the result back to the user
