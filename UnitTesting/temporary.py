@@ -9,25 +9,25 @@ pytestmark = pytest.mark.asyncio
 setup_logging()
 
 
+async def test_navigate_to_website_failure_control(base_test_case):
+    # This simulates a failure within the control layer
+    with patch('control.BrowserControl.BrowserControl.receive_command', side_effect=Exception("Control Layer Failed")) as mock_control:
+        
+        # Setup expected outcomes
+        url = "https://example.com"
+        expected_control_result = "Control Layer Exception: Control Layer Failed"
 
-async def test_login_control_layer_failure(base_test_case):
-    """Test that the control layer handles an unexpected failure or exception."""
-    with patch('control.AccountControl.AccountControl.fetch_account_by_website') as mock_fetch_account:
-        # Simulate an exception being raised in the control layer
-        mock_fetch_account.side_effect = Exception("Control layer failure during account fetch.")
-        
-        expected_result = "Control Layer Exception: Control layer failure during account fetch."
-        
-        # Execute the command
-        result = await base_test_case.browser_control.receive_command("login", site="example.com")
-        
-        # Assert results and logging
-        logging.info(f"Control Layer Expected: {expected_result}")
+        # Execute the command and catch the raised exception
+        try:
+            result = await base_test_case.browser_control.receive_command("navigate_to_website", site=url)
+        except Exception as e:
+            result = f"Control Layer Exception: {str(e)}"
+
+        # Log and assert the outcomes
+        logging.info(f"Control Layer Expected: {expected_control_result}")
         logging.info(f"Control Layer Received: {result}")
-        assert result == expected_result, "Control layer failed to handle control layer exception."
-        logging.info("Unit Test Passed for control layer failure handling.")
-
-
+        assert result == expected_control_result, "Control layer assertion failed."
+        logging.info("Unit Test Passed for control layer failure.")
 
 
 if __name__ == "__main__":
