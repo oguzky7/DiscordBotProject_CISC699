@@ -14,9 +14,7 @@ class BrowserControl:
                 result = self.browser_entity.close_browser()
             else:
                 result = "Invalid command."
-            print(f"Control Layer Output: {result}")
             return f"Control Object Result: {result}"
         except Exception as e:
             error_msg = f"Control Layer Exception: {str(e)}"
-            print(error_msg)
             return error_msg
