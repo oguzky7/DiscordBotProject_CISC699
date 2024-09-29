@@ -58,6 +58,8 @@ class BrowserControl:
                     url = selectors.get('url')
                     print(f"URL from selectors: {url}")
 
+                if not url:
+                    return f"URL for {site} not found."
 
                 result = await self.browser_entity.login(url, username, password)
                 return f"Control Object Result: {result}"
