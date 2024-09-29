@@ -1,8 +1,26 @@
-import sys, os, logging, pytest
+import sys, os, logging, pytest, asyncio
 from unittest.mock import patch, MagicMock
-
-# Ensure all necessary paths are included for modules that tests need to access
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+async def run_monitoring_loop(control_object, check_function, url, date_str, frequency, iterations=1):
+    """Run the monitoring loop for a control object and execute a check function."""
+    control_object.is_monitoring = True
+    results = []
+
+    while control_object.is_monitoring and iterations > 0:
+        try:
+            result = await check_function(url, date_str)
+        except Exception as e:
+            result = f"Failed to monitor: {str(e)}"
+        logging.info(f"Monitoring Iteration: {result}")
+        results.append(result)
+        iterations -= 1
+        await asyncio.sleep(frequency)
+
+    control_object.is_monitoring = False
+    results.append("Monitoring stopped successfully!")
+    
+    return results
 
 def setup_logging():
     """Set up logging without timestamp and other unnecessary information."""
