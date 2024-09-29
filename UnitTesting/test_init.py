@@ -3,6 +3,9 @@ import subprocess
 from unittest.mock import patch, MagicMock
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+#pytest -v > test_results.txt
+#Run this command in the terminal to save the test results to a file
+
 async def run_monitoring_loop(control_object, check_function, url, date_str, frequency, iterations=1):
     """Run the monitoring loop for a control object and execute a check function."""
     control_object.is_monitoring = True
@@ -30,8 +33,8 @@ def setup_logging():
         logging.basicConfig(level=logging.INFO, format='%(message)s')
 def save_test_results_to_file(output_file="test_results.txt"):
     """Helper function to run pytest and save results to a file."""
+    print("Running tests and saving results to file...")
     output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), output_file)
-    
     with open(output_path, 'w') as f:
         # Use subprocess to call pytest and redirect output to file
         subprocess.run(['pytest', '-v'], stdout=f, stderr=subprocess.STDOUT)
