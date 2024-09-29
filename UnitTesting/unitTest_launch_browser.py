@@ -68,5 +68,5 @@ async def test_launch_browser_failure_entity(base_test_case):
         logging.info("Unit Test Passed for entity layer error handling.")
 
 if __name__ == "__main__":
-    pytest.main()
+    pytest.main([__file__])
     
