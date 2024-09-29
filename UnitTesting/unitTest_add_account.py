@@ -1,6 +1,6 @@
 import pytest, logging
 from unittest.mock import patch
-from test_init import base_test_case, setup_logging, log_test_start_end
+from test_init import base_test_case, setup_logging, log_test_start_end, save_test_results_to_file
 
 # Enable asyncio for all tests in this file
 pytestmark = pytest.mark.asyncio

@@ -1,4 +1,5 @@
 import sys, os, logging, pytest, asyncio
+import subprocess
 from unittest.mock import patch, MagicMock
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -27,6 +28,13 @@ def setup_logging():
     logger = logging.getLogger()
     if not logger.hasHandlers():
         logging.basicConfig(level=logging.INFO, format='%(message)s')
+def save_test_results_to_file(output_file="test_results.txt"):
+    """Helper function to run pytest and save results to a file."""
+    output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), output_file)
+    
+    with open(output_path, 'w') as f:
+        # Use subprocess to call pytest and redirect output to file
+        subprocess.run(['pytest', '-v'], stdout=f, stderr=subprocess.STDOUT)
         
 # Custom fixture for logging test start and end
 @pytest.fixture(autouse=True)
@@ -58,14 +66,6 @@ def base_test_case():
     test_case.bot_control = BotControl()
     return test_case
 
-@pytest.fixture
-def username():
-    return "sample_username"
-
-@pytest.fixture
-def account_id():
-    return "sample_account_id"
-
-@pytest.fixture
-def website():
-    return "http://example.com"
+if __name__ == "__main__":
+    # Save the pytest output to a file in the same folder
+    save_test_results_to_file(output_file="test_results.txt")
