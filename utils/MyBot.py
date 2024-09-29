@@ -1,13 +1,10 @@
 import discord
 from discord.ext import commands
 from boundary.BrowserBoundary import BrowserBoundary
-from boundary.NavigationBoundary import NavigationBoundary
-from boundary.HelpBoundary import HelpBoundary
-from boundary.StopBoundary import StopBoundary
-from boundary.LoginBoundary import LoginBoundary
 from boundary.AccountBoundary import AccountBoundary
 from boundary.AvailabilityBoundary import AvailabilityBoundary
 from boundary.PriceBoundary import PriceBoundary
+from boundary.BotBoundary import BotBoundary
 from DataObjects.global_vars import GlobalState  # Import the global variable
 
 # Bot initialization
@@ -41,13 +38,10 @@ class MyBot(commands.Bot):
 
     async def setup_hook(self):
         await self.add_cog(BrowserBoundary())  # Add your boundary objects
-        await self.add_cog(NavigationBoundary())
-        await self.add_cog(HelpBoundary())
-        await self.add_cog(StopBoundary())
-        await self.add_cog(LoginBoundary())
         await self.add_cog(AccountBoundary())
         await self.add_cog(AvailabilityBoundary())
         await self.add_cog(PriceBoundary())
+        await self.add_cog(BotBoundary())
 
     async def on_ready(self):
         print(f"Logged in as {self.user}")

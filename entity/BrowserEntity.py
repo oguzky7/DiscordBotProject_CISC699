@@ -30,91 +30,77 @@ class BrowserEntity:
 
 
     def launch_browser(self):
-        if not self.browser_open:
-            options = webdriver.ChromeOptions()
-            options.add_argument("--remote-debugging-port=9222")
-            options.add_experimental_option("excludeSwitches", ["enable-automation"])
-            options.add_experimental_option('useAutomationExtension', False)
-            options.add_argument("--start-maximized")
-            options.add_argument("--disable-notifications")
-            options.add_argument("--disable-popup-blocking")
-            options.add_argument("--disable-infobars")
-            options.add_argument("--disable-extensions")
-            options.add_argument("--disable-webgl")
-            options.add_argument("--disable-webrtc")
-            options.add_argument("--disable-rtc-smoothing")
+        try:
+            if not self.browser_open:
+                options = webdriver.ChromeOptions()
+                options.add_argument("--remote-debugging-port=9222")
+                options.add_experimental_option("excludeSwitches", ["enable-automation"])
+                options.add_experimental_option('useAutomationExtension', False)
+                options.add_argument("--start-maximized")
+                options.add_argument("--disable-notifications")
+                options.add_argument("--disable-popup-blocking")
+                options.add_argument("--disable-infobars")
+                options.add_argument("--disable-extensions")
+                options.add_argument("--disable-webgl")
+                options.add_argument("--disable-webrtc")
+                options.add_argument("--disable-rtc-smoothing")
 
-            self.driver = webdriver.Chrome(service=Service(), options=options)
-            self.browser_open = True
-            result = "Browser launched."
-            print(result)
-            return result
-        else:
-            result = "Browser is already running."
-            print(result)
-            return result
-
-
-    def close_browser(self):
-        if self.browser_open and self.driver:
-            self.driver.quit()
-            self.browser_open = False
-            result = "Browser closed."
-            print(result)
-            return result
-        else:
-            result = "No browser is currently open."
-            print(result)
-            return result
-
-
-    def navigate_to_website(self, url):       
-            # Ensure the browser is launched before navigating
-            if not self.is_browser_open():
-                self.launch_browser()
-
-            # Navigate to the URL if browser is open
-            if self.driver:
-                self.driver.get(url)
-                result = f"Navigated to {url}"
-                print(result)
+                self.driver = webdriver.Chrome(service=Service(), options=options)
+                self.browser_open = True
+                result = "Browser launched."
                 return result
             else:
-                result = "Failed to open browser."
-                print(result)
+                result = "Browser is already running."
                 return result
+        except Exception as e:
+            result = f"BrowserEntity_Failed to launch browser: {str(e)}"
+            return result
         
+    def close_browser(self):
+        try:
+            if self.browser_open and self.driver:
+                self.driver.quit()
+                self.browser_open = False
+                return "Browser closed."
+            else:
+                return "No browser is currently open."
+        except Exception as e:
+            return f"BrowserEntity_Failed to close browser: {str(e)}"
+
+    def navigate_to_website(self, url):
+        try:
+            if not self.is_browser_open():
+                launch_message = self.launch_browser()
+                if "Failed" in launch_message:
+                    return launch_message
+
+            if self.driver:
+                self.driver.get(url)
+                return f"Navigated to {url}"
+            else:
+                return "Failed to open browser."
+        except Exception as e:
+            return f"BrowserEntity_Failed to navigate to {url}: {str(e)}"
 
     async def login(self, url, username, password):
-        # Navigate to the website
-        self.navigate_to_website(url)
-        await asyncio.sleep(3)
-
-        # Enter the username
-        email_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['email_field'])
-        email_field.send_keys(username)
-        await asyncio.sleep(3)
-
-        # Enter the password
-        password_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['password_field'])
-        password_field.send_keys(password)
-        await asyncio.sleep(3)
-
-        # Click the login button
-        sign_in_button = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['SignIn_button'])
-        sign_in_button.click()
-        await asyncio.sleep(5)
-
-        # Wait for the homepage to load
         try:
-            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['homePage'])))
+            navigate_message = self.navigate_to_website(url)
+            if "Failed" in navigate_message:
+                return navigate_message
 
-            result = f"Logged in to {url} successfully with username: {username}"
-            print(result)
-            return result
+            email_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['email_field'])
+            email_field.send_keys(username)
+            await asyncio.sleep(3)
+
+            password_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['password_field'])
+            password_field.send_keys(password)
+            await asyncio.sleep(3)
+
+            sign_in_button = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['SignIn_button'])
+            sign_in_button.click()
+            await asyncio.sleep(5)
+
+            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['homePage'])))
+            return f"Logged in to {url} successfully with username: {username}"
         except Exception as e:
-            result = f"Failed to log in: {str(e)}"
-            print(result)
-            return result
-        
-    
+            return f"BrowserEntity_Failed to log in to {url}: {str(e)}"

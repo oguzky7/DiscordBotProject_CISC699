@@ -103,7 +103,7 @@ class AvailabilityControl:
                 self.is_monitoring = False
                 result = "Results for availability monitoring:\n"
                 result += "\n".join(self.results)
-                result = result + "\n" + "\nAvailability monitoring stopped successfully!"
+                result = result + "\n" + "\nMonitoring stopped successfully!"
                 print(result)
         except Exception as e:
             # Handle any error that occurs

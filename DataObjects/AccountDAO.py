@@ -91,8 +91,11 @@ class AccountDAO:
 
     def close(self):
         """Close the database connection."""
-        if self.cursor:
-            self.cursor.close()
-        if self.connection:
-            self.connection.close()
-            print("Database connection closed.")
+        try:
+            if self.cursor:
+                self.cursor.close()
+            if self.connection:
+                self.connection.close()
+                print("Database connection closed.")
+        except Exception as error:
+            print(f"Error closing the database connection: {error}")

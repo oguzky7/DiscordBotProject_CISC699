@@ -1,33 +1,74 @@
-# Purpose: This file contains common setup code for all test cases.
-import sys, os, discord, logging, unittest
+import sys, os, logging, pytest, asyncio
+import subprocess
+from unittest.mock import patch, MagicMock
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from unittest.mock import AsyncMock
-from utils.MyBot import MyBot
 
-# Setup logging configuration
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+#pytest -v > test_results.txt
+#Run this command in the terminal to save the test results to a file
 
-class CustomTextTestResult(unittest.TextTestResult):
-    """Custom test result to output 'Unit test passed' instead of 'ok'."""
-    def addSuccess(self, test):
-        super().addSuccess(test)
-        self.stream.write("Unit test passed\n")  # Custom success message
-        self.stream.flush()
+async def run_monitoring_loop(control_object, check_function, url, date_str, frequency, iterations=1):
+    """Run the monitoring loop for a control object and execute a check function."""
+    control_object.is_monitoring = True
+    results = []
 
-class CustomTextTestRunner(unittest.TextTestRunner):
-    """Custom test runner that uses the custom result class."""
-    resultclass = CustomTextTestResult
+    while control_object.is_monitoring and iterations > 0:
+        try:
+            result = await check_function(url, date_str)
+        except Exception as e:
+            result = f"Failed to monitor: {str(e)}"
+        logging.info(f"Monitoring Iteration: {result}")
+        results.append(result)
+        iterations -= 1
+        await asyncio.sleep(frequency)
 
-class BaseTestSetup(unittest.IsolatedAsyncioTestCase):
-    """Base setup class for initializing bot and mock context for all tests."""
+    control_object.is_monitoring = False
+    results.append("Monitoring stopped successfully!")
     
-    async def asyncSetUp(self):
-        """Setup the bot and mock context before each test."""
-        logging.info("Setting up the bot and mock context for testing...")
-        intents = discord.Intents.default()
-        intents.message_content = True
-        self.bot = MyBot(command_prefix="!", intents=intents)
-        self.ctx = AsyncMock()
-        self.ctx.send = AsyncMock()
-        self.ctx.bot = self.bot  # Mock the bot property in the context
-        await self.bot.setup_hook()  # Ensure commands are registered
+    return results
+
+def setup_logging():
+    """Set up logging without timestamp and other unnecessary information."""
+    logger = logging.getLogger()
+    if not logger.hasHandlers():
+        logging.basicConfig(level=logging.INFO, format='%(message)s')
+def save_test_results_to_file(output_file="test_results.txt"):
+    """Helper function to run pytest and save results to a file."""
+    print("Running tests and saving results to file...")
+    output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), output_file)
+    with open(output_path, 'w') as f:
+        # Use subprocess to call pytest and redirect output to file
+        subprocess.run(['pytest', '-v'], stdout=f, stderr=subprocess.STDOUT)
+        
+# Custom fixture for logging test start and end
+@pytest.fixture(autouse=True)
+def log_test_start_end(request):
+    test_name = request.node.name
+    logging.info(f"------------------------------------------------------\nStarting test: {test_name}\n")
+    
+    # Yield control to the test function
+    yield
+    
+    # Log after the test finishes
+    logging.info(f"\nFinished test: {test_name}\n------------------------------------------------------")
+
+# Import your control classes
+from control.BrowserControl import BrowserControl
+from control.AccountControl import AccountControl
+from control.AvailabilityControl import AvailabilityControl
+from control.PriceControl import PriceControl
+from control.BotControl import BotControl
+
+@pytest.fixture
+def base_test_case():
+    """Base test setup that can be used by all test functions."""
+    test_case = MagicMock()
+    test_case.browser_control = BrowserControl()
+    test_case.account_control = AccountControl()
+    test_case.availability_control = AvailabilityControl()
+    test_case.price_control = PriceControl()
+    test_case.bot_control = BotControl()
+    return test_case
+
+if __name__ == "__main__":
+    # Save the pytest output to a file in the same folder
+    save_test_results_to_file(output_file="test_results.txt")
