@@ -9,7 +9,7 @@ class TestBrowserFunctionality(BaseTestCase):
         mock_close.return_value = "Browser closed."
         expected_entity_result = "Browser closed."
         expected_control_result = "Control Object Result: Browser closed."
-        result = self.control.receive_command("close_browser")
+        result = self.browser_control.receive_command("close_browser")
         
         logging.info(f"Entity Layer Expected: {expected_entity_result}")
         logging.info(f"Entity Layer Received: {mock_close.return_value}")
@@ -28,7 +28,7 @@ class TestBrowserFunctionality(BaseTestCase):
         mock_close.return_value = "No browser is currently open."
         expected_entity_result = "No browser is currently open."
         expected_control_result = "Control Object Result: No browser is currently open."
-        result = self.control.receive_command("close_browser")
+        result = self.browser_control.receive_command("close_browser")
         
         logging.info(f"Entity Layer Expected: {expected_entity_result}")
         logging.info(f"Entity Layer Received: {mock_close.return_value}")
@@ -46,7 +46,7 @@ class TestBrowserFunctionality(BaseTestCase):
         print("\nTest Started for: test_close_browser_failure")
         mock_close.side_effect = Exception("Unexpected error")
         expected_result = "Control Layer Exception: Unexpected error"
-        result = self.control.receive_command("close_browser")
+        result = self.browser_control.receive_command("close_browser")
         
         logging.info(f"Control Layer Expected to Report: {expected_result}")
         logging.info(f"Control Layer Received: {result}")
@@ -63,7 +63,7 @@ class TestBrowserFunctionality(BaseTestCase):
         expected_control_result = f"Control Layer Exception: {internal_error_message}"
 
         # Execute command
-        result = self.control.receive_command("close_browser")
+        result = self.browser_control.receive_command("close_browser")
 
         # Check if the control layer returns the correct error message
         logging.info(f"Entity Layer Expected Failure: {internal_error_message}")

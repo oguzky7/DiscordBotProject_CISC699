@@ -8,7 +8,7 @@ class BrowserControl:
         self.account_control = AccountControl()  # Manages account data for login use case
 
     # Browser-related command handler
-    def receive_command(self, command_data, site=None, url=None):
+    async def receive_command(self, command_data, site=None, url=None):
         print("Data Received from boundary object: ", command_data)
         
         # Handle browser commands
@@ -43,7 +43,7 @@ class BrowserControl:
                 if not url:
                     return f"URL for {site} not found."
 
-                result = self.browser_entity.login(url, username, password)
+                result = await self.browser_entity.login(url, username, password)
                 return f"Control Object Result: {result}"
             except Exception as e:
                 return f"Control Layer Exception: {str(e)}"

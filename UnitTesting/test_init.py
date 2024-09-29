@@ -1,33 +1,52 @@
-# Purpose: This file contains common setup code for all test cases.
-import sys, os, discord, logging, unittest
+import sys, os, logging, pytest
+from unittest.mock import patch, MagicMock
+
+# Ensure all necessary paths are included for modules that tests need to access
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from unittest.mock import AsyncMock
-from utils.MyBot import MyBot
 
-# Setup logging configuration
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Setting up logging without timestamp
+logger = logging.getLogger()
+if not logger.hasHandlers():
+    logging.basicConfig(level=logging.INFO, format='%(message)s')
 
-class CustomTextTestResult(unittest.TextTestResult):
-    """Custom test result to output 'Unit test passed' instead of 'ok'."""
-    def addSuccess(self, test):
-        super().addSuccess(test)
-        self.stream.write("Unit test passed\n")  # Custom success message
-        self.stream.flush()
-
-class CustomTextTestRunner(unittest.TextTestRunner):
-    """Custom test runner that uses the custom result class."""
-    resultclass = CustomTextTestResult
-
-class BaseTestSetup(unittest.IsolatedAsyncioTestCase):
-    """Base setup class for initializing bot and mock context for all tests."""
+# Custom fixture for logging test start and end
+@pytest.fixture(autouse=True)
+def log_test_start_end(request):
+    test_name = request.node.name
+    logging.info(f"------------------------------------------------------\nStarting test: {test_name}\n")
     
-    async def asyncSetUp(self):
-        """Setup the bot and mock context before each test."""
-        logging.info("Setting up the bot and mock context for testing...")
-        intents = discord.Intents.default()
-        intents.message_content = True
-        self.bot = MyBot(command_prefix="!", intents=intents)
-        self.ctx = AsyncMock()
-        self.ctx.send = AsyncMock()
-        self.ctx.bot = self.bot  # Mock the bot property in the context
-        await self.bot.setup_hook()  # Ensure commands are registered
+    # Yield control to the test function
+    yield
+    
+    # Log after the test finishes
+    logging.info(f"\nFinished test: {test_name}\n------------------------------------------------------")
+
+# Import your control classes
+from control.BrowserControl import BrowserControl
+from control.AccountControl import AccountControl
+from control.AvailabilityControl import AvailabilityControl
+from control.PriceControl import PriceControl
+from control.BotControl import BotControl
+
+@pytest.fixture
+def base_test_case():
+    """Base test setup that can be used by all test functions."""
+    test_case = MagicMock()
+    test_case.browser_control = BrowserControl()
+    test_case.account_control = AccountControl()
+    test_case.availability_control = AvailabilityControl()
+    test_case.price_control = PriceControl()
+    test_case.bot_control = BotControl()
+    return test_case
+
+@pytest.fixture
+def username():
+    return "sample_username"
+
+@pytest.fixture
+def account_id():
+    return "sample_account_id"
+
+@pytest.fixture
+def website():
+    return "http://example.com"
