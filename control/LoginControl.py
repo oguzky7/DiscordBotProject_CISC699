@@ -28,8 +28,9 @@ class LoginControl:
                     return f"URL for {site} not found."
 
                 result = await self.browser_entity.login(url, username, password)
+                return f"Control Object Result: {result}"
             except Exception as e:
-                result = str(e)
-            return result
+                error_msg = f"Control Layer Exception: {str(e)}"
+                return error_msg
         else:
             return "Invalid command or site."
