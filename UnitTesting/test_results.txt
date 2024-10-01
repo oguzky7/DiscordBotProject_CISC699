@@ -1,0 +1,1047 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.2, pytest-8.3.3, pluggy-1.5.0 -- C:\Users\oguzk\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: D:\HARRISBURG\Harrisburg Master's Fifth Term Late Summer\CISC 699\DiscordBotProject_CISC699
+configfile: pytest.ini
+testpaths: UnitTesting
+plugins: asyncio-0.24.0, mock-3.14.0
+asyncio: mode=Mode.AUTO, default_loop_scope=function
+collecting ... collected 56 items
+
+UnitTesting/unitTest_add_account.py::TestAccountDAO::test_add_account_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_add_account_success
+
+2024-09-30 22:07:52 INFO Initializing test setup for AccountDAO
+2024-09-30 22:07:52 INFO Fake database connection established
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO AccountDAO.add_account returned <MagicMock name='mock().account_dao.add_account()' id='375473504'>
+2024-09-30 22:07:52 INFO Expected result: True
+FAILED                                                                   [  1%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_add_account_success
+------------------------------------------------------
+
+UnitTesting/unitTest_add_account.py::TestAccountDAO::test_add_account_fail 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_add_account_fail
+
+2024-09-30 22:07:52 INFO Initializing test setup for AccountDAO
+2024-09-30 22:07:52 INFO Fake database connection established
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO AccountDAO.add_account returned <MagicMock name='mock().account_dao.add_account()' id='331701216'>
+2024-09-30 22:07:52 INFO Expected result: False
+FAILED                                                                   [  3%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_add_account_fail
+------------------------------------------------------
+
+UnitTesting/unitTest_check_availability.py::test_check_availability_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_check_availability_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Entity Layer Expected: Selected or default date current date is available for booking.
+2024-09-30 22:07:52 INFO Entity Layer Received: Selected or default date current date is available for booking.
+2024-09-30 22:07:52 INFO Unit Test Passed for entity layer.
+
+2024-09-30 22:07:52 INFO Control Layer Expected: Checked availability: Selected or default date current date is available for booking.
+2024-09-30 22:07:52 INFO Control Layer Received: Checked availability: Selected or default date current date is available for booking.
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer.
+PASSED                                                                   [  5%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_check_availability_success
+------------------------------------------------------
+
+UnitTesting/unitTest_check_availability.py::test_check_availability_failure_entity 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_check_availability_failure_entity
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Control Layer Expected: Failed to check availability: Failed to check availability
+2024-09-30 22:07:52 INFO Control Layer Received: Failed to check availability: Failed to check availability
+2024-09-30 22:07:52 INFO Unit Test Passed for entity layer error handling.
+PASSED                                                                   [  7%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_check_availability_failure_entity
+------------------------------------------------------
+
+UnitTesting/unitTest_check_availability.py::test_check_availability_no_availability 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_check_availability_no_availability
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Entity Layer Received: No availability for the selected date.
+2024-09-30 22:07:52 INFO Control Layer Received: Checked availability: No availability for the selected date.
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer no availability handling.
+PASSED                                                                   [  8%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_check_availability_no_availability
+------------------------------------------------------
+
+UnitTesting/unitTest_check_availability.py::test_check_availability_failure_control 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_check_availability_failure_control
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Control Layer Expected: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:52 INFO Control Layer Received: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer failure.
+PASSED                                                                   [ 10%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_check_availability_failure_control
+------------------------------------------------------
+
+UnitTesting/unitTest_close_browser.py::test_close_browser_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_close_browser_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Entity Layer Expected: Browser closed.
+2024-09-30 22:07:52 INFO Entity Layer Received: Browser closed.
+2024-09-30 22:07:52 INFO Unit Test Passed for entity layer.
+
+2024-09-30 22:07:52 INFO Control Layer Expected: Control Object Result: Browser closed.
+2024-09-30 22:07:52 INFO Control Layer Received: Control Object Result: Browser closed.
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer.
+PASSED                                                                   [ 12%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_close_browser_success
+------------------------------------------------------
+
+UnitTesting/unitTest_close_browser.py::test_close_browser_not_open 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_close_browser_not_open
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Entity Layer Expected: No browser is currently open.
+2024-09-30 22:07:52 INFO Entity Layer Received: No browser is currently open.
+2024-09-30 22:07:52 INFO Unit Test Passed for entity layer.
+
+2024-09-30 22:07:52 INFO Control Layer Expected: Control Object Result: No browser is currently open.
+2024-09-30 22:07:52 INFO Control Layer Received: Control Object Result: No browser is currently open.
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer.
+PASSED                                                                   [ 14%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_close_browser_not_open
+------------------------------------------------------
+
+UnitTesting/unitTest_close_browser.py::test_close_browser_failure_control 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_close_browser_failure_control
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Control Layer Expected to Report: Control Layer Exception: Unexpected error
+2024-09-30 22:07:52 INFO Control Layer Received: Control Layer Exception: Unexpected error
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer error handling.
+PASSED                                                                   [ 16%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_close_browser_failure_control
+------------------------------------------------------
+
+UnitTesting/unitTest_close_browser.py::test_close_browser_failure_entity 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_close_browser_failure_entity
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Entity Layer Expected Failure: BrowserEntity_Failed to close browser: Internal error
+2024-09-30 22:07:52 INFO Control Layer Received: Control Layer Exception: BrowserEntity_Failed to close browser: Internal error
+2024-09-30 22:07:52 INFO Unit Test Passed for entity layer error handling.
+PASSED                                                                   [ 17%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_close_browser_failure_entity
+------------------------------------------------------
+
+UnitTesting/unitTest_delete_account.py::test_delete_account_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_delete_account_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Entity Layer Expected: Account with ID 1 deleted successfully.
+2024-09-30 22:07:52 INFO Entity Layer Received: True
+2024-09-30 22:07:52 INFO Unit Test Passed for entity layer.
+
+2024-09-30 22:07:52 INFO Control Layer Expected: Account with ID 1 deleted successfully.
+2024-09-30 22:07:52 INFO Control Layer Received: Account with ID 1 deleted successfully.
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer.
+PASSED                                                                   [ 19%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_delete_account_success
+------------------------------------------------------
+
+UnitTesting/unitTest_delete_account.py::test_delete_account_not_found 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_delete_account_not_found
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Control Layer Expected: Failed to delete account with ID 999.
+2024-09-30 22:07:52 INFO Control Layer Received: Failed to delete account with ID 999.
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer with account not found.
+
+PASSED                                                                   [ 21%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_delete_account_not_found
+------------------------------------------------------
+
+UnitTesting/unitTest_delete_account.py::test_delete_account_failure_entity 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_delete_account_failure_entity
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Control Layer Expected: Error deleting account.
+2024-09-30 22:07:52 INFO Control Layer Received: Error deleting account.
+2024-09-30 22:07:52 INFO Unit Test Passed for entity layer error handling.
+PASSED                                                                   [ 23%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_delete_account_failure_entity
+------------------------------------------------------
+
+UnitTesting/unitTest_delete_account.py::test_delete_account_failure_control 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_delete_account_failure_control
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Control Layer Expected: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:52 INFO Control Layer Received: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer failure.
+PASSED                                                                   [ 25%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_delete_account_failure_control
+------------------------------------------------------
+
+UnitTesting/unitTest_fetch_account_by_website.py::test_fetch_account_by_website_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_fetch_account_by_website_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Entity Layer Expected: ('sample_username', 'sample_password')
+2024-09-30 22:07:52 INFO Entity Layer Received: ('sample_username', 'sample_password')
+2024-09-30 22:07:52 INFO Unit Test Passed for entity layer.
+
+2024-09-30 22:07:52 INFO Control Layer Expected: ('sample_username', 'sample_password')
+2024-09-30 22:07:52 INFO Control Layer Received: ('sample_username', 'sample_password')
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer.
+PASSED                                                                   [ 26%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_fetch_account_by_website_success
+------------------------------------------------------
+
+UnitTesting/unitTest_fetch_account_by_website.py::test_fetch_account_by_website_no_account 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_fetch_account_by_website_no_account
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Control Layer Expected: No account found for nonexistent.com.
+2024-09-30 22:07:52 INFO Control Layer Received: No account found for nonexistent.com.
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer no account found.
+
+PASSED                                                                   [ 28%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_fetch_account_by_website_no_account
+------------------------------------------------------
+
+UnitTesting/unitTest_fetch_account_by_website.py::test_fetch_account_by_website_failure_entity 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_fetch_account_by_website_failure_entity
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Control Layer Expected: Error: Database Error
+2024-09-30 22:07:52 INFO Control Layer Received: Error: Database Error
+2024-09-30 22:07:52 INFO Unit Test Passed for entity layer error handling.
+PASSED                                                                   [ 30%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_fetch_account_by_website_failure_entity
+------------------------------------------------------
+
+UnitTesting/unitTest_fetch_account_by_website.py::test_fetch_account_by_website_failure_control 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_fetch_account_by_website_failure_control
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Control Layer Expected: Control Layer Exception: Control Layer Error
+2024-09-30 22:07:52 INFO Control Layer Received: Control Layer Exception: Control Layer Error
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer error handling.
+PASSED                                                                   [ 32%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_fetch_account_by_website_failure_control
+------------------------------------------------------
+
+UnitTesting/unitTest_fetch_all_accounts.py::test_fetch_all_accounts_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_fetch_all_accounts_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Entity Layer Expected: Accounts:
+ID: 1, Username: user1, Password: pass1, Website: example.com
+ID: 2, Username: user2, Password: pass2, Website: test.com
+2024-09-30 22:07:52 INFO Entity Layer Received: [(1, 'user1', 'pass1', 'example.com'), (2, 'user2', 'pass2', 'test.com')]
+2024-09-30 22:07:52 INFO Unit Test Passed for entity layer.
+
+2024-09-30 22:07:52 INFO Control Layer Expected: Accounts:
+ID: 1, Username: user1, Password: pass1, Website: example.com
+ID: 2, Username: user2, Password: pass2, Website: test.com
+2024-09-30 22:07:52 INFO Control Layer Received: Accounts:
+ID: 1, Username: user1, Password: pass1, Website: example.com
+ID: 2, Username: user2, Password: pass2, Website: test.com
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer.
+PASSED                                                                   [ 33%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_fetch_all_accounts_success
+------------------------------------------------------
+
+UnitTesting/unitTest_fetch_all_accounts.py::test_fetch_all_accounts_no_accounts 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_fetch_all_accounts_no_accounts
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:52 INFO Control Layer Expected: No accounts found.
+2024-09-30 22:07:52 INFO Control Layer Received: No accounts found.
+2024-09-30 22:07:52 INFO Unit Test Passed for control layer no accounts found.
+
+PASSED                                                                   [ 35%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:52 INFO 
+Finished test: test_fetch_all_accounts_no_accounts
+------------------------------------------------------
+
+UnitTesting/unitTest_fetch_all_accounts.py::test_fetch_all_accounts_failure_entity 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:52 INFO ------------------------------------------------------
+Starting test: test_fetch_all_accounts_failure_entity
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: Error fetching accounts.
+2024-09-30 22:07:53 INFO Control Layer Received: Error fetching accounts.
+2024-09-30 22:07:53 INFO Unit Test Passed for entity layer error handling.
+PASSED                                                                   [ 37%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_fetch_all_accounts_failure_entity
+------------------------------------------------------
+
+UnitTesting/unitTest_get_price.py::test_get_price_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_get_price_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Entity Layer Expected: $199.99
+2024-09-30 22:07:53 INFO Entity Layer Received: $199.99
+2024-09-30 22:07:53 INFO Unit Test Passed for entity layer.
+
+2024-09-30 22:07:53 INFO Control Layer Expected: $199.99
+2024-09-30 22:07:53 INFO Control Layer Received: $199.99
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer.
+PASSED                                                                   [ 39%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_get_price_success
+------------------------------------------------------
+
+UnitTesting/unitTest_get_price.py::test_get_price_invalid_url 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_get_price_invalid_url
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: Error fetching price: Invalid URL
+2024-09-30 22:07:53 INFO Control Layer Received: Error fetching price: Invalid URL
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer invalid URL handling.
+
+PASSED                                                                   [ 41%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_get_price_invalid_url
+------------------------------------------------------
+
+UnitTesting/unitTest_get_price.py::test_get_price_failure_entity 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_get_price_failure_entity
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: Failed to fetch price: Failed to fetch price
+2024-09-30 22:07:53 INFO Control Layer Received: Failed to fetch price: Failed to fetch price
+2024-09-30 22:07:53 INFO Unit Test Passed for entity layer error handling.
+PASSED                                                                   [ 42%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_get_price_failure_entity
+------------------------------------------------------
+
+UnitTesting/unitTest_get_price.py::test_get_price_failure_control 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_get_price_failure_control
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:53 INFO Control Layer Received: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer failure.
+PASSED                                                                   [ 44%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_get_price_failure_control
+------------------------------------------------------
+
+UnitTesting/unitTest_launch_browser.py::test_launch_browser_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_launch_browser_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Entity Layer Expected: Browser launched.
+2024-09-30 22:07:53 INFO Entity Layer Received: Browser launched.
+2024-09-30 22:07:53 INFO Unit Test Passed for entity layer.
+
+2024-09-30 22:07:53 INFO Control Layer Expected: Control Object Result: Browser launched.
+2024-09-30 22:07:53 INFO Control Layer Received: Control Object Result: Browser launched.
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer.
+PASSED                                                                   [ 46%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_launch_browser_success
+------------------------------------------------------
+
+UnitTesting/unitTest_launch_browser.py::test_launch_browser_already_running 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_launch_browser_already_running
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Entity Layer Expected: Browser is already running.
+2024-09-30 22:07:53 INFO Entity Layer Received: Browser is already running.
+2024-09-30 22:07:53 INFO Unit Test Passed for entity layer.
+
+2024-09-30 22:07:53 INFO Control Layer Expected: Control Object Result: Browser is already running.
+2024-09-30 22:07:53 INFO Control Layer Received: Control Object Result: Browser is already running.
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer.
+PASSED                                                                   [ 48%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_launch_browser_already_running
+------------------------------------------------------
+
+UnitTesting/unitTest_launch_browser.py::test_launch_browser_failure_control 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_launch_browser_failure_control
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected to Report: Control Layer Exception: Internal error
+2024-09-30 22:07:53 INFO Control Layer Received: Control Layer Exception: Internal error
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer error handling.
+PASSED                                                                   [ 50%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_launch_browser_failure_control
+------------------------------------------------------
+
+UnitTesting/unitTest_launch_browser.py::test_launch_browser_failure_entity 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_launch_browser_failure_entity
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Entity Layer Expected Failure: Failed to launch browser: Internal error
+2024-09-30 22:07:53 INFO Control Layer Received: Control Layer Exception: Failed to launch browser: Internal error
+2024-09-30 22:07:53 INFO Unit Test Passed for entity layer error handling.
+PASSED                                                                   [ 51%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_launch_browser_failure_entity
+------------------------------------------------------
+
+UnitTesting/unitTest_login.py::test_login_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_login_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Entity Layer Expected: Logged in to http://example.com successfully with username: sample_username
+2024-09-30 22:07:53 INFO Entity Layer Received: Logged in to http://example.com successfully with username: sample_username
+2024-09-30 22:07:53 INFO Unit Test Passed for entity layer.
+
+2024-09-30 22:07:53 INFO Control Layer Expected: Control Object Result: Logged in to http://example.com successfully with username: sample_username
+2024-09-30 22:07:53 INFO Control Layer Received: Control Object Result: Logged in to http://example.com successfully with username: sample_username
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer.
+PASSED                                                                   [ 53%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_login_success
+------------------------------------------------------
+
+UnitTesting/unitTest_login.py::test_login_no_account 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_login_no_account
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: No account found for example.com
+2024-09-30 22:07:53 INFO Control Layer Received: No account found for example.com
+2024-09-30 22:07:53 INFO Unit Test Passed for missing account handling.
+PASSED                                                                   [ 55%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_login_no_account
+------------------------------------------------------
+
+UnitTesting/unitTest_login.py::test_login_entity_layer_failure 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_login_entity_layer_failure
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: Control Layer Exception: BrowserEntity_Failed to log in to http://example.com: Internal error
+2024-09-30 22:07:53 INFO Control Layer Received: Control Layer Exception: BrowserEntity_Failed to log in to http://example.com: Internal error
+2024-09-30 22:07:53 INFO Unit Test Passed for entity layer failure.
+PASSED                                                                   [ 57%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_login_entity_layer_failure
+------------------------------------------------------
+
+UnitTesting/unitTest_login.py::test_login_control_layer_failure 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_login_control_layer_failure
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: Control Layer Exception: Control layer failure during account fetch.
+2024-09-30 22:07:53 INFO Control Layer Received: Control Layer Exception: Control layer failure during account fetch.
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer failure handling.
+PASSED                                                                   [ 58%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_login_control_layer_failure
+------------------------------------------------------
+
+UnitTesting/unitTest_login.py::test_login_invalid_url 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_login_invalid_url
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: URL for example not found.
+2024-09-30 22:07:53 INFO Control Layer Received: URL for example not found.
+2024-09-30 22:07:53 INFO Unit Test Passed for missing URL/selector handling.
+PASSED                                                                   [ 60%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_login_invalid_url
+------------------------------------------------------
+
+UnitTesting/unitTest_navigate_to_website.py::test_navigate_to_website_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_navigate_to_website_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Entity Layer Expected: Navigated to https://example.com
+2024-09-30 22:07:53 INFO Entity Layer Received: Navigated to https://example.com
+2024-09-30 22:07:53 INFO Unit Test Passed for entity layer.
+
+2024-09-30 22:07:53 INFO Control Layer Expected: Control Object Result: Navigated to https://example.com
+2024-09-30 22:07:53 INFO Control Layer Received: Control Object Result: Navigated to https://example.com
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer.
+PASSED                                                                   [ 62%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_navigate_to_website_success
+------------------------------------------------------
+
+UnitTesting/unitTest_navigate_to_website.py::test_navigate_to_website_invalid_url 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_navigate_to_website_invalid_url
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: URL for invalid_site not found.
+2024-09-30 22:07:53 INFO Control Layer Received: URL for invalid_site not found.
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer invalid URL handling.
+
+PASSED                                                                   [ 64%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_navigate_to_website_invalid_url
+------------------------------------------------------
+
+UnitTesting/unitTest_navigate_to_website.py::test_navigate_to_website_failure_entity 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_navigate_to_website_failure_entity
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: Control Layer Exception: Failed to navigate
+2024-09-30 22:07:53 INFO Control Layer Received: Control Layer Exception: Failed to navigate
+2024-09-30 22:07:53 INFO Unit Test Passed for entity layer error handling.
+PASSED                                                                   [ 66%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_navigate_to_website_failure_entity
+------------------------------------------------------
+
+UnitTesting/unitTest_navigate_to_website.py::test_navigate_to_website_launch_browser_on_failure 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_navigate_to_website_launch_browser_on_failure
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: Control Object Result: Navigated to https://example.com
+2024-09-30 22:07:53 INFO Control Layer Received: Control Object Result: Navigated to https://example.com
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer with browser launch.
+
+PASSED                                                                   [ 67%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_navigate_to_website_launch_browser_on_failure
+------------------------------------------------------
+
+UnitTesting/unitTest_navigate_to_website.py::test_navigate_to_website_failure_control 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_navigate_to_website_failure_control
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:53 INFO Control Layer Received: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:53 INFO Unit Test Passed for control layer failure.
+PASSED                                                                   [ 69%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_navigate_to_website_failure_control
+------------------------------------------------------
+
+UnitTesting/unitTest_project_help.py::test_project_help_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_project_help_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: Here are the available commands:
+!project_help - Get help on available commands.
+!fetch_all_accounts - Fetch all stored accounts.
+!add_account 'username' 'password' 'website' - Add a new account to the database.
+!fetch_account_by_website 'website' - Fetch account details by website.
+!delete_account 'account_id' - Delete an account by its ID.
+!launch_browser - Launch the browser.
+!close_browser - Close the browser.
+!navigate_to_website 'url' - Navigate to a specified website.
+!login 'website' - Log in to a website (e.g., !login bestbuy).
+!get_price 'url' - Check the price of a product on a specified website.
+!start_monitoring_price 'url' 'frequency' - Start monitoring a product's price at a specific interval (frequency in minutes).
+!stop_monitoring_price - Stop monitoring the product's price.
+!check_availability 'url' - Check availability for a restaurant or service.
+!start_monitoring_availability 'url' 'frequency' - Monitor availability at a specific interval.
+!stop_monitoring_availability - Stop monitoring availability.
+!stop_bot - Stop the bot.
+
+2024-09-30 22:07:53 INFO Control Layer Received: Here are the available commands:
+!project_help - Get help on available commands.
+!fetch_all_accounts - Fetch all stored accounts.
+!add_account 'username' 'password' 'website' - Add a new account to the database.
+!fetch_account_by_website 'website' - Fetch account details by website.
+!delete_account 'account_id' - Delete an account by its ID.
+!launch_browser - Launch the browser.
+!close_browser - Close the browser.
+!navigate_to_website 'url' - Navigate to a specified website.
+!login 'website' - Log in to a website (e.g., !login bestbuy).
+!get_price 'url' - Check the price of a product on a specified website.
+!start_monitoring_price 'url' 'frequency' - Start monitoring a product's price at a specific interval (frequency in minutes).
+!stop_monitoring_price - Stop monitoring the product's price.
+!check_availability 'url' - Check availability for a restaurant or service.
+!start_monitoring_availability 'url' 'frequency' - Monitor availability at a specific interval.
+!stop_monitoring_availability - Stop monitoring availability.
+!stop_bot - Stop the bot.
+
+2024-09-30 22:07:53 INFO Unit Test Passed for project help.
+
+PASSED                                                                   [ 71%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_project_help_success
+------------------------------------------------------
+
+UnitTesting/unitTest_project_help.py::test_project_help_failure 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_project_help_failure
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Control Layer Expected: Error handling help command: Error handling help command
+2024-09-30 22:07:53 INFO Control Layer Received: Error handling help command: Error handling help command
+2024-09-30 22:07:53 INFO Unit Test Passed for error handling in project help.
+
+PASSED                                                                   [ 73%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:53 INFO 
+Finished test: test_project_help_failure
+------------------------------------------------------
+
+UnitTesting/unitTest_start_monitoring_availability.py::test_start_monitoring_availability_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:53 INFO ------------------------------------------------------
+Starting test: test_start_monitoring_availability_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:53 INFO Monitoring Iteration: Checked availability: Selected or default date is available for booking.
+2024-09-30 22:07:54 INFO Control Layer Expected: ['Checked availability: Selected or default date is available for booking.', 'Monitoring stopped successfully!']
+2024-09-30 22:07:54 INFO Control Layer Received: ['Checked availability: Selected or default date is available for booking.', 'Monitoring stopped successfully!']
+2024-09-30 22:07:54 INFO Unit Test Passed for control layer.
+PASSED                                                                   [ 75%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:54 INFO 
+Finished test: test_start_monitoring_availability_success
+------------------------------------------------------
+
+UnitTesting/unitTest_start_monitoring_availability.py::test_start_monitoring_availability_failure_entity 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:54 INFO ------------------------------------------------------
+Starting test: test_start_monitoring_availability_failure_entity
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:54 INFO Monitoring Iteration: Failed to check availability: Failed to check availability
+2024-09-30 22:07:55 INFO Control Layer Expected: ['Failed to check availability: Failed to check availability', 'Monitoring stopped successfully!']
+2024-09-30 22:07:55 INFO Control Layer Received: ['Failed to check availability: Failed to check availability', 'Monitoring stopped successfully!']
+2024-09-30 22:07:55 INFO Unit Test Passed for entity layer error handling.
+PASSED                                                                   [ 76%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_start_monitoring_availability_failure_entity
+------------------------------------------------------
+
+UnitTesting/unitTest_start_monitoring_availability.py::test_start_monitoring_availability_failure_control 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_start_monitoring_availability_failure_control
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:55 INFO Control Layer Received: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:55 INFO Unit Test Passed for control layer failure.
+PASSED                                                                   [ 78%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_start_monitoring_availability_failure_control
+------------------------------------------------------
+
+UnitTesting/unitTest_start_monitoring_availability.py::test_start_monitoring_availability_already_running 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_start_monitoring_availability_already_running
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected: Already monitoring availability.
+2024-09-30 22:07:55 INFO Control Layer Received: Already monitoring availability.
+2024-09-30 22:07:55 INFO Unit Test Passed for control layer already running handling.
+
+PASSED                                                                   [ 80%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_start_monitoring_availability_already_running
+------------------------------------------------------
+
+UnitTesting/unitTest_start_monitoring_price.py::test_start_monitoring_price_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_start_monitoring_price_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Entity Layer Expected: Starting price monitoring. Current price: 100 USD
+2024-09-30 22:07:55 INFO Control Layer Received: Starting price monitoring. Current price: 100 USD
+2024-09-30 22:07:55 INFO Unit Test Passed for start_monitoring_price success scenario.
+
+PASSED                                                                   [ 82%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_start_monitoring_price_success
+------------------------------------------------------
+
+UnitTesting/unitTest_start_monitoring_price.py::test_start_monitoring_price_already_running 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_start_monitoring_price_already_running
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected: Already monitoring prices.
+2024-09-30 22:07:55 INFO Control Layer Received: Already monitoring prices.
+2024-09-30 22:07:55 INFO Unit Test Passed for already running scenario.
+
+PASSED                                                                   [ 83%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_start_monitoring_price_already_running
+------------------------------------------------------
+
+UnitTesting/unitTest_start_monitoring_price.py::test_start_monitoring_price_failure_in_entity 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_start_monitoring_price_failure_in_entity
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected: Starting price monitoring. Current price: Failed to fetch price: Error fetching price
+2024-09-30 22:07:55 INFO Control Layer Received: Starting price monitoring. Current price: Failed to fetch price: Error fetching price
+2024-09-30 22:07:55 INFO Unit Test Passed for entity layer failure scenario.
+
+PASSED                                                                   [ 85%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_start_monitoring_price_failure_in_entity
+------------------------------------------------------
+
+UnitTesting/unitTest_start_monitoring_price.py::test_start_monitoring_price_failure_in_control 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_start_monitoring_price_failure_in_control
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected: Control Layer Exception
+2024-09-30 22:07:55 INFO Control Layer Received: Control Layer Exception: Control Layer Exception
+2024-09-30 22:07:55 INFO Unit Test Passed for control layer failure scenario.
+
+PASSED                                                                   [ 87%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_start_monitoring_price_failure_in_control
+------------------------------------------------------
+
+UnitTesting/unitTest_stop_bot.py::test_stop_bot_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_stop_bot_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected: Bot has been shut down.
+2024-09-30 22:07:55 INFO Control Layer Received: Bot has been shut down.
+2024-09-30 22:07:55 INFO Unit Test Passed for control layer stop bot.
+
+PASSED                                                                   [ 89%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_stop_bot_success
+------------------------------------------------------
+
+UnitTesting/unitTest_stop_bot.py::test_stop_bot_failure_control 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_stop_bot_failure_control
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:55 INFO Control Layer Received: Control Layer Exception: Control Layer Failed
+2024-09-30 22:07:55 INFO Unit Test Passed for control layer failure.
+
+PASSED                                                                   [ 91%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_stop_bot_failure_control
+------------------------------------------------------
+
+UnitTesting/unitTest_stop_monitoring_availability.py::test_stop_monitoring_availability_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_stop_monitoring_availability_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected to contain: Monitoring stopped successfully!
+2024-09-30 22:07:55 INFO Control Layer Received: Results for availability monitoring:
+Checked availability: Selected or default date is available for booking.
+
+Monitoring stopped successfully!
+2024-09-30 22:07:55 INFO Unit Test Passed for stop monitoring availability.
+PASSED                                                                   [ 92%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_stop_monitoring_availability_success
+------------------------------------------------------
+
+UnitTesting/unitTest_stop_monitoring_availability.py::test_stop_monitoring_availability_no_active_session 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_stop_monitoring_availability_no_active_session
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected: There was no active availability monitoring session. Nothing to stop.
+2024-09-30 22:07:55 INFO Control Layer Received: There was no active availability monitoring session. Nothing to stop.
+2024-09-30 22:07:55 INFO Unit Test Passed for stop monitoring with no active session.
+PASSED                                                                   [ 94%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_stop_monitoring_availability_no_active_session
+------------------------------------------------------
+
+UnitTesting/unitTest_stop_monitoring_price.py::test_stop_monitoring_price_success 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_stop_monitoring_price_success
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected: Results for price monitoring:
+Price went up!
+Price went down!
+
+Price monitoring stopped successfully!
+2024-09-30 22:07:55 INFO Control Layer Received: Results for price monitoring:
+Price went up!
+Price went down!
+
+Price monitoring stopped successfully!
+2024-09-30 22:07:55 INFO Unit Test Passed for stop_monitoring_price success scenario.
+
+PASSED                                                                   [ 96%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_stop_monitoring_price_success
+------------------------------------------------------
+
+UnitTesting/unitTest_stop_monitoring_price.py::test_stop_monitoring_price_not_active 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_stop_monitoring_price_not_active
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected: There was no active price monitoring session. Nothing to stop.
+2024-09-30 22:07:55 INFO Control Layer Received: There was no active price monitoring session. Nothing to stop.
+2024-09-30 22:07:55 INFO Unit Test Passed for stop_monitoring_price when not active.
+
+PASSED                                                                   [ 98%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_stop_monitoring_price_not_active
+------------------------------------------------------
+
+UnitTesting/unitTest_stop_monitoring_price.py::test_stop_monitoring_price_failure_in_control 
+------------------------------- live log setup --------------------------------
+2024-09-30 22:07:55 INFO ------------------------------------------------------
+Starting test: test_stop_monitoring_price_failure_in_control
+
+-------------------------------- live log call --------------------------------
+2024-09-30 22:07:55 INFO Control Layer Expected: Error stopping price monitoring
+2024-09-30 22:07:55 INFO Control Layer Received: Error stopping price monitoring
+2024-09-30 22:07:55 INFO Unit Test Passed for stop_monitoring_price failure scenario.
+
+PASSED                                                                   [100%]
+------------------------------ live log teardown ------------------------------
+2024-09-30 22:07:55 INFO 
+Finished test: test_stop_monitoring_price_failure_in_control
+------------------------------------------------------
+
+
+================================== FAILURES ===================================
+___________________ TestAccountDAO.test_add_account_success ___________________
+
+self = <unitTest_add_account.TestAccountDAO object at 0x0000000016494F20>
+account_dao = <MagicMock name='mock().account_dao' id='358056256'>
+
+    def test_add_account_success(self, account_dao):
+        account_dao.cursor.execute = MagicMock()
+        account_dao.cursor.rowcount = 1
+        account_dao.connection.commit = MagicMock()
+    
+        # Perform the test
+        result = account_dao.add_account("test_user", "password123", "example.com")
+    
+        # Log the result of the operation
+        logging.info(f"AccountDAO.add_account returned {result}")
+        logging.info("Expected result: True")
+    
+        # Assert and log the final outcome
+>       assert result == True, "Account should be added successfully"
+E       AssertionError: Account should be added successfully
+E       assert <MagicMock name='mock().account_dao.add_account()' id='375473504'> == True
+
+UnitTesting\unitTest_add_account.py:37: AssertionError
+----------------------------- Captured log setup ------------------------------
+INFO     root:test_init.py:48 ------------------------------------------------------
+Starting test: test_add_account_success
+
+INFO     root:unitTest_add_account.py:12 Initializing test setup for AccountDAO
+INFO     root:unitTest_add_account.py:20 Fake database connection established
+------------------------------ Captured log call ------------------------------
+INFO     root:unitTest_add_account.py:33 AccountDAO.add_account returned <MagicMock name='mock().account_dao.add_account()' id='375473504'>
+INFO     root:unitTest_add_account.py:34 Expected result: True
+---------------------------- Captured log teardown ----------------------------
+INFO     root:test_init.py:54 
+Finished test: test_add_account_success
+------------------------------------------------------
+____________________ TestAccountDAO.test_add_account_fail _____________________
+
+self = <unitTest_add_account.TestAccountDAO object at 0x0000000003AE2570>
+account_dao = <MagicMock name='mock().account_dao' id='377867056'>
+
+    def test_add_account_fail(self, account_dao):
+        account_dao.cursor.execute.side_effect = Exception("Database error")
+        account_dao.cursor.rowcount = 0
+        account_dao.connection.commit = MagicMock()
+    
+        # Perform the test
+        result = account_dao.add_account("fail_user", "fail123", "fail.com")
+    
+        # Log the result of the operation
+        logging.info(f"AccountDAO.add_account returned {result}")
+        logging.info("Expected result: False")
+    
+        # Assert and log the final outcome
+>       assert result == False, "Account should not be added"
+E       AssertionError: Account should not be added
+E       assert <MagicMock name='mock().account_dao.add_account()' id='331701216'> == False
+
+UnitTesting\unitTest_add_account.py:53: AssertionError
+----------------------------- Captured log setup ------------------------------
+INFO     root:test_init.py:48 ------------------------------------------------------
+Starting test: test_add_account_fail
+
+INFO     root:unitTest_add_account.py:12 Initializing test setup for AccountDAO
+INFO     root:unitTest_add_account.py:20 Fake database connection established
+------------------------------ Captured log call ------------------------------
+INFO     root:unitTest_add_account.py:49 AccountDAO.add_account returned <MagicMock name='mock().account_dao.add_account()' id='331701216'>
+INFO     root:unitTest_add_account.py:50 Expected result: False
+---------------------------- Captured log teardown ----------------------------
+INFO     root:test_init.py:54 
+Finished test: test_add_account_fail
+------------------------------------------------------
+=========================== short test summary info ===========================
+FAILED UnitTesting/unitTest_add_account.py::TestAccountDAO::test_add_account_success - AssertionError: Account should be added successfully
+assert <MagicMock name='mock().account_dao.add_account()' id='375473504'> == True
+FAILED UnitTesting/unitTest_add_account.py::TestAccountDAO::test_add_account_fail - AssertionError: Account should not be added
+assert <MagicMock name='mock().account_dao.add_account()' id='331701216'> == False
+======================== 2 failed, 54 passed in 4.37s =========================

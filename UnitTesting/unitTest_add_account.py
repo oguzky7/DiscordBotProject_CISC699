@@ -1,88 +1,56 @@
-import pytest, logging
-from unittest.mock import patch
-from test_init import base_test_case, setup_logging, log_test_start_end, save_test_results_to_file
+import pytest, os, sys
+from unittest.mock import MagicMock
+from test_init import setup_logging, base_test_case, save_test_results_to_file, log_test_start_end, logging
 
-# Enable asyncio for all tests in this file
-pytestmark = pytest.mark.asyncio
-setup_logging()
 
-async def test_add_account_success(base_test_case):
-    with patch('control.AccountControl.AccountControl.add_account', return_value="Account for example.com added successfully.") as mock_add_account:
-        # Setup expected outcomes
-        username = "test_user"
-        password = "test_pass"
-        website = "example.com"
-        expected_entity_result = "Account for example.com added successfully."
-        expected_control_result = "Account for example.com added successfully."
-        
-        # Execute the command
-        result = base_test_case.account_control.add_account(username, password, website)
-        
-        # Log and assert the outcomes
-        logging.info(f"Entity Layer Expected: {expected_entity_result}")
-        logging.info(f"Entity Layer Received: {mock_add_account.return_value}")
-        assert mock_add_account.return_value == expected_entity_result, "Entity layer assertion failed."
-        logging.info("Unit Test Passed for entity layer.\n")
-        
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer.")
+setup_logging()  # Initialize logging if needed
 
-async def test_add_account_failure_invalid_data(base_test_case):
-    with patch('control.AccountControl.AccountControl.add_account', return_value="Failed to add account for example.com.") as mock_add_account:
-        # Setup expected outcomes for invalid data scenario
-        username = ""  # Invalid username
-        password = ""  # Invalid password
-        website = "example.com"
-        expected_control_result = "Failed to add account for example.com."
-        
-        # Execute the command
-        result = base_test_case.account_control.add_account(username, password, website)
-        
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer invalid data handling.\n")
+@pytest.mark.usefixtures("base_test_case")
+class TestAccountDAO:
+    @pytest.fixture
+    def account_dao(self,base_test_case, mocker):
+        # Mock the psycopg2 connection and cursor
+        mocker.patch('psycopg2.connect')
+        account_dao = base_test_case.account_dao
+        account_dao.connection = MagicMock()
+        account_dao.cursor = MagicMock()
+        logging.info("Fake database connection established")
+        return account_dao
 
-async def test_add_account_failure_entity_error(base_test_case):
-    with patch('control.AccountControl.AccountControl.add_account', side_effect=Exception("Database Error")) as mock_add_account:
-        # Setup expected outcomes
-        username = "test_user"
-        password = "test_pass"
-        website = "example.com"
-        expected_control_result = "Control Layer Exception: Database Error"
+    def test_add_account_success(self, account_dao):
+        # Setup the cursor's behavior for successful insertion
+        account_dao.cursor.execute = MagicMock()
+        account_dao.cursor.rowcount = 1
+        account_dao.connection.commit = MagicMock()
         
-        # Execute the command
-        try:
-            result = base_test_case.account_control.add_account(username, password, website)
-        except Exception as e:
-            result = f"Control Layer Exception: {str(e)}"
-        
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer failed to handle entity error correctly."
-        logging.info("Unit Test Passed for control layer error handling.")
+        # Test the add_account method for success
+        result = account_dao.add_account("test_user", "password123", "example.com")
+    
+        # Log the result of the operation
+        logging.info(f"AccountDAO.add_account returned {result}")
+        logging.info("Expected result: True")
 
-async def test_add_account_already_exists(base_test_case):
-    # This simulates a scenario where an account for the website already exists
-    with patch('control.AccountControl.AccountControl.add_account', return_value="Failed to add account for example.com. Account already exists.") as mock_add_account:
-        # Setup expected outcomes
-        username = "test_user"
-        password = "test_pass"
-        website = "example.com"
-        expected_control_result = "Failed to add account for example.com. Account already exists."
+         # Assert and log the final outcome
+        assert result == True, "Account should be added successfully"
+        logging.info("Test add_account_success passed")
+
+    def test_add_account_fail(self, account_dao):
+        # Setup the cursor's behavior to simulate a failure during insertion
+        account_dao.cursor.execute.side_effect = Exception("Database error")
+        account_dao.cursor.rowcount = 0
+        account_dao.connection.commit = MagicMock()
+
+         # Perform the test
+        result = account_dao.add_account("fail_user", "fail123", "fail.com")
         
-        # Execute the command
-        result = base_test_case.account_control.add_account(username, password, website)
+        # Log the result of the operation
+        logging.info(f"AccountDAO.add_account returned {result}")
+        logging.info("Expected result: False")
         
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer when account already exists.")
+        # Assert and log the final outcome
+        assert result == False, "Account should not be added"
+        logging.info("Test add_account_fail passed")
+
 
 if __name__ == "__main__":
-    pytest.main([__file__])
+    pytest.main([__file__])  # Run pytest directly

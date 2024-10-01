@@ -31,6 +31,8 @@ def setup_logging():
     logger = logging.getLogger()
     if not logger.hasHandlers():
         logging.basicConfig(level=logging.INFO, format='%(message)s')
+
+
 def save_test_results_to_file(output_file="test_results.txt"):
     """Helper function to run pytest and save results to a file."""
     print("Running tests and saving results to file...")
@@ -57,6 +59,10 @@ from control.AccountControl import AccountControl
 from control.AvailabilityControl import AvailabilityControl
 from control.PriceControl import PriceControl
 from control.BotControl import BotControl
+from DataObjects.AccountDAO import AccountDAO
+from entity.AvailabilityEntity import AvailabilityEntity
+from entity.BrowserEntity import BrowserEntity
+from entity.PriceEntity import PriceEntity
 
 @pytest.fixture
 def base_test_case():
@@ -67,6 +73,10 @@ def base_test_case():
     test_case.availability_control = AvailabilityControl()
     test_case.price_control = PriceControl()
     test_case.bot_control = BotControl()
+    test_case.account_dao = AccountDAO()
+    test_case.availability_entity = AvailabilityEntity()
+    test_case.browser_entity = BrowserEntity()
+    test_case.price_entity = PriceEntity()
     return test_case
 
 if __name__ == "__main__":

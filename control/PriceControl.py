@@ -62,7 +62,7 @@ class PriceControl:
         return result
 
 
-    async def start_monitoring_price(self, url: str, frequency=20):
+    async def start_monitoring_price(self, url: str, frequency=10):
         """Start monitoring the price at a given interval."""
         print("Starting price monitoring...")
         try:
