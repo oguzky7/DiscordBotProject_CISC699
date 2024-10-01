@@ -1,7 +1,8 @@
 import discord
+from utils.email_utils import send_email_with_attachments
 
 class BotControl:
-    async def receive_command(self, command_data, ctx=None):
+    async def receive_command(self, command_data, *args):
         """Handle commands related to help and stopping the bot."""
         print("Data received from boundary:", command_data)
 
@@ -34,8 +35,9 @@ class BotControl:
                 return error_msg
 
         # Handle stop bot commands
-        elif command_data == "stop_bot" and ctx is not None:
+        elif command_data == "stop_bot":
             try:
+                ctx = args[0] if args else None
                 bot = ctx.bot  # Get the bot instance from the context
                 await ctx.send("The bot is shutting down...")
                 print("Bot is shutting down...")
@@ -47,6 +49,24 @@ class BotControl:
                 error_msg = f"Error shutting down the bot: {str(e)}"
                 print(error_msg)
                 return error_msg
+
+
+        # Handle receive email commands
+        elif command_data == "receive_email":
+            try:
+                file_name = args[0] if args else None
+                if file_name:
+                    print(f"Sending email with the file '{file_name}'...")
+                    result = send_email_with_attachments(file_name)
+                    print(result)
+                else:
+                    result = "Please specify a file to send, e.g., !receive_email monitor_price.html"
+                return result
+            except Exception as e:
+                error_msg = f"Error shutting down the bot: {str(e)}"
+                print(error_msg)
+                return error_msg
+
 
         # Default response for invalid commands
         else:

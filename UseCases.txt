@@ -12,6 +12,8 @@ Commands/ use cases
 
 !delete_account 
 
+!receive_email <file name>
+
 !launch_browser
 
 !close_browser

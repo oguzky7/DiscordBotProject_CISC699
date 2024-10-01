@@ -12,6 +12,8 @@ Working Commands: Test commands
 
 !delete_account 4
 
+!receive_email monitor_price.html
+
 !launch_browser
 
 !close_browser
