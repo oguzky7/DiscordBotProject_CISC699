@@ -2,7 +2,16 @@ import sys, os, logging, pytest, asyncio
 import subprocess
 from unittest.mock import patch, MagicMock
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
+from utils.email_utils import send_email_with_attachments
+from control.BrowserControl import BrowserControl
+from control.AccountControl import AccountControl
+from control.AvailabilityControl import AvailabilityControl
+from control.PriceControl import PriceControl
+from control.BotControl import BotControl
+from DataObjects.AccountDAO import AccountDAO
+from entity.AvailabilityEntity import AvailabilityEntity
+from entity.BrowserEntity import BrowserEntity
+from entity.PriceEntity import PriceEntity
 #pytest -v > test_results.txt
 #Run this command in the terminal to save the test results to a file
 
@@ -53,16 +62,6 @@ def log_test_start_end(request):
     # Log after the test finishes
     logging.info(f"\nFinished test: {test_name}\n------------------------------------------------------")
 
-# Import your control classes
-from control.BrowserControl import BrowserControl
-from control.AccountControl import AccountControl
-from control.AvailabilityControl import AvailabilityControl
-from control.PriceControl import PriceControl
-from control.BotControl import BotControl
-from DataObjects.AccountDAO import AccountDAO
-from entity.AvailabilityEntity import AvailabilityEntity
-from entity.BrowserEntity import BrowserEntity
-from entity.PriceEntity import PriceEntity
 
 @pytest.fixture
 def base_test_case():
@@ -77,6 +76,7 @@ def base_test_case():
     test_case.availability_entity = AvailabilityEntity()
     test_case.browser_entity = BrowserEntity()
     test_case.price_entity = PriceEntity()
+    test_case.email_dao = send_email_with_attachments
     return test_case
 
 if __name__ == "__main__":
