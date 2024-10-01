@@ -1,0 +1,10 @@
+# EmailBoundary.py
+from discord.ext import commands
+from utils.email_utils import send_email_with_attachments
+
+class EmailBoundary(commands.Cog):
+    @commands.command(name="receive_email")
+    async def receive_email(self, ctx):
+        await ctx.send("Sending email with the exported files...")
+        result = send_email_with_attachments()
+        await ctx.send(result)
