@@ -13,10 +13,8 @@ async def test_start_monitoring_availability_success(base_test_case):
         mock_check.return_value = "Selected or default date is available for booking."
         
         expected_control_result = [
-            "Checked availability: Selected or default date is available for booking.",
-            "Monitoring stopped successfully!"
+('Checked availability: Selected or default date is available for booking.', 'Data saved to Excel file at ExportedFiles\\excelFiles\\check_availability.xlsx.', 'HTML file saved and updated at ExportedFiles\\htmlFiles\\check_availability.html.'), 'Monitoring stopped successfully!'
         ]
-
         # Run the monitoring loop once
         actual_control_result = await run_monitoring_loop(
             base_test_case.availability_control,
@@ -36,9 +34,7 @@ async def test_start_monitoring_availability_failure_entity(base_test_case):
     with patch('entity.AvailabilityEntity.AvailabilityEntity.check_availability', side_effect=Exception("Failed to check availability")):
         url = "https://example.com"
         expected_control_result = [
-            "Failed to check availability: Failed to check availability",
-            "Monitoring stopped successfully!"
-        ]
+('Failed to check availability: Failed to check availability', 'Data saved to Excel file at ExportedFiles\\excelFiles\\check_availability.xlsx.', 'HTML file saved and updated at ExportedFiles\\htmlFiles\\check_availability.html.'), 'Monitoring stopped successfully!'        ]
 
         # Run the monitoring loop once
         actual_control_result = await run_monitoring_loop(
