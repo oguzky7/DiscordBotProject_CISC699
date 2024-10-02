@@ -2,6 +2,7 @@ import asyncio
 from datetime import datetime
 from entity.PriceEntity import PriceEntity
 from utils.css_selectors import Selectors
+from utils.exportUtils import ExportUtils
 
 class PriceControl:
     def __init__(self):
@@ -45,24 +46,35 @@ class PriceControl:
             
             result = self.price_entity.get_price_from_page(url)
             print(f"Price found: {result}")
-            data_dto = {
-                        "command": "monitor_price",
-                        "url": url,
-                        "result": result,
-                        "entered_date": datetime.now().strftime('%Y-%m-%d'),
-                        "entered_time": datetime.now().strftime('%H:%M:%S')
-                    }
-
-                    # Pass the DTO to PriceEntity to handle export
-            self.price_entity.export_data(data_dto)
-            
         except Exception as e:
             return f"Failed to fetch price: {str(e)}"
-    
-        return result
+            
+        try:
+            # Call the Excel export method from ExportUtils
+            excelResult = ExportUtils.log_to_excel(
+                command="check_availability",
+                url=url,
+                result=result,
+                entered_date=datetime.now().strftime('%Y-%m-%d'),  # Pass the optional entered_date
+                entered_time=datetime.now().strftime('%H:%M:%S')   # Pass the optional entered_time
+            )
+            print(excelResult)
+            htmlResult = ExportUtils.export_to_html(
+                command="check_availability",
+                url=url,
+                result=result,
+                entered_date=datetime.now().strftime('%Y-%m-%d'),  # Pass the optional entered_date
+                entered_time=datetime.now().strftime('%H:%M:%S')   # Pass the optional entered_time
+            )
+            print(htmlResult)
+
+        except Exception as e:
+            return f"PriceControl_Error exporting data: {str(e)}"   
+             
+        return result, excelResult, htmlResult
 
 
-    async def start_monitoring_price(self, url: str, frequency=20):
+    async def start_monitoring_price(self, url: str, frequency=10):
         """Start monitoring the price at a given interval."""
         print("Starting price monitoring...")
         try:

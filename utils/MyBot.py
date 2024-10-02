@@ -5,7 +5,7 @@ from boundary.AccountBoundary import AccountBoundary
 from boundary.AvailabilityBoundary import AvailabilityBoundary
 from boundary.PriceBoundary import PriceBoundary
 from boundary.BotBoundary import BotBoundary
-from DataObjects.global_vars import GlobalState  # Import the global variable
+from DataObjects.global_vars import GlobalState
 
 # Bot initialization
 intents = discord.Intents.default()

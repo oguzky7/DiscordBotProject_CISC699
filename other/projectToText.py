@@ -6,7 +6,7 @@ from docx import Document
 directory = r"D:\HARRISBURG\Harrisburg Master's Fifth Term Late Summer\CISC 699\DiscordBotProject_CISC699"
 
 # Lists for files and folders to ignore
-files_to_ignore = ['ignore_this.py', '*txt', '*md', '*.pdf', '*.docx', '*.pyc']  # Example file names to ignore
+files_to_ignore = ['ignore_this.py', '*txt', '*md', '*.pdf', '*.docx', '*.pyc', 'Config.py']  # Example file names to ignore
 folders_to_ignore = ['ignore_folder', '.git', '__pycache__', 'PersonelTest', 'MockTesting', 'ExportedFiles', 'other']  # Folders to ignore
 
 def create_pdf(text_blocks, output_path):

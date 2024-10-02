@@ -1,5 +1,4 @@
 import asyncio
-from utils.exportUtils import ExportUtils
 from entity.BrowserEntity import BrowserEntity
 from utils.css_selectors import Selectors
 from selenium.webdriver.common.by import By
@@ -64,41 +63,3 @@ class AvailabilityEntity:
             
         except Exception as e:
             return f"Failed to check availability: {str(e)}"
-
-
-    def export_data(self, dto):
-        """Export price data to both Excel and HTML using ExportUtils.
-        
-        dto: This is a Data Transfer Object (DTO) that contains the command, URL, result, date, and time.
-        """
-        try:
-            # Extract the data from the DTO
-            command = dto.get('command')
-            url = dto.get('url')
-            result = dto.get('result')
-            entered_date = dto.get('entered_date')  # Optional, could be None
-            entered_time = dto.get('entered_time')  # Optional, could be None
-
-            # Call the Excel export method from ExportUtils
-            excelResult = ExportUtils.log_to_excel(
-                command=command,
-                url=url,
-                result=result,
-                entered_date=entered_date,  # Pass the optional entered_date
-                entered_time=entered_time   # Pass the optional entered_time
-            )
-            print(excelResult)
-
-            # Call the HTML export method from ExportUtils
-            htmlResult = ExportUtils.export_to_html(
-                command=command,
-                url=url,
-                result=result,
-                entered_date=entered_date,  # Pass the optional entered_date
-                entered_time=entered_time   # Pass the optional entered_time
-            )
-            print(htmlResult)
-            # Export operations...
-        except Exception as e:
-            return f"priceEntity_Error exporting data: {str(e)}"
-
