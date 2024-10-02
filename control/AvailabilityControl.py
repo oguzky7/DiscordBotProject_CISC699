@@ -2,6 +2,7 @@ import asyncio
 from entity.AvailabilityEntity import AvailabilityEntity
 from datetime import datetime
 from utils.css_selectors import Selectors
+from utils.exportUtils import ExportUtils
 
 class AvailabilityControl:
     def __init__(self):
@@ -60,10 +61,16 @@ class AvailabilityControl:
             "entered_date": datetime.now().strftime('%Y-%m-%d'),
             "entered_time": datetime.now().strftime('%H:%M:%S')
         }
+        try:
+            # Call the Excel export method from ExportUtils
+            excelResult = ExportUtils.log_to_excel(data_dto)
+            print(excelResult)
+            htmlResult = ExportUtils.export_to_html(data_dto)
+            print(htmlResult)
 
-        # Export data to Excel/HTML via the entity
-        self.availability_entity.export_data(data_dto)
-        return result
+        except Exception as e:
+            return f"AvailabilityControl_Error exporting data: {str(e)}"        
+        return result, excelResult, htmlResult
 
 
     async def start_monitoring_availability(self, url: str, date_str=None, frequency=15):
