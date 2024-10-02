@@ -30,13 +30,13 @@ Working Commands: Test commands
 
 !check_availability https://www.opentable.com/r/hals-the-steakhouse-nashville
 
-!check_availability https://www.opentable.com/r/hals-the-steakhouse-nashville "September 27"
+!check_availability https://www.opentable.com/r/hals-the-steakhouse-nashville "October 25"
 
-!start_monitoring_availability https://www.opentable.com/r/hals-the-steakhouse-nashville
+!start_monitoring_availability https://www.opentable.com/r/hals-the-steakhouse-nashville "October 20"
 
-!start_monitoring_availability https://www.opentable.com/r/sinatra-bar-and-lounge-nashville
+!start_monitoring_availability https://www.opentable.com/r/sinatra-bar-and-lounge-nashville "October 20"
 
-!start_monitoring_availability https://www.opentable.com/r/the-hampton-social-nashville "September 30"
+!start_monitoring_availability https://www.opentable.com/r/the-hampton-social-nashville "October 20"
 
 !stop_monitoring_availability
 

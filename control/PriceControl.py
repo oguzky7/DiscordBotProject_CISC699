@@ -50,17 +50,22 @@ class PriceControl:
             return f"Failed to fetch price: {str(e)}"
             
         try:
-            data_dto = {
-                        "command": "monitor_price",
-                        "url": url,
-                        "result": result,
-                        "entered_date": datetime.now().strftime('%Y-%m-%d'),
-                        "entered_time": datetime.now().strftime('%H:%M:%S')
-                    }
             # Call the Excel export method from ExportUtils
-            excelResult = ExportUtils.log_to_excel(data_dto)
+            excelResult = ExportUtils.log_to_excel(
+                command="check_availability",
+                url=url,
+                result=result,
+                entered_date=datetime.now().strftime('%Y-%m-%d'),  # Pass the optional entered_date
+                entered_time=datetime.now().strftime('%H:%M:%S')   # Pass the optional entered_time
+            )
             print(excelResult)
-            htmlResult = ExportUtils.export_to_html(data_dto)
+            htmlResult = ExportUtils.export_to_html(
+                command="check_availability",
+                url=url,
+                result=result,
+                entered_date=datetime.now().strftime('%Y-%m-%d'),  # Pass the optional entered_date
+                entered_time=datetime.now().strftime('%H:%M:%S')   # Pass the optional entered_time
+            )
             print(htmlResult)
 
         except Exception as e:
