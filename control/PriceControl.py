@@ -1,6 +1,7 @@
 import asyncio
 from datetime import datetime
 from entity.PriceEntity import PriceEntity
+from utils.configuration import load_config
 from utils.css_selectors import Selectors
 from utils.exportUtils import ExportUtils
 
@@ -20,8 +21,10 @@ class PriceControl:
             return await self.get_price(url)
 
         elif command_data == "start_monitoring_price":
+            config = load_config()
+            price_monitor_frequency = config.get('project_options', {}).get('price_monitor_frequency', 15)
             url = args[0] if args else None
-            frequency = args[1] if len(args) > 1 and args[1] not in [None, ""] else 20
+            frequency = args[1] if len(args) > 1 and args[1] not in [None, ""] else price_monitor_frequency
             return await self.start_monitoring_price(url, frequency)
 
         elif command_data == "stop_monitoring_price":

@@ -4,12 +4,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from utils.configuration import load_config
 from utils.css_selectors import Selectors
 
 
 class BrowserEntity:
     _instance = None
-
+    config = load_config()
+    search_element_timeOut = config.get('project_options', {}).get('search_element_timeOut', 15)
+    sleep_time = config.get('project_options', {}).get('sleep_time', 15)
+    
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(BrowserEntity, cls).__new__(cls, *args, **kwargs)
@@ -90,17 +94,17 @@ class BrowserEntity:
 
             email_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['email_field'])
             email_field.send_keys(username)
-            await asyncio.sleep(3)
+            await asyncio.sleep(self.sleep_time)
 
             password_field = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['password_field'])
             password_field.send_keys(password)
-            await asyncio.sleep(3)
+            await asyncio.sleep(self.sleep_time)
 
             sign_in_button = self.driver.find_element(By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['SignIn_button'])
             sign_in_button.click()
-            await asyncio.sleep(5)
+            await asyncio.sleep(self.sleep_time)
 
-            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['homePage'])))
+            WebDriverWait(self.driver, self.search_element_timeOut).until(EC.presence_of_element_located((By.CSS_SELECTOR, Selectors.get_selectors_for_url(url)['homePage'])))
             return f"Logged in to {url} successfully with username: {username}"
         except Exception as e:
             return f"BrowserEntity_Failed to log in to {url}: {str(e)}"

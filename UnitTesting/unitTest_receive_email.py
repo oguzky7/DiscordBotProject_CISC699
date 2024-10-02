@@ -15,7 +15,7 @@ class TestEmailDAO:
         logging.info("Mocked EmailDAO with send_email_with_attachments method")
         return email_dao
 
-    def test_entity_send_email_success(self, email_dao):
+    def test_utility_send_email_success(self, email_dao):
         # Mock successful email sending
         email_dao.return_value = "Email with file 'monitor_price.html' sent successfully!"
         
@@ -26,7 +26,7 @@ class TestEmailDAO:
         assert result == "Email with file 'monitor_price.html' sent successfully!"
         logging.info("Test send_email_success passed")
 
-    def test_entity_send_email_fail(self, email_dao):
+    def test_utility_send_email_fail(self, email_dao):
         # Mock failure in email sending
         email_dao.return_value = "File 'non_existent_file.html' not found."
         

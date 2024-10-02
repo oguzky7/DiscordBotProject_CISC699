@@ -3,6 +3,7 @@ import subprocess
 from unittest.mock import patch, MagicMock
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.email_utils import send_email_with_attachments
+from utils.exportUtils import ExportUtils
 from control.BrowserControl import BrowserControl
 from control.AccountControl import AccountControl
 from control.AvailabilityControl import AvailabilityControl
@@ -77,6 +78,7 @@ def base_test_case():
     test_case.browser_entity = BrowserEntity()
     test_case.price_entity = PriceEntity()
     test_case.email_dao = send_email_with_attachments
+    test_case.export_utils = ExportUtils()
     return test_case
 
 if __name__ == "__main__":
