@@ -1,0 +1,12 @@
+{
+    "project_options": {
+      "sleep_time": 3,
+      "availability_monitor_frequency": 15, 
+      "price_monitor_frequency": 15, 
+      "search_element_timeOut": 20, 
+      "max_retries": 3,  
+      "default_website": "https://www.google.com/",
+      "is_debug_mode": false  
+    }
+  }
+  

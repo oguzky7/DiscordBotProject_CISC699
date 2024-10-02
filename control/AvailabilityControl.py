@@ -3,6 +3,7 @@ from entity.AvailabilityEntity import AvailabilityEntity
 from datetime import datetime
 from utils.css_selectors import Selectors
 from utils.exportUtils import ExportUtils
+from utils.configuration import load_config
 
 class AvailabilityControl:
     def __init__(self):
@@ -20,9 +21,12 @@ class AvailabilityControl:
             return await self.check_availability(url, date_str)
 
         elif command_data == "start_monitoring_availability":
+            config = load_config()
+            availability_monitor_frequency = config.get('project_options', {}).get('availability_monitor_frequency', 15)
+
             url = args[0]
             date_str = args[1] if len(args) > 1 else None
-            frequency = args[2] if len(args) > 2 and args[2] not in [None, ""] else 15
+            frequency = args[2] if len(args) > 2 and args[2] not in [None, ""] else availability_monitor_frequency
             return await self.start_monitoring_availability(url, date_str, frequency)
 
         elif command_data == "stop_monitoring_availability":

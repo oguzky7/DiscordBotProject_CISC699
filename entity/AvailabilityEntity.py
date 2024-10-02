@@ -4,13 +4,19 @@ from utils.css_selectors import Selectors
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from utils.configuration import load_config
 
 class AvailabilityEntity:
+
+    config = load_config()
+    search_element_timeOut = config.get('project_options', {}).get('search_element_timeOut', 15)
+    sleep_time = config.get('project_options', {}).get('sleep_time', 15)
+
     def __init__(self):
         self.browser_entity = BrowserEntity()
 
 
-    async def check_availability(self, url: str, date_str=None, timeout=15):
+    async def check_availability(self, url: str, date_str=None, timeout=search_element_timeOut):
         try:
             # Use BrowserEntity to navigate to the URL
             self.browser_entity.navigate_to_website(url)
@@ -21,17 +27,17 @@ class AvailabilityEntity:
             # Perform date selection (optional)
             if date_str:
                 try:
-                    await asyncio.sleep(3)  # Wait for updates to load
+                    await asyncio.sleep(self.sleep_time)  # Wait for updates to load
                     print(selectors['date_field'])
                     date_field = self.browser_entity.driver.find_element(By.CSS_SELECTOR, selectors['date_field'])
                     date_field.click()
-                    await asyncio.sleep(3)
+                    await asyncio.sleep(self.sleep_time)
                     date_button = self.browser_entity.driver.find_element(By.CSS_SELECTOR, f"{selectors['select_date']} button[aria-label*=\"{date_str}\"]")
                     date_button.click()
                 except Exception as e:
                     return f"Failed to select the date: {str(e)}"
 
-            await asyncio.sleep(2)  # Wait for updates to load
+            await asyncio.sleep(self.sleep_time)  # Wait for updates to load
 
             # Initialize flags for select_time and no_availability elements
             select_time_seen = False
