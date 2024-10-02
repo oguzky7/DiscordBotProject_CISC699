@@ -1,10 +1,8 @@
-import pytest, logging
+import logging, pytest
 from unittest.mock import patch
 from test_init import base_test_case, setup_logging, run_monitoring_loop, log_test_start_end
-import asyncio
 
 # Enable asyncio for all tests in this file
-pytestmark = pytest.mark.asyncio
 setup_logging()
 
 async def test_start_monitoring_availability_success(base_test_case):
