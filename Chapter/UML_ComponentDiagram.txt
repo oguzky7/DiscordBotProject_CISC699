@@ -1,0 +1,48 @@
+@startuml
+[Discord User] as DU
+
+package "Boundary Layer" as BL{
+  [AccountBoundary] 
+  [BrowserBoundary] 
+  [AvailabilityBoundary]
+  [PriceBoundary] 
+}
+
+package "Control Layer" as CL{
+  [AccountControl]
+  [AvailabilityControl]
+  [BrowserControl] 
+  [PriceControl] 
+}
+
+package "Entity Layer" as EL{
+[AccountDAO] 
+[BrowserEntity] 
+[PriceEntity] 
+[AvailabilityEntity]
+}
+DU --> [AccountBoundary]
+DU --> [BrowserBoundary]
+DU --> [AvailabilityBoundary]
+DU --> [PriceBoundary]
+[AccountBoundary] --> [AccountControl]
+[BrowserBoundary] --> [BrowserControl]
+[AvailabilityBoundary] --> [AvailabilityControl]
+[PriceBoundary] --> [PriceControl]
+
+
+
+[AccountControl] --> [AccountDAO]
+[AvailabilityControl] --> [AvailabilityEntity]
+[BrowserControl] --> [BrowserEntity]
+[PriceControl] --> [PriceEntity]
+
+
+
+[AccountDAO] --> [Postgres Database]
+[BrowserEntity] --> [ExportUtils]
+[PriceEntity] --> [ExportUtils]
+[AvailabilityEntity] --> [ExportUtils]
+
+
+@enduml

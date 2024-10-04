@@ -1,0 +1,39 @@
+@startuml
+start
+
+:User sends !get_price command;
+:Discord Bot receives command;
+
+if (Command is valid?) then (yes)
+  :Parse command;
+  :Forward command to PriceBoundary;
+  :PriceBoundary forwards to PriceControl;
+  :PriceControl requests price from PriceEntity;
+
+  :PriceEntity navigates to website and retrieves price;
+  
+  if (Price found?) then (yes)
+    :PriceEntity returns price to PriceControl;
+    :PriceControl forwards price to PriceBoundary;
+    :PriceBoundary sends price to User via Discord;
+
+    :PriceControl exports data to Excel and HTML;
+
+    if (Price has changed?) then (yes)
+      :PriceControl sends email notification with price change;
+      :PriceControl sends notification to User via Discord;
+    else (no)
+      :No price change detected;
+    endif
+
+  else (no)
+    :PriceEntity returns error;
+    :PriceBoundary sends error to User;
+  endif
+  
+else (no)
+  :Send error message to User;
+endif
+
+stop
+@enduml
