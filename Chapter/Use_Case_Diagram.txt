@@ -1,0 +1,92 @@
+@startuml
+actor User
+actor ExternalHelpers as EH
+
+User -down-> System
+
+rectangle "Discord Bot System" as System {
+
+  package "Account Management" as AM {
+    usecase "Add Account" as UC1
+    usecase "Fetch All Accounts" as UC2
+    usecase "Fetch Account by Website" as UC3
+    usecase "Delete Account" as UC4
+  }
+
+  package "Browser Operations" as BO {
+    usecase "Launch Browser" as UC5
+    usecase "Close Browser" as UC6
+    usecase "Navigate to Website" as UC7
+  }
+
+  package "Login" as LO {
+    usecase "Login to Website" as UC8
+  }
+
+  package "Price Monitoring" as PM {
+    usecase "Get Price" as UC9
+    usecase "Start Monitoring Price" as UC10
+    usecase "Stop Monitoring Price" as UC11
+  }
+
+  package "Availability Monitoring" as AMon {
+    usecase "Check Availability" as UC12
+    usecase "Start Monitoring Availability" as UC13
+    usecase "Stop Monitoring Availability" as UC14
+  }
+
+  package "Data Export" as DE {
+    usecase "Export Data" as UC15
+  }
+
+  package "Notifications & Email" as NE {
+    usecase "Receive Email" as UC16
+  }
+
+  package "Chat with Bot" as CB {
+    usecase "Interact with Bot" as UC17
+  }
+
+}
+
+'Positioning the packages
+AM -down-> BO
+LO -right-> BO
+BO -down-> AMon
+AMon -down-> PM
+
+'User interactions with each use case
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+User --> UC8
+User --> UC9
+User --> UC10
+User --> UC11
+User --> UC12
+User --> UC13
+User --> UC14
+User --> UC16
+User --> UC17
+
+EH --> UC5
+EH --> UC6
+EH --> UC7
+
+UC9 ..> UC15 : <<extends>>
+UC12 ..> UC15 : <<extends>>
+
+UC15 ..> UC16 : <<extends>>
+
+UC17 --> UC1
+UC17 --> UC5
+UC17 --> UC9
+UC17 --> UC12
+UC17 --> UC15
+UC17 --> UC16
+
+@enduml
