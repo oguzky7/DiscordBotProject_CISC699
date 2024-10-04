@@ -4,6 +4,7 @@ from datetime import datetime
 from utils.css_selectors import Selectors
 from utils.exportUtils import ExportUtils
 from utils.configuration import load_config
+from utils.email_utils import send_email_with_attachments
 
 class AvailabilityControl:
     def __init__(self):
@@ -95,6 +96,8 @@ class AvailabilityControl:
                 # Call entity to check availability
                 result = await self.check_availability(url, date_str)
                 self.results.append(result) # Store the result in the list
+                send_email_with_attachments("check_availability.html")
+                send_email_with_attachments("check_availability.xlsx")
                 await asyncio.sleep(frequency)  # Wait for the specified frequency before checking again
 
         except Exception as e:

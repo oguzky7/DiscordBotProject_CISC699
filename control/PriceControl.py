@@ -4,6 +4,8 @@ from entity.PriceEntity import PriceEntity
 from utils.configuration import load_config
 from utils.css_selectors import Selectors
 from utils.exportUtils import ExportUtils
+from utils.email_utils import send_email_with_attachments
+
 
 class PriceControl:
     def __init__(self):
@@ -55,7 +57,7 @@ class PriceControl:
         try:
             # Call the Excel export method from ExportUtils
             excelResult = ExportUtils.log_to_excel(
-                command="check_availability",
+                command="get_price",
                 url=url,
                 result=result,
                 entered_date=datetime.now().strftime('%Y-%m-%d'),  # Pass the optional entered_date
@@ -63,7 +65,7 @@ class PriceControl:
             )
             print(excelResult)
             htmlResult = ExportUtils.export_to_html(
-                command="check_availability",
+                command="get_price",
                 url=url,
                 result=result,
                 entered_date=datetime.now().strftime('%Y-%m-%d'),  # Pass the optional entered_date
@@ -96,8 +98,12 @@ class PriceControl:
                         result = f"Starting price monitoring. Current price: {current_price}"
                     elif current_price > previous_price:
                         result = f"Price went up! Current price: {current_price} (Previous: {previous_price})"
+                        send_email_with_attachments("get_price.html")
+                        send_email_with_attachments("check_availability.xlsx")
                     elif current_price < previous_price:
                         result = f"Price went down! Current price: {current_price} (Previous: {previous_price})"
+                        send_email_with_attachments("get_price.html")
+                        send_email_with_attachments("check_availability.xlsx")
                     else:
                         result = f"Price remains the same: {current_price}"
                     previous_price = current_price
