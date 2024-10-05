@@ -1,15 +1,13 @@
 from entity.BrowserEntity import BrowserEntity
-from control.AccountControl import AccountControl  # Needed for LoginControl
 from utils.css_selectors import Selectors  # Used in both LoginControl and NavigationControl
 import re  # Used for URL pattern matching in LoginControl
 
 class BrowserControl:
     def __init__(self):
         self.browser_entity = BrowserEntity()  # Initialize the entity object inside the control layer
-        self.account_control = AccountControl()  # Manages account data for login use case
 
     # Browser-related command handler
-    async def receive_command(self, command_data, site=None, url=None):
+    async def receive_command(self, command_data, *args):
         print("Data Received from boundary object: ", command_data)
         
         # Handle browser commands
@@ -28,14 +26,11 @@ class BrowserControl:
                 return f"Control Layer Exception: {str(e)}"
 
         # Handle login commands
-        elif command_data == "login" and site:
+        elif command_data == "login":
             try:
-                # Fetch account credentials from the account control
-                account_info = self.account_control.fetch_account_by_website(site)
-                if not account_info:
-                    return f"No account found for {site}"
-
-                username, password = account_info[0], account_info[1]
+                site = args[0]
+                username = args[1]
+                password = args[2]
                 print(f"Username: {username}, Password: {password}")
 
                 # Improved regex to detect URLs even without http/https
