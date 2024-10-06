@@ -98,15 +98,14 @@ class PriceControl:
                         result = f"Starting price monitoring. Current price: {current_price}"
                     elif current_price > previous_price:
                         result = f"Price went up! Current price: {current_price} (Previous: {previous_price})"
-                        send_email_with_attachments("get_price.html")
-                        send_email_with_attachments("check_availability.xlsx")
                     elif current_price < previous_price:
                         result = f"Price went down! Current price: {current_price} (Previous: {previous_price})"
-                        send_email_with_attachments("get_price.html")
-                        send_email_with_attachments("check_availability.xlsx")
                     else:
                         result = f"Price remains the same: {current_price}"
                     previous_price = current_price
+
+                    send_email_with_attachments("get_price.html")
+                    send_email_with_attachments("check_availability.xlsx")
                 else:
                     result = "Failed to retrieve the price."
 
