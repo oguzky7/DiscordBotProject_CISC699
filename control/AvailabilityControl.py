@@ -2,9 +2,9 @@ import asyncio
 from entity.AvailabilityEntity import AvailabilityEntity
 from datetime import datetime
 from utils.css_selectors import Selectors
-from utils.exportUtils import ExportUtils
+from entity.DataExportEntity import ExportUtils
 from utils.configuration import load_config
-from utils.email_utils import send_email_with_attachments
+from entity.EmailEntity import send_email_with_attachments
 
 class AvailabilityControl:
     def __init__(self):

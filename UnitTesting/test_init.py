@@ -2,14 +2,12 @@ import sys, os, logging, pytest, asyncio
 import subprocess
 from unittest.mock import patch, MagicMock
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils.email_utils import send_email_with_attachments
-from utils.exportUtils import ExportUtils
+from entity.EmailEntity import send_email_with_attachments
+from entity.DataExportEntity import ExportUtils
 from control.BrowserControl import BrowserControl
-from control.AccountControl import AccountControl
 from control.AvailabilityControl import AvailabilityControl
 from control.PriceControl import PriceControl
 from control.BotControl import BotControl
-from DataObjects.AccountDAO import AccountDAO
 from entity.AvailabilityEntity import AvailabilityEntity
 from entity.BrowserEntity import BrowserEntity
 from entity.PriceEntity import PriceEntity
@@ -69,11 +67,9 @@ def base_test_case():
     """Base test setup that can be used by all test functions."""
     test_case = MagicMock()
     test_case.browser_control = BrowserControl()
-    test_case.account_control = AccountControl()
     test_case.availability_control = AvailabilityControl()
     test_case.price_control = PriceControl()
     test_case.bot_control = BotControl()
-    test_case.account_dao = AccountDAO()
     test_case.availability_entity = AvailabilityEntity()
     test_case.browser_entity = BrowserEntity()
     test_case.price_entity = PriceEntity()

@@ -3,8 +3,8 @@ from datetime import datetime
 from entity.PriceEntity import PriceEntity
 from utils.configuration import load_config
 from utils.css_selectors import Selectors
-from utils.exportUtils import ExportUtils
-from utils.email_utils import send_email_with_attachments
+from entity.DataExportEntity import ExportUtils
+from entity.EmailEntity import send_email_with_attachments
 
 
 class PriceControl:

@@ -1,10 +1,9 @@
 # email_utils.py
-import smtplib
+import smtplib, os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
-import os
 from utils.Config import Config
 
 def send_email_with_attachments(file_name=None):
