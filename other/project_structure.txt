@@ -2,15 +2,11 @@ Project Tree Overview
 DiscordBotProject_CISC699
 ||___ DiscordBotProject_CISC699
 |    |___ .pytest_cache
-|    |___ Assignments
-|    |___ Chapter
 |    |___ DataObjects
-|    |___ ExportedFiles
 |    |___ UnitTesting
 |    |___ boundary
 |    |___ control
 |    |___ entity
-|    |___ other
 |    |___ utils
 |    |___ .gitignore
 |    |___ BCE_Notes
@@ -33,38 +29,12 @@ DiscordBotProject_CISC699
 |                |___ lastfailed
 |                |___ nodeids
 |                |___ stepwise
-|    |___ Assignments
-|        |___ Assignment8_Attempt3_OguzKaanYildirim.docx
-|        |___ Assignment8_Attempt3_OguzKaanYildirim.pdf
-|        |___ Assignment9_Attempt1_OguzKaanYildirim.docx
-|        |___ Assignment9_Attempt1_OguzKaanYildirim.pdf
-|        |___ CISC695_Assignment2_OguzKaanYildirim.docx
-|        |___ CISC695_Assignment3_OguzKaanYildirim.docx
-|        |___ CISC695_Assignment5_OguzKaanYildirim.docx
-|        |___ assignment 2 note.txt
 |    |___ boundary
 |        |___ AvailabilityBoundary.py
 |        |___ BotBoundary.py
 |        |___ BrowserBoundary.py
 |        |___ PriceBoundary.py
 |        |___ __init__.py
-|    |___ Chapter
-|        |___ Activity Diagram.txt
-|        |___ CISC695_Assignment 10.pdf
-|        |___ CISC695_Assignment 2.pdf
-|        |___ CISC695_Assignment 3.pdf
-|        |___ CISC695_Assignment 4.pdf
-|        |___ CISC695_Assignment 5.pdf
-|        |___ CISC695_Assignment 8.pdf
-|        |___ CISC695_Assignment 9.pdf
-|        |___ Chapter3_Attempt1_OguzKaanYildirim.docx
-|        |___ Deployment Diagram.txt
-|        |___ Old_Chapter3.docx
-|        |___ UML_ComponentDiagram.txt
-|        |___ Use_Case_Diagram.png
-|        |___ Use_Case_Diagram.txt
-|        |___ adequate Assignment 4.pdf
-|        |___ ~$apter3_Attempt1_OguzKaanYildirim.docx
 |    |___ control
 |        |___ AvailabilityControl.py
 |        |___ BotControl.py
@@ -80,29 +50,6 @@ DiscordBotProject_CISC699
 |        |___ EmailEntity.py
 |        |___ PriceEntity.py
 |        |___ __init__.py
-|    |___ ExportedFiles
-|        |___ excelFiles
-|        |___ htmlFiles
-|        |___ excelFiles
-|            |___ MOCK_check_availability.xlsx
-|            |___ check_availability.xlsx
-|            |___ check_availability_old.xlsx
-|            |___ command_results.xlsx
-|            |___ monitor_availability.xlsx
-|            |___ monitor_price.xlsx
-|            |___ start_monitoring_availability.xlsx
-|            |___ start_monitoring_price.xlsx
-|        |___ htmlFiles
-|            |___ MOCK_check_availability.html
-|            |___ check_availability.html
-|            |___ monitor_availability.html
-|            |___ monitor_price.html
-|            |___ start_monitoring_availability.html
-|            |___ start_monitoring_price.html
-|    |___ other
-|        |___ projectToText.py
-|        |___ project_structure.py
-|        |___ project_structure.txt
 |    |___ UnitTesting
 |        |___ defectCodeStore.py
 |        |___ defectCodeTry.py
@@ -110,18 +57,15 @@ DiscordBotProject_CISC699
 |        |___ test_init.py
 |        |___ test_results.docx
 |        |___ test_results.txt
-|        |___ unitTest_ExportData.py
 |        |___ unitTest_check_availability.py
 |        |___ unitTest_close_browser.py
 |        |___ unitTest_get_price.py
-|        |___ unitTest_launch_browser.py
 |        |___ unitTest_login.py
 |        |___ unitTest_navigate_to_website.py
 |        |___ unitTest_project_help.py
 |        |___ unitTest_receive_email.py
 |        |___ unitTest_start_monitoring_availability.py
 |        |___ unitTest_start_monitoring_price.py
-|        |___ unitTest_stop_bot.py
 |        |___ unitTest_stop_monitoring_availability.py
 |        |___ unitTest_stop_monitoring_price.py
 |    |___ utils

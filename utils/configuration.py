@@ -8,7 +8,7 @@ def load_config():
             config_data = json.load(config_file)
             return config_data
     except FileNotFoundError:
-        print("Configuration file not found. Using default settings.")
+        #print("Configuration file not found. Using default settings.")
         return {}
     except json.JSONDecodeError:
         print("Error decoding JSON. Please check the format of your config.json file.")

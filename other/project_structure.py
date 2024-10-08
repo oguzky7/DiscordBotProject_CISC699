@@ -9,7 +9,7 @@ def list_files_and_folders(directory, output_file):
         f.write(f"Project Tree Overview\n{directory.split('/')[-1]}\n")  # Project name as root
         for root, dirs, files in os.walk(directory):
             # Ignore .git and __pycache__ folders
-            dirs[:] = [d for d in dirs if d not in ['.git', '__pycache__']]
+            dirs[:] = [d for d in dirs if d not in ['.git', '__pycache__', 'Chapter', 'Assignments' ,'ExportedFiles', 'other']]
             level = root.replace(directory, '').count(os.sep)  # Determine the current level
             indent_level = pipe + indent * level  # Apply indentation based on level
             subindent = pipe + indent * (level + 1)
