@@ -25,7 +25,8 @@ async def test_control_layer_processing():
     logging.info("Starting test: test_control_layer_processing")
     
     # Mocking the email sending function to simulate email sending without actual I/O operations
-    with patch('entity.EmailEntity.send_email_with_attachments', new_callable=AsyncMock):        
+    with patch('entity.EmailEntity.send_email_with_attachments', new_callable=AsyncMock) as mock_email: 
+        mock_email.return_value = "Email with file 'testfile.txt' sent successfully!"       
         # Creating an instance of BotControl
         control = BotControl()
         
