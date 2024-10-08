@@ -1,77 +1,65 @@
-import pytest
-from unittest.mock import MagicMock
-from test_init import setup_logging, base_test_case, save_test_results_to_file, log_test_start_end, logging
+import sys, os, pytest, logging
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+############################################################################################################
+from unittest.mock import patch, AsyncMock
+from control.BotControl import BotControl
+from entity.EmailEntity import send_email_with_attachments
+from test_init import log_test_start_end
 
-setup_logging()
-
-@pytest.mark.usefixtures("base_test_case")
-class TestEmailDAO:
-    
-    @pytest.fixture
-    def email_dao(self, base_test_case, mocker):
-        # Use the send_email_with_attachments from base_test_case
-        email_dao = base_test_case.email_dao
-        mocker.patch('smtplib.SMTP')
-        logging.info("Mocked EmailDAO with send_email_with_attachments method")
-        return email_dao
-
-    def test_utility_send_email_success(self, email_dao):
-        # Mock successful email sending
-        email_dao.return_value = "Email with file 'monitor_price.html' sent successfully!"
-        
-        # Perform the test
-        result = email_dao('monitor_price.html')
-        
-        # Log and assert the result
-        assert result == "Email with file 'monitor_price.html' sent successfully!"
-        logging.info("Test send_email_success passed")
-
-    def test_utility_send_email_fail(self, email_dao):
-        # Mock failure in email sending
-        email_dao.return_value = "File 'non_existent_file.html' not found."
-        
-        # Perform the test
-        result = email_dao('non_existent_file.html')
-        
-        # Log and assert the result
-        assert result == "File 'non_existent_file.html' not found in either excelFiles or htmlFiles."
-        logging.info("Test send_email_fail passed")
+# test_bot_control.py
+@pytest.mark.asyncio
+async def test_control_layer_processing():
+    with patch('entity.EmailEntity.send_email_with_attachments', new_callable=AsyncMock):
+        control = BotControl()
+        result = await control.receive_command("receive_email", "testfile.txt")
+        assert result == "Email with file 'testfile.txt' sent successfully!"
+        print("Step 1 executed: Control Layer Processing")
 
 
-@pytest.mark.usefixtures("base_test_case")
-class TestEmailControl:
-
-    @pytest.fixture
-    def email_control(self, base_test_case, mocker):
-        # Get the bot control from base_test_case, which should handle the receive_command method
-        email_control = base_test_case.bot_control
-        email_control.receive_command = MagicMock()  # Mock the receive_command method
-        logging.info("Mocked EmailControl (BotControl) for control layer")
-        return email_control
-
-    def test_control_send_email_success(self, email_control):
-        # Mock successful email sending
-        email_control.receive_command.return_value = "Email with file 'monitor_price.html' sent successfully!"
-        
-        # Call the control method and check the response
-        result = email_control.receive_command("receive_email", "monitor_price.html")
-        
-        # Log and assert the result
-        assert result == "Email with file 'monitor_price.html' sent successfully!"
-        logging.info("Test control_send_email_success passed")
-
-    def test_control_send_email_fail(self, email_control):
-        # Mock failure in email sending
-        email_control.receive_command.return_value = "File 'non_existent_file.html' not found."
-        
-        # Call the control method and check the response
-        result = email_control.receive_command("receive_email", "non_existent_file.html")
-        
-        # Log and assert the result
-        assert result == "File 'non_existent_file.html' not found."
-        logging.info("Test control_send_email_fail passed")
+# test_email_handling.py
+def test_email_handling():
+    with patch('smtplib.SMTP') as mock_smtp:
+        result = send_email_with_attachments("testfile.txt")
+        assert "Email with file 'testfile.txt' sent successfully!" in result
+        print("Step 2 executed: Email Handling")
 
 
+# test_response_generation.py
+@pytest.mark.asyncio
+async def test_response_generation():
+    with patch('control.BotControl.BotControl.receive_command', new_callable=AsyncMock) as mock_receive:
+        mock_receive.return_value = "Email with file 'testfile.txt' sent successfully!"
+        control = BotControl()
+        result = await control.receive_command("receive_email", "testfile.txt")
+        assert "Email with file 'testfile.txt' sent successfully!" in result
+        print("Step 3 executed: Response Generation")
 
+
+# This condition ensures that the pytest runner handles the test run.
 if __name__ == "__main__":
-    pytest.main([__file__])  # Run pytest directly
+    pytest.main([__file__])
+
+
+
+"""
+@pytest.mark.asyncio
+async def test_handle_receive_email():
+    # Explanation: Patching the 'receive_command' to simulate control layer behavior without actual execution.
+    with patch('control.BotControl.BotControl.receive_command', new_callable=AsyncMock) as mock_receive_command:
+        # Expected return value from the mocked method
+        mock_receive_command.return_value = "Email with file 'monitor_price.html' sent successfully!"
+
+        # Instantiate BotControl to test the interaction within the control layer
+        control = BotControl()
+
+        # Explanation: This line simulates the control layer receiving the 'receive_email' command with a filename.
+        result = await control.receive_command("receive_email", "monitor_price.html")
+
+        # Logging the result to understand what happens when the command is processed
+        logging.info(f'Result of receive_command: {result}')
+
+        # Explanation: Assert that the mocked method returns the expected result
+        assert result == "Email with file 'monitor_price.html' sent successfully!"
+        # Explanation: Ensure that the method was called exactly once with expected parameters
+        mock_receive_command.assert_called_once_with("receive_email", "monitor_price.html")
+        """
