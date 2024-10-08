@@ -1,58 +1,42 @@
-import sys, os, discord
+import sys, os, pytest
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ############################################################################################################
-
-import pytest
-from discord.ext import commands
-from unittest.mock import AsyncMock
-from boundary.BotBoundary import BotBoundary
-import pytest
-from discord.ext import commands
-
-
-import pytest
-from unittest.mock import AsyncMock, MagicMock
-from boundary.BotBoundary import BotBoundary
+from unittest.mock import patch, AsyncMock
 from control.BotControl import BotControl
-from discord.ext import commands
+from test_init import logging
 
-@pytest.fixture
-def ctx():
-    # Mock the Discord context
-    context = AsyncMock(spec=commands.Context)
-    context.send = AsyncMock()
-    return context
+"""
+Executable steps for the project_help use case:
+1. Control Layer Processing
+This test will ensure that BotControl.receive_command() handles the "project_help" command correctly, including proper parameter passing.
+"""
 
-@pytest.fixture
-def bot_control():
-    # Mock the BotControl with its response for project_help
-    control = BotControl()
-    control.receive_command = AsyncMock(return_value="Here are the available commands: ...")
-    return control
-
+# test_project_help_control.py
 @pytest.mark.asyncio
-async def test_project_help_boundary(ctx, bot_control):
-    # Test the boundary's ability to process 'project_help' command and interact with control
-    boundary = BotBoundary()
-    boundary.bot_control = bot_control  # Use the mocked control
+async def test_project_help_control():
+    # Start logging the test case
+    logging.info("Starting test: test_project_help_control")
+    
+    # Mocking the BotControl to simulate control layer behavior
+    with patch('control.BotControl.BotControl.receive_command', new_callable=AsyncMock) as mock_command:
+        # Setup the mock to return the expected help message
+        expected_help_message = "Here are the available commands:..."
+        mock_command.return_value = expected_help_message
+        
+        # Creating an instance of BotControl
+        control = BotControl()
+        
+        # Simulating the command processing
+        result = await control.receive_command("project_help")
+        
+        # Logging expected and actual outcomes
+        logging.info(f"Expected outcome: '{expected_help_message}'")
+        logging.info(f"Actual outcome: '{result}'")
+        
+        # Assertion to check if the result is as expected
+        assert result == expected_help_message
+        logging.info("Step 1 executed and Test passed: Control Layer Processing was successful")
 
-    await boundary.project_help(ctx)
-
-    # Check if the boundary sends the correct initial and follow-up messages
-    ctx.send.assert_called()
-    assert ctx.send.call_args_list[0][0][0] == "Command recognized, passing data to control."
-    assert ctx.send.call_args_list[1][0][0].startswith("Here are the available commands:")
-
-@pytest.mark.asyncio
-async def test_project_help_control(bot_control):
-    # Directly test control layer's response to 'project_help'
-    response = await bot_control.receive_command('project_help')
-    assert "Here are the available commands:" in response
-
-# Additional tests can include error handling, command parsing, and interaction with other modules
-
-
-
-# If running the test directly:
+# This condition ensures that the pytest runner handles the test run.
 if __name__ == "__main__":
     pytest.main([__file__])

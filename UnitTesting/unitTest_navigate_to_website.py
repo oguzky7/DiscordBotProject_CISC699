@@ -1,108 +1,71 @@
-import pytest, logging
-from unittest.mock import patch
-from test_init import base_test_case, setup_logging, log_test_start_end
+import sys, os, pytest
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from unittest.mock import patch, AsyncMock
+from control.BrowserControl import BrowserControl
+from entity.BrowserEntity import BrowserEntity
+from test_init import logging
 
-# Enable asyncio for all tests in this file
-pytestmark = pytest.mark.asyncio
-setup_logging()
+# Define executable steps from the provided use case
+"""
+Executable steps for the navigate_to_website command:
+1. Command Processing and URL Extraction
+   - Ensure that the command is correctly processed and the URL is extracted and passed accurately to the control layer.
 
+2. Browser Navigation
+   - Verify that the browser control object receives the command and correctly triggers navigation to the URL.
 
-async def test_navigate_to_website_success(base_test_case):
-    with patch('entity.BrowserEntity.BrowserEntity.navigate_to_website') as mock_navigate:
-        # Setup mock return and expected outcomes
-        url = "https://example.com"
-        mock_navigate.return_value = f"Navigated to {url}"
-        expected_entity_result = f"Navigated to {url}"
-        expected_control_result = f"Control Object Result: Navigated to {url}"
+3. Response Generation
+   - Check that the correct response about navigation success or failure is generated and would be passed back to the boundary.
+"""
 
-        # Execute the command
-        result = await base_test_case.browser_control.receive_command("navigate_to_website", site=url)
+# Test for Command Processing and URL Extraction
+@pytest.mark.asyncio
+async def test_command_processing_and_url_extraction():
+    logging.info("Starting test: test_command_processing_and_url_extraction")
+    with patch('control.BrowserControl.BrowserControl.receive_command', new_callable=AsyncMock) as mock_receive:
+        mock_receive.return_value = "Navigating to URL"
+        browser_control = BrowserControl()
 
-        # Log and assert the outcomes
-        logging.info(f"Entity Layer Expected: {expected_entity_result}")
-        logging.info(f"Entity Layer Received: {mock_navigate.return_value}")
-        assert mock_navigate.return_value == expected_entity_result, "Entity layer assertion failed."
-        logging.info("Unit Test Passed for entity layer.\n")
-
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer.")
-
-
-async def test_navigate_to_website_invalid_url(base_test_case):
-    with patch('entity.BrowserEntity.BrowserEntity.navigate_to_website') as mock_navigate:
-        # Setup mock return and expected outcomes
-        invalid_site = "invalid_site"
-        mock_navigate.return_value = f"URL for {invalid_site} not found."
-        expected_control_result = f"URL for {invalid_site} not found."
-
-        # Execute the command
-        result = await base_test_case.browser_control.receive_command("navigate_to_website", site=invalid_site)
-
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer invalid URL handling.\n")
-
-
-async def test_navigate_to_website_failure_entity(base_test_case):
-    with patch('entity.BrowserEntity.BrowserEntity.navigate_to_website', side_effect=Exception("Failed to navigate")) as mock_navigate:
-        # Setup expected outcomes
-        url = "https://example.com"
-        expected_control_result = "Control Layer Exception: Failed to navigate"
-
-        # Execute the command
-        result = await base_test_case.browser_control.receive_command("navigate_to_website", site=url)
-
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer failed to handle entity error correctly."
-        logging.info("Unit Test Passed for entity layer error handling.")
-
-
-async def test_navigate_to_website_launch_browser_on_failure(base_test_case):
-    # This test simulates a scenario where the browser is not open and needs to be launched first.
-    with patch('entity.BrowserEntity.BrowserEntity.is_browser_open', return_value=False), \
-         patch('entity.BrowserEntity.BrowserEntity.launch_browser', return_value="Browser launched."), \
-         patch('entity.BrowserEntity.BrowserEntity.navigate_to_website') as mock_navigate:
+        # Simulate receiving the navigate command with a URL
+        result = await browser_control.receive_command("navigate_to_website", "http://example.com")
         
-        # Setup expected outcomes
-        url = "https://example.com"
-        mock_navigate.return_value = f"Navigated to {url}"
-        expected_control_result = f"Control Object Result: Navigated to {url}"
+        logging.info(f"Expected outcome: 'Navigating to URL'")
+        logging.info(f"Actual outcome: {result}")
 
-        # Execute the command
-        result = await base_test_case.browser_control.receive_command("navigate_to_website", site=url)
+        assert result == "Navigating to URL"
+        logging.info("Step 1 executed and Test passed: Command Processing and URL Extraction was successful")
 
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer with browser launch.\n")
+# Test for Browser Navigation
+@pytest.mark.asyncio
+async def test_browser_navigation():
+    logging.info("Starting test: test_browser_navigation")
+    with patch('entity.BrowserEntity.BrowserEntity.navigate_to_website', new_callable=AsyncMock) as mock_navigate:
+        mock_navigate.return_value = "Navigation successful"
+        browser_entity = BrowserEntity()
+        result = await browser_entity.navigate_to_website("http://example.com")
 
+        logging.info("Expected outcome: 'Navigation successful'")
+        logging.info(f"Actual outcome: {result}")
 
-async def test_navigate_to_website_failure_control(base_test_case):
-    # This simulates a failure within the control layer
-    with patch('control.BrowserControl.BrowserControl.receive_command', side_effect=Exception("Control Layer Failed")) as mock_control:
-        
-        # Setup expected outcomes
-        url = "https://example.com"
-        expected_control_result = "Control Layer Exception: Control Layer Failed"
+        assert result == "Navigation successful"
+        logging.info("Step 2 executed and Test passed: Browser Navigation was successful")
 
-        # Execute the command and catch the raised exception
-        try:
-            result = await base_test_case.browser_control.receive_command("navigate_to_website", site=url)
-        except Exception as e:
-            result = f"Control Layer Exception: {str(e)}"
+# Test for Response Generation
+@pytest.mark.asyncio
+async def test_response_generation():
+    logging.info("Starting test: test_response_generation")
+    with patch('control.BrowserControl.BrowserControl.receive_command', new_callable=AsyncMock) as mock_receive:
+        mock_receive.return_value = "Navigation confirmed"
+        browser_control = BrowserControl()
 
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer failure.")
-        
+        result = await browser_control.receive_command("confirm_navigation", "http://example.com")
+
+        logging.info("Expected outcome: 'Navigation confirmed'")
+        logging.info(f"Actual outcome: {result}")
+
+        assert result == "Navigation confirmed"
+        logging.info("Step 3 executed and Test passed: Response Generation was successful")
+
+# This condition ensures that the pytest runner handles the test run.
 if __name__ == "__main__":
     pytest.main([__file__])

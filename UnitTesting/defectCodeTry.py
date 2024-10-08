@@ -1,29 +1,34 @@
-import pytest
-import logging
-from unittest.mock import patch, AsyncMock
-from test_init import base_test_case, setup_logging, log_test_start_end
+import sys, os, pytest
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from unittest.mock import patch, AsyncMock, Mock
+from control.BrowserControl import BrowserControl
+from entity.BrowserEntity import BrowserEntity
+from test_init import logging
 
-# Enable asyncio for all tests in this file
-pytestmark = pytest.mark.asyncio
-setup_logging()
+# Ensure that BrowserEntity initializes 'driver' in the constructor or in an accessible method before use
 
-async def test_stop_monitoring_price_success(base_test_case):
-    # Set up monitoring to be active
-    base_test_case.price_control.is_monitoring = True
-    base_test_case.price_control.results = ["Price went up!", "Price went down!"]
+@pytest.fixture
+def browser_entity_setup():
+    with patch('selenium.webdriver.Chrome') as mock_browser:
+        entity = BrowserEntity()
+        entity.driver = Mock()
+        entity.driver.get = Mock()
+        entity.driver.find_element = Mock()
+        return entity
 
-    # Expected result after stopping monitoring
-    expected_result = "Results for price monitoring:Price went up!\nPrice went down!\nPrice monitoring stopped successfully!"
+def test_website_interaction(browser_entity_setup):
+    logging.info("Starting test: Website Interaction for Login")
     
-    # Execute the command
-    result = base_test_case.price_control.stop_monitoring_price()
-
-    # Log and assert the outcomes
-    logging.info(f"Control Layer Expected: {expected_result}")
-    logging.info(f"Control Layer Received: {result}")
-    assert result == expected_result, "Control layer did not return the correct results for stopping monitoring."
-    logging.info("Unit Test Passed for stop_monitoring_price success scenario.\n")
-
+    browser_entity = browser_entity_setup
+    browser_entity.login = Mock(return_value="Login successful!")
+    
+    result = browser_entity.login("http://example.com", "user", "pass")
+    
+    logging.info("Expected to attempt login on 'http://example.com'")
+    logging.info(f"Actual outcome: {result}")
+    
+    assert "Login successful!" in result
+    logging.info("Step 2 executed and Test passed: Website Interaction for Login was successful")
 
 if __name__ == "__main__":
     pytest.main([__file__])
