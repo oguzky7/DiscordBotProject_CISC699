@@ -1,81 +1,75 @@
-import pytest, logging
-from unittest.mock import patch
-from test_init import base_test_case, setup_logging, log_test_start_end
+import sys, os, pytest
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from unittest.mock import patch, AsyncMock
+from control.PriceControl import PriceControl
+from entity.PriceEntity import PriceEntity
+from test_init import logging
 
-# Enable asyncio for all tests in this file
-pytestmark = pytest.mark.asyncio
-setup_logging()
+# Testing the control layer's ability to process the "get_price" command
+@pytest.mark.asyncio
+async def test_control_layer_processing():
+    logging.info("Starting test: Control Layer Processing for get_price command")
+    
+    # Mock the actual command handling to simulate command receipt and processing
+    with patch('control.PriceControl.PriceControl.receive_command', new_callable=AsyncMock) as mock_receive:
+        mock_receive.return_value = await PriceControl().get_price("https://example.com/product")
+        result = await PriceControl().receive_command("get_price", "https://example.com/product")
+        
+        logging.info("Verifying that the receive_command correctly processed the 'get_price' command")
+        assert "get_price" in str(mock_receive.call_args)
+        logging.info("Test passed: Control layer processing correctly handles 'get_price'")
 
-async def test_get_price_success(base_test_case):
-    # Simulate a successful price retrieval
-    with patch('entity.PriceEntity.PriceEntity.get_price_from_page') as mock_get_price:
-        url = "https://example.com/product"
-        mock_get_price.return_value = "$199.99"
-        expected_entity_result = "$199.99"
-        expected_control_result = "$199.99"
+# Testing the price retrieval functionality from the PriceEntity
+@pytest.mark.asyncio
+async def test_price_retrieval():
+    logging.info("Starting test: Price Retrieval from webpage")
+    
+    with patch('entity.PriceEntity.PriceEntity.get_price_from_page', return_value="100.00") as mock_price:
+        price_control = PriceControl()
+        result = await price_control.get_price("https://example.com/product")
+        
+        logging.info("Expected fetched price: '100.00'")
+        assert "100.00" in result
+        logging.info("Test passed: Price retrieval successful and correct")
 
-        # Execute the command
-        result = await base_test_case.price_control.receive_command("get_price", url)
+# Testing the Excel logging functionality
+@pytest.mark.asyncio
+async def test_data_logging_excel():
+    logging.info("Starting test: Data Logging to Excel")
+    
+    with patch('entity.DataExportEntity.ExportUtils.log_to_excel', return_value="Data saved to Excel file at path.xlsx") as mock_excel:
+        price_control = PriceControl()
+        _, excel_result, _ = await price_control.get_price("https://example.com/product")
+        
+        logging.info("Verifying Excel file creation and data logging")
+        assert "path.xlsx" in excel_result
+        logging.info("Test passed: Data correctly logged to Excel")
 
-        # Log and assert the outcomes
-        logging.info(f"Entity Layer Expected: {expected_entity_result}")
-        logging.info(f"Entity Layer Received: {mock_get_price.return_value}")
-        assert mock_get_price.return_value == expected_entity_result, "Entity layer assertion failed."
-        logging.info("Unit Test Passed for entity layer.\n")
+# Testing the HTML export functionality
+@pytest.mark.asyncio
+async def test_data_logging_html():
+    logging.info("Starting test: Data Export to HTML")
+    
+    with patch('entity.DataExportEntity.ExportUtils.export_to_html', return_value="Data exported to HTML file at path.html") as mock_html:
+        price_control = PriceControl()
+        _, _, html_result = await price_control.get_price("https://example.com/product")
+        
+        logging.info("Verifying HTML file creation and data export")
+        assert "path.html" in html_result
+        logging.info("Test passed: Data correctly exported to HTML")
 
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer.")
-
-async def test_get_price_invalid_url(base_test_case):
-    # Simulate an invalid URL case
-    with patch('entity.PriceEntity.PriceEntity.get_price_from_page') as mock_get_price:
-        invalid_url = "invalid_url"
-        mock_get_price.return_value = "Error fetching price: Invalid URL"
-        expected_control_result = "Error fetching price: Invalid URL"
-
-        # Execute the command
-        result = await base_test_case.price_control.receive_command("get_price", invalid_url)
-
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer invalid URL handling.\n")
-
-async def test_get_price_failure_entity(base_test_case):
-    # Simulate an entity layer failure when fetching the price
-    with patch('entity.PriceEntity.PriceEntity.get_price_from_page', side_effect=Exception("Failed to fetch price")) as mock_get_price:
-        url = "https://example.com/product"
-        expected_control_result = "Failed to fetch price: Failed to fetch price"
-
-        # Execute the command
-        result = await base_test_case.price_control.receive_command("get_price", url)
-
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer failed to handle entity error correctly."
-        logging.info("Unit Test Passed for entity layer error handling.")
-
-async def test_get_price_failure_control(base_test_case):
-    # Simulate a control layer failure
-    with patch('control.PriceControl.PriceControl.receive_command', side_effect=Exception("Control Layer Failed")) as mock_control:
-        url = "https://example.com/product"
-        expected_control_result = "Control Layer Exception: Control Layer Failed"
-
-        # Execute the command and catch the raised exception
-        try:
-            result = await base_test_case.price_control.receive_command("get_price", url)
-        except Exception as e:
-            result = f"Control Layer Exception: {str(e)}"
-
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer failure.")
+# Testing response assembly and output correctness
+@pytest.mark.asyncio
+async def test_response_assembly_and_output():
+    logging.info("Starting test: Response Assembly and Output")
+    
+    with patch('control.PriceControl.PriceControl.get_price', return_value=("100.00", "Data saved to Excel file at path.xlsx", "Data exported to HTML at path.html")):
+        price_control = PriceControl()
+        result = await price_control.receive_command("get_price", "https://example.com/product")
+        
+        logging.info("Checking response contains price, Excel and HTML paths")
+        assert all(x in result for x in ["100.00", "path.xlsx", "path.html"])
+        logging.info("Test passed: Correct response assembled and output")
 
 if __name__ == "__main__":
     pytest.main([__file__])

@@ -1,34 +1,27 @@
 import sys, os, pytest
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from unittest.mock import patch, AsyncMock, Mock
+from unittest.mock import patch
 from control.BrowserControl import BrowserControl
-from entity.BrowserEntity import BrowserEntity
 from test_init import logging
 
-# Ensure that BrowserEntity initializes 'driver' in the constructor or in an accessible method before use
+@pytest.mark.asyncio
+async def test_close_browser():
+    logging.info("Starting test: Control Layer Processing for close_browser")
 
-@pytest.fixture
-def browser_entity_setup():
-    with patch('selenium.webdriver.Chrome') as mock_browser:
-        entity = BrowserEntity()
-        entity.driver = Mock()
-        entity.driver.get = Mock()
-        entity.driver.find_element = Mock()
-        return entity
+    with patch('entity.BrowserEntity.BrowserEntity.close_browser') as mock_close:
+        # Configure the mock to return different responses based on the browser state
+        mock_close.side_effect = ["Browser closed successfully.", "No browser is currently open."]
+        browser_control = BrowserControl()
 
-def test_website_interaction(browser_entity_setup):
-    logging.info("Starting test: Website Interaction for Login")
-    
-    browser_entity = browser_entity_setup
-    browser_entity.login = Mock(return_value="Login successful!")
-    
-    result = browser_entity.login("http://example.com", "user", "pass")
-    
-    logging.info("Expected to attempt login on 'http://example.com'")
-    logging.info(f"Actual outcome: {result}")
-    
-    assert "Login successful!" in result
-    logging.info("Step 2 executed and Test passed: Website Interaction for Login was successful")
+        # First call simulates the browser being open and then closed
+        result = await browser_control.receive_command("close_browser")
+        assert result == "Control Object Result: Browser closed successfully."
+        logging.info(f"Test when browser is initially open and then closed: Passed with '{result}'")
+
+        # Second call simulates the browser already being closed
+        result = await browser_control.receive_command("close_browser")
+        assert result == "Control Object Result: No browser is currently open."
+        logging.info(f"Test when no browser is initially open: Passed with '{result}'")
 
 if __name__ == "__main__":
     pytest.main([__file__])

@@ -28,10 +28,10 @@ async def test_control_layer_processing():
     with patch('entity.EmailEntity.send_email_with_attachments', new_callable=AsyncMock) as mock_email: 
         mock_email.return_value = "Email with file 'testfile.txt' sent successfully!"       
         # Creating an instance of BotControl
-        control = BotControl()
+        bot_control = BotControl()
         
         # Calling the receive_command method and passing the command and filename
-        result = await control.receive_command("receive_email", "testfile.txt")
+        result = await bot_control.receive_command("receive_email", "testfile.txt")
         
         # Logging expected and actual outcomes
         logging.info(f"Expected outcome: 'Email with file 'testfile.txt' sent successfully!'")
@@ -72,10 +72,10 @@ async def test_response_generation():
         mock_receive.return_value = "Email with file 'testfile.txt' sent successfully!"
         
         # Creating an instance of BotControl
-        control = BotControl()
+        bot_control = BotControl()
         
         # Calling the receive_command method and passing the command and filename
-        result = await control.receive_command("receive_email", "testfile.txt")
+        result = await bot_control.receive_command("receive_email", "testfile.txt")
         
         # Logging expected and actual outcomes
         logging.info("Expected outcome: 'Email with file 'testfile.txt' sent successfully!'")

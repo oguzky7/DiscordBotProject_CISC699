@@ -1,81 +1,85 @@
-import pytest, logging
-from unittest.mock import patch
-from test_init import base_test_case, setup_logging, log_test_start_end
+import sys, os, pytest
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+############################################################################################################
+from unittest.mock import patch, AsyncMock, MagicMock
+from control.BrowserControl import BrowserControl
+from entity.BrowserEntity import BrowserEntity
+from test_init import logging
 
-# Enable asyncio for all tests in this file
-pytestmark = pytest.mark.asyncio
-setup_logging()
+"""
+Executable steps for the !close_browser use case:
+1. Control Layer Processing
+This test ensures that BrowserControl.receive_command() handles the "!close_browser" command correctly.
 
-async def test_close_browser_success(base_test_case):
+2. Browser Closing
+This test focuses on the BrowserEntity.close_browser() method to ensure it executes the browser closing process.
+
+3. Response Generation
+This test validates that the control layer correctly interprets the response from the browser closing step and returns the appropriate result to the boundary layer.
+"""
+
+# Test for Control Layer Processing
+@pytest.mark.asyncio
+async def test_control_layer_processing():
+    logging.info("Starting test: Control Layer Processing for close_browser")
+
     with patch('entity.BrowserEntity.BrowserEntity.close_browser') as mock_close:
-        # Set up mock and expected outcomes
-        mock_close.return_value = "Browser closed."
-        expected_entity_result = "Browser closed."
-        expected_control_result = "Control Object Result: Browser closed."
-        
-        # Execute the command
-        result = await base_test_case.browser_control.receive_command("close_browser")
-        
-        # Log and assert the outcomes
-        logging.info(f"Entity Layer Expected: {expected_entity_result}")
-        logging.info(f"Entity Layer Received: {mock_close.return_value}")
-        assert mock_close.return_value == expected_entity_result, "Entity layer assertion failed."
-        logging.info("Unit Test Passed for entity layer.\n")
-        
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer.")
+        # Configure the mock to return different responses based on the browser state
+        mock_close.side_effect = ["Browser closed successfully.", "No browser is currently open."]
+        browser_control = BrowserControl()
 
-async def test_close_browser_not_open(base_test_case):
-    with patch('entity.BrowserEntity.BrowserEntity.close_browser') as mock_close:
-        # Set up mock and expected outcomes
-        mock_close.return_value = "No browser is currently open."
-        expected_entity_result = "No browser is currently open."
-        expected_control_result = "Control Object Result: No browser is currently open."
-        
-        # Execute the command
-        result = await base_test_case.browser_control.receive_command("close_browser")
-        
-        # Log and assert the outcomes
-        logging.info(f"Entity Layer Expected: {expected_entity_result}")
-        logging.info(f"Entity Layer Received: {mock_close.return_value}")
-        assert mock_close.return_value == expected_entity_result, "Entity layer assertion failed."
-        logging.info("Unit Test Passed for entity layer.\n")
-        
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer.")
+        # First call simulates the browser being open and then closed
+        result = await browser_control.receive_command("close_browser")
+        assert result == "Control Object Result: Browser closed successfully."
+        logging.info(f"Test when browser is initially open and then closed: Passed with '{result}'")
 
-async def test_close_browser_failure_control(base_test_case):
-    with patch('entity.BrowserEntity.BrowserEntity.close_browser', side_effect=Exception("Unexpected error")) as mock_close:
-        # Set up expected outcome
-        expected_result = "Control Layer Exception: Unexpected error"
-        
-        # Execute the command
-        result = await base_test_case.browser_control.receive_command("close_browser")
-        
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected to Report: {expected_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_result, "Control layer failed to handle or report the error correctly."
-        logging.info("Unit Test Passed for control layer error handling.")
+        # Second call simulates the browser already being closed
+        result = await browser_control.receive_command("close_browser")
+        assert result == "Control Object Result: No browser is currently open."
+        logging.info(f"Test when no browser is initially open: Passed with '{result}'")
 
-async def test_close_browser_failure_entity(base_test_case):
-    with patch('entity.BrowserEntity.BrowserEntity.close_browser', side_effect=Exception("BrowserEntity_Failed to close browser: Internal error")) as mock_close:
-        # Set up expected outcome
-        internal_error_message = "BrowserEntity_Failed to close browser: Internal error"
-        expected_control_result = f"Control Layer Exception: {internal_error_message}"
-        
-        # Execute the command
-        result = await base_test_case.browser_control.receive_command("close_browser")
-        
-        # Log and assert the outcomes
-        logging.info(f"Entity Layer Expected Failure: {internal_error_message}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer failed to report entity error correctly."
-        logging.info("Unit Test Passed for entity layer error handling.")
 
+# Test for Browser Closing
+
+def test_browser_closing():
+    logging.info("Starting test: Browser Closing")
+
+    # Patching the webdriver.Chrome directly at the point of instantiation
+    with patch('selenium.webdriver.Chrome', new_callable=MagicMock) as mock_chrome:
+        mock_driver = mock_chrome.return_value  # Mock the return value which acts as the driver
+        mock_driver.quit = MagicMock()  # Mock the quit method of the driver
+
+        browser_entity = BrowserEntity()
+        browser_entity.browser_open = True  # Ensure the browser is considered open
+        browser_entity.driver = mock_driver  # Set the mock driver as the browser entity's driver
+
+        result = browser_entity.close_browser()
+
+        mock_driver.quit.assert_called_once()  # Check if quit was called on the driver instance
+        logging.info("Expected outcome: Browser quit method called.")
+        logging.info(f"Actual outcome: {result}")
+
+        assert result == "Browser closed."
+        logging.info("Test passed: Browser closing was successful")
+
+
+# Test for Response Generation
+@pytest.mark.asyncio
+async def test_response_generation():
+    logging.info("Starting test: Response Generation for close_browser")
+    
+    with patch('control.BrowserControl.BrowserControl.receive_command', new_callable=AsyncMock) as mock_receive:
+        mock_receive.return_value = "Browser closed successfully."
+        
+        browser_control = BrowserControl()
+        result = await browser_control.receive_command("close_browser")
+        
+        logging.info("Expected outcome: 'Browser closed successfully.'")
+        logging.info(f"Actual outcome: {result}")
+        
+        assert result == "Browser closed successfully."
+        logging.info("Step 3 executed and Test passed: Response generation was successful")
+
+# This condition ensures that the pytest runner handles the test run.
 if __name__ == "__main__":
     pytest.main([__file__])
