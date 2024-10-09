@@ -1,11 +1,9 @@
-import sys, os, pytest
+import sys, os, pytest, logging
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ############################################################################################################
 from unittest.mock import patch, AsyncMock, MagicMock
 from control.BrowserControl import BrowserControl
 from entity.BrowserEntity import BrowserEntity
-from test_init import logging
-
 """
 Executable steps for the !close_browser use case:
 1. Control Layer Processing

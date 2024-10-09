@@ -1,10 +1,8 @@
-import sys, os, pytest
+import sys, os, pytest, logging
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from unittest.mock import patch, AsyncMock
 from control.AvailabilityControl import AvailabilityControl
-from entity.AvailabilityEntity import AvailabilityEntity
 from entity.DataExportEntity import ExportUtils
-from test_init import logging
 """
 Executable steps for the 'Check_Availability' use case:
 1. Control Layer Command Reception

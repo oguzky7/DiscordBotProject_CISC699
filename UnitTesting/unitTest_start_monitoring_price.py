@@ -1,8 +1,7 @@
-import sys, os, pytest, asyncio
+import sys, os, pytest, asyncio, logging
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from unittest.mock import patch, AsyncMock
 from control.PriceControl import PriceControl
-from test_init import logging
 
 """
 Executable steps for the `start_monitoring_price` use case:
@@ -47,7 +46,7 @@ async def test_price_monitoring_initiation():
 
     price_control = PriceControl()
     url = "https://example.com/product"
-    frequency = 2
+    frequency = 3
     logging.info(f"Initiating price monitoring for URL: {url} with frequency: {frequency}")
 
     # Mock the get_price method to return a constant value
@@ -60,7 +59,7 @@ async def test_price_monitoring_initiation():
         logging.info("Monitoring task started.")
 
         # Simulate a brief period of monitoring (e.g., two intervals)
-        await asyncio.sleep(5)
+        await asyncio.sleep(8)
         logging.info(f"Simulated monitoring for 5 seconds, checking number of calls to get_price.")
 
         # Check if get_price was called twice due to the frequency
