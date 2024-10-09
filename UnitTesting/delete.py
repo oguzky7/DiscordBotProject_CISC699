@@ -13,31 +13,34 @@ Executable steps for the `start_monitoring_price` use case:
    This test confirms that the monitoring can be stopped correctly using the "stop_monitoring_price" command and that final results are collected.
 """
 
-# Test 1: Control Layer Processing for start_monitoring_price command
+# Mocking email sending and monitoring function to avoid sending real emails and starting real monitoring
+@patch('entity.EmailEntity.send_email_with_attachments', return_value="Mock email sent")
+@patch('control.PriceControl.PriceControl.start_monitoring_price', new_callable=AsyncMock)
+@patch('control.PriceControl.PriceControl.receive_command', new_callable=AsyncMock)
 @pytest.mark.asyncio
-async def test_control_layer_processing():
+async def test_control_layer_processing(mock_receive_command, mock_start_monitoring_price, mock_send_email):
     logging.info("Starting test: test_control_layer_processing")
 
     url = "https://example.com/product"
     frequency = 2
     logging.info(f"Testing command processing for URL: {url} with frequency: {frequency}")
 
-    # Mock the actual command handling to simulate command receipt and processing
-    with patch('control.PriceControl.PriceControl.receive_command', new_callable=AsyncMock) as mock_receive:
-        logging.info("Patching receive_command method...")
-        
-        # Simulate receiving the 'start_monitoring_price' command
-        result = await PriceControl().receive_command("start_monitoring_price", url, frequency)
-        
-        logging.info("Verifying if 'start_monitoring_price' was processed correctly...")
-        assert "start_monitoring_price" in str(mock_receive.call_args)
-        assert mock_receive.call_args[0][1] == url
-        assert mock_receive.call_args[0][2] == frequency
-        logging.info("Test passed: Control layer processed 'start_monitoring_price' correctly.")
+    # Simulate receiving the 'start_monitoring_price' command
+    result = await PriceControl().receive_command("start_monitoring_price", url, frequency)
+
+    logging.info("Verifying if 'start_monitoring_price' was processed correctly...")
+    assert "start_monitoring_price" in str(mock_receive_command.call_args)
+    assert mock_receive_command.call_args[0][1] == url
+    assert mock_receive_command.call_args[0][2] == frequency
+    logging.info("Test passed: Control layer processed 'start_monitoring_price' correctly.")
+
 
 # Test 2: Price Monitoring Initiation
+@patch('entity.EmailEntity.send_email_with_attachments', return_value="Mock email sent")
+@patch('control.PriceControl.PriceControl.start_monitoring_price', new_callable=AsyncMock)
+@patch('control.PriceControl.PriceControl.receive_command', new_callable=AsyncMock)
 @pytest.mark.asyncio
-async def test_price_monitoring_initiation():
+async def test_price_monitoring_initiation(mock_receive_command, mock_start_monitoring_price, mock_send_email):
     logging.info("Starting test: test_price_monitoring_initiation")
 
     price_control = PriceControl()
@@ -56,7 +59,7 @@ async def test_price_monitoring_initiation():
 
         # Simulate a brief period of monitoring (e.g., two intervals)
         await asyncio.sleep(8)
-        logging.info(f"Simulated monitoring for 5 seconds, checking number of calls to get_price.")
+        logging.info(f"Simulated monitoring for 8 seconds, checking number of calls to get_price.")
 
         # Check if get_price was called twice due to the frequency
         assert mock_get_price.call_count == 2, f"Expected 2 price checks, but got {mock_get_price.call_count}"
@@ -71,9 +74,13 @@ async def test_price_monitoring_initiation():
     assert len(price_control.results) == 2
     logging.info(f"Test passed: Monitoring stopped with {len(price_control.results)} results.")
 
+
 # Test 3: Stop Monitoring Logic
+@patch('entity.EmailEntity.send_email_with_attachments', return_value="Mock email sent")
+@patch('control.PriceControl.PriceControl.start_monitoring_price', new_callable=AsyncMock)
+@patch('control.PriceControl.PriceControl.receive_command', new_callable=AsyncMock)
 @pytest.mark.asyncio
-async def test_stop_monitoring_logic():
+async def test_stop_monitoring_logic(mock_receive_command, mock_start_monitoring_price, mock_send_email):
     logging.info("Starting test: test_stop_monitoring_logic")
 
     price_control = PriceControl()
@@ -102,6 +109,7 @@ async def test_stop_monitoring_logic():
         assert price_control.is_monitoring == False
         assert len(price_control.results) >= 1
         logging.info(f"Test passed: Monitoring stopped with {len(price_control.results)} result(s).")
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

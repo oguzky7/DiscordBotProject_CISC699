@@ -58,11 +58,12 @@ def extract_project_text(directory, ignore_files=None, ignore_folders=None):
 def create_documentation(directory, ignore_files=None, ignore_folders=None):
     text_blocks = extract_project_text(directory, ignore_files, ignore_folders)
     if text_blocks:
-        pdf_path = os.path.join(directory, "project_text.pdf")
-        docx_path = os.path.join(directory, "project_text.docx")
-        create_pdf(text_blocks, pdf_path)
+        #pdf_path = os.path.join(directory, "project_text.pdf")
+        docx_path = os.path.join(directory, "UnitTesting.docx")
+        #create_pdf(text_blocks, pdf_path)
         create_docx(text_blocks, docx_path)
-        print(f"Documentation created at: {pdf_path} and {docx_path}")
+        #print(f"Documentation created at: {pdf_path} and {docx_path}")
+        print(f"Documentation created at: {docx_path}")
     else:
         print("No project text found.")
 
