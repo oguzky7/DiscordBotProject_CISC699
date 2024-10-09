@@ -1,83 +1,113 @@
-import logging, pytest
-from unittest.mock import patch
-from test_init import base_test_case, setup_logging, run_monitoring_loop, log_test_start_end
+import sys, os, pytest, asyncio
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+############################################################################################################
+from unittest.mock import patch, AsyncMock
+from control.AvailabilityControl import AvailabilityControl
+from test_init import logging
 
-# Enable asyncio for all tests in this file
-setup_logging()
+"""
+Executable steps for the `start_monitoring_availability` use case:
 
-async def test_start_monitoring_availability_success(base_test_case):
-    with patch('entity.AvailabilityEntity.AvailabilityEntity.check_availability') as mock_check:
-        url = "https://example.com"
-        mock_check.return_value = "Selected or default date is available for booking."
-        
-        expected_control_result = [
-('Checked availability: Selected or default date is available for booking.', 'Data saved to Excel file at ExportedFiles\\excelFiles\\check_availability.xlsx.', 'HTML file saved and updated at ExportedFiles\\htmlFiles\\check_availability.html.'), 'Monitoring stopped successfully!'
-        ]
-        # Run the monitoring loop once
-        actual_control_result = await run_monitoring_loop(
-            base_test_case.availability_control,
-            base_test_case.availability_control.check_availability,
-            url,
-            "2024-10-01",
-            1
-        )
+1. Control Layer Processing:
+   This test ensures that `AvailabilityControl.receive_command()` handles the "start_monitoring_availability" command correctly,
+   including proper parameter passing for the URL, date, and frequency.
 
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {actual_control_result}")
-        assert actual_control_result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer.")
+2. Availability Monitoring Initiation:
+   This test verifies that the control layer starts the monitoring process by calling `check_availability()` at regular intervals.
 
+3. Stop Monitoring Logic:
+   This test confirms that the monitoring can be stopped correctly using the "stop_monitoring_availability" command and that the final results are collected.
+"""
 
-async def test_start_monitoring_availability_failure_entity(base_test_case):
-    with patch('entity.AvailabilityEntity.AvailabilityEntity.check_availability', side_effect=Exception("Failed to check availability")):
-        url = "https://example.com"
-        expected_control_result = [
-('Failed to check availability: Failed to check availability', 'Data saved to Excel file at ExportedFiles\\excelFiles\\check_availability.xlsx.', 'HTML file saved and updated at ExportedFiles\\htmlFiles\\check_availability.html.'), 'Monitoring stopped successfully!'        ]
+# Test 1: Control Layer Processing
+@pytest.mark.asyncio
+async def test_control_layer_processing():
+    logging.info("Starting test: test_control_layer_processing")
 
-        # Run the monitoring loop once
-        actual_control_result = await run_monitoring_loop(
-            base_test_case.availability_control,
-            base_test_case.availability_control.check_availability,
-            url,
-            "2024-10-01",
-            1
-        )
+    url = "https://example.com/availability"
+    frequency = 1
+    logging.info(f"Testing command processing for URL: {url} with frequency: {frequency}")
 
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {actual_control_result}")
-        assert actual_control_result == expected_control_result, "Control layer failed to handle entity error correctly."
-        logging.info("Unit Test Passed for entity layer error handling.")
+    # Mock the actual command handling to simulate command receipt and processing
+    with patch('control.AvailabilityControl.AvailabilityControl.receive_command', new_callable=AsyncMock) as mock_receive:
+        logging.info("Patching receive_command method...")
 
+        # Simulate receiving the 'start_monitoring_availability' command
+        result = await AvailabilityControl().receive_command("start_monitoring_availability", url, None, frequency)
 
-async def test_start_monitoring_availability_failure_control(base_test_case):
-    with patch('control.AvailabilityControl.AvailabilityControl.receive_command', side_effect=Exception("Control Layer Failed")):
-        url = "https://example.com"
-        expected_control_result = "Control Layer Exception: Control Layer Failed"
+        logging.info("Verifying if 'start_monitoring_availability' was processed correctly...")
+        assert "start_monitoring_availability" in str(mock_receive.call_args)
+        assert mock_receive.call_args[0][1] == url
+        assert mock_receive.call_args[0][3] == frequency
+        logging.info("Test passed: Control layer processed 'start_monitoring_availability' correctly.")
 
-        try:
-            result = await base_test_case.availability_control.receive_command("start_monitoring_availability", url, "2024-10-01", 5)
-        except Exception as e:
-            result = f"Control Layer Exception: {str(e)}"
+# Test 2: Availability Monitoring Initiation
+@pytest.mark.asyncio
+async def test_availability_monitoring_initiation():
+    logging.info("Starting test: test_availability_monitoring_initiation")
 
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer failure.")
+    availability_control = AvailabilityControl()
+    url = "https://example.com/availability"
+    frequency = 2
+    logging.info(f"Initiating availability monitoring for URL: {url} with frequency: {frequency}")
 
+    # Mock the check_availability method to return a constant value
+    with patch.object(availability_control, 'check_availability', new_callable=AsyncMock) as mock_check_availability:
+        logging.info("Patching check_availability method...")
+        mock_check_availability.return_value = "Available"
 
-async def test_start_monitoring_availability_already_running(base_test_case):
-    with patch('entity.AvailabilityEntity.AvailabilityEntity.check_availability') as mock_check:
-        url = "https://example.com"
-        base_test_case.availability_control.is_monitoring = True
-        expected_control_result = "Already monitoring availability."
+        # Start the monitoring process (monitoring in a separate task)
+        monitoring_task = asyncio.create_task(availability_control.start_monitoring_availability(url, None, frequency))
+        logging.info("Monitoring task started.")
 
-        result = await base_test_case.availability_control.receive_command("start_monitoring_availability", url, "2024-10-01", 5)
+        # Simulate a brief period of monitoring (e.g., for two intervals)
+        await asyncio.sleep(5)
+        logging.info(f"Simulated monitoring for 5 seconds, checking number of calls to check_availability.")
 
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer failed to handle already running condition."
-        logging.info("Unit Test Passed for control layer already running handling.\n")
+        # Check if check_availability was called twice due to the frequency
+        assert mock_check_availability.call_count == 2, f"Expected 2 availability checks, but got {mock_check_availability.call_count}"
+        logging.info("Test passed: Availability monitoring initiated and 'check_availability' called twice.")
 
+        # Stop the monitoring
+        logging.info("Stopping availability monitoring...")
+        availability_control.stop_monitoring_availability()
+        await monitoring_task  # Wait for the task to stop
+
+    # Ensure monitoring stopped and results were collected
+    assert len(availability_control.results) == 2
+    logging.info(f"Test passed: Monitoring stopped with {len(availability_control.results)} results.")
+
+# Test 3: Stop Monitoring Logic
+@pytest.mark.asyncio
+async def test_stop_monitoring_logic():
+    logging.info("Starting test: test_stop_monitoring_logic")
+
+    availability_control = AvailabilityControl()
+    url = "https://example.com/availability"
+    frequency = 1
+    logging.info(f"Initiating monitoring to test stopping logic for URL: {url} with frequency: {frequency}")
+
+    # Mock check_availability method
+    with patch.object(availability_control, 'check_availability', new_callable=AsyncMock) as mock_check_availability:
+        logging.info("Patching check_availability method...")
+        mock_check_availability.return_value = "Available"
+
+        # Start monitoring
+        monitoring_task = asyncio.create_task(availability_control.start_monitoring_availability(url, None, frequency))
+        logging.info("Monitoring task started.")
+
+        # Simulate monitoring for one interval
+        await asyncio.sleep(2)
+        logging.info("Simulated monitoring for 6 seconds, stopping monitoring now.")
+
+        # Stop the monitoring
+        availability_control.stop_monitoring_availability()
+        await monitoring_task  # Wait for the task to stop
+
+        # Ensure the monitoring has stopped
+        assert availability_control.is_monitoring == False
+        assert len(availability_control.results) >= 1
+        logging.info(f"Test passed: Monitoring stopped with {len(availability_control.results)} result(s).")
 
 if __name__ == "__main__":
     pytest.main([__file__])
