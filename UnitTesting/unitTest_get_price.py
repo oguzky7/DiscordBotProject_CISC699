@@ -5,6 +5,29 @@ from control.PriceControl import PriceControl
 from entity.PriceEntity import PriceEntity
 from test_init import logging
 
+"""
+Executable steps for the 'get_price' use case:
+1. Control Layer Processing
+   This test will ensure that PriceControl.receive_command() correctly processes the "get_price" command,
+   including proper URL parameter handling and delegation to the get_price method.
+
+2. Price Retrieval
+   This test will verify that PriceEntity.get_price_from_page() retrieves the correct price from the webpage,
+   simulating the fetching process accurately.
+
+3. Data Logging to Excel
+   This test checks that the price data is correctly logged to an Excel file using DataExportEntity.log_to_excel(),
+   ensuring that data is recorded properly.
+
+4. Data Logging to HTML
+   This test ensures that the price data is correctly exported to an HTML file using DataExportEntity.export_to_html(),
+   validating the data export process.
+
+5. Response Assembly and Output
+   This test will confirm that the control layer assembles and outputs the correct response, including price information,
+   Excel and HTML paths, ensuring the completeness of the response.
+"""
+
 # Testing the control layer's ability to process the "get_price" command
 @pytest.mark.asyncio
 async def test_control_layer_processing():
@@ -63,12 +86,20 @@ async def test_data_logging_html():
 async def test_response_assembly_and_output():
     logging.info("Starting test: Response Assembly and Output")
     
-    with patch('control.PriceControl.PriceControl.get_price', return_value=("100.00", "Data saved to Excel file at path.xlsx", "Data exported to HTML at path.html")):
+    # Mocking get_price to return a tuple of price, excel file path, and html file path
+    with patch('control.PriceControl.PriceControl.get_price', new_callable=AsyncMock) as mock_get_price:
+        mock_get_price.return_value = ("100.00", "Data saved to Excel file at path.xlsx", "Data exported to HTML at path.html")
         price_control = PriceControl()
         result = await price_control.receive_command("get_price", "https://example.com/product")
         
+        # Unpack the result tuple for clarity
+        price, excel_path, html_path = result
+
         logging.info("Checking response contains price, Excel and HTML paths")
-        assert all(x in result for x in ["100.00", "path.xlsx", "path.html"])
+        assert price == "100.00", "Price did not match expected value"
+        assert "path.xlsx" in excel_path, "Excel path did not contain expected file name"
+        assert "path.html" in html_path, "HTML path did not contain expected file name"
+        
         logging.info("Test passed: Correct response assembled and output")
 
 if __name__ == "__main__":
