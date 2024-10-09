@@ -1,0 +1,30 @@
+@startuml
+node "User" {
+  [DiscordClient]
+}
+
+node "Discord Bot Server" {
+  [AccountControl]
+  [BrowserControl]
+  [AvailabilityControl]
+  [PriceControl]
+}
+
+node "Database Server" {
+  [Postgres Database]
+}
+
+node "External Systems" {
+  [Websites]
+}
+
+[DiscordClient] --> [AccountControl]
+[DiscordClient] --> [BrowserControl]
+[DiscordClient] --> [AvailabilityControl]
+[DiscordClient] --> [PriceControl]
+
+[AccountControl] --> [Postgres Database]
+[BrowserControl] --> [Websites]
+[AvailabilityControl] --> [Websites]
+[PriceControl] --> [Websites]
+@enduml

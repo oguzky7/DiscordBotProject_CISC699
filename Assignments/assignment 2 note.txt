@@ -1,0 +1,52 @@
+I had a homework. after that homework:
+""""
+Assignment 2
+Due Mar 24 by 11:59pm Points 100 Submitting a file upload File Types pdf Attempts 2 Allowed Attempts 3 Available until Jun 14 at 11:59pm
+This assignment was locked Jun 14 at 11:59pm.
+In this assigment, students are expected to elicit appropriate requirements for their own project.  There should be enuogh requirements to provide sufficient scope to finish the project in two semesters.  To this end, students are required to:  
+
+Identify actors
+Identify use cases
+Identify relationships among actors and use cases
+For each use case, document it using the table show in Figure 4-7 of the textbook on page 135. To doucment a use case, refer to the writing guide shown on page 137 of the textbook. 
+Follow rigorously the writing guide for use cases shown in Figure 4-8 of the textbook on page 137. 
+Submit the documented use cases in a single document. 
+"""
+
+I change some things in my earlier thinking in the project.
+I need you to update that homework and make wayyy better and morreee detailed.
+Read the code, understand how the project works. and re-do the assignment. but structure should be same/similar better. more detailed and everything. also tell me what you think or give me recommendations.
+
+ I'll upload here the old homework, and new code.
+I'll write the new use cases below:
+So I need you the do/update/create/add these.
+if I'm not mistaken in the old assignment only difference is chatwith bot. and that will be simple as this, it  is already in the code if you check. It will detect the message and say either "recognized the code, taking action" something like that, or didn't understand you. 
+and the rest is pretty straight forward to understand. 
+
+!stop_bot
+
+!project_help
+
+!navigate_to_website
+
+!close_browser
+
+!login !login bestbuy oguzky7@gmail.com 438007Be*
+
+!get_price https://www.ebay.com/itm/314411766963
+
+!start_monitoring_price
+
+!stop_monitoring_price
+
+!check_availability https://www.opentable.com/r/hals-the-steakhouse-nashville
+
+!start_monitoring_availability https://www.opentable.com/r/sinatra-bar-and-lounge-nashville
+
+!stop_monitoring_availability
+
+!receive_email monitor_price.html
+
+
+
+I'll check after you do it, please do a good job. if its to much to do at once, we can go one by one or 5,10 at a time or however is best for you

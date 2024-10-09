@@ -35,8 +35,10 @@ class BrowserBoundary(commands.Cog):
         list = GlobalState.parse_user_message(GlobalState.user_message)  # Parse the message into command and up to 6 variables
         command = list[0]  # First element is the command
         website = list[1]
+        userName = list[2]
+        password = list[3]
 
-        result = await self.browser_control.receive_command(command, website)  # Pass the command and website to control object
+        result = await self.browser_control.receive_command(command, website, userName, password)  # Pass the command and website to control object
         
         # Send the result back to the user
         await ctx.send(result)

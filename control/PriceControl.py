@@ -3,7 +3,9 @@ from datetime import datetime
 from entity.PriceEntity import PriceEntity
 from utils.configuration import load_config
 from utils.css_selectors import Selectors
-from utils.exportUtils import ExportUtils
+from entity.DataExportEntity import ExportUtils
+from entity.EmailEntity import send_email_with_attachments
+
 
 class PriceControl:
     def __init__(self):
@@ -55,7 +57,7 @@ class PriceControl:
         try:
             # Call the Excel export method from ExportUtils
             excelResult = ExportUtils.log_to_excel(
-                command="check_availability",
+                command="get_price",
                 url=url,
                 result=result,
                 entered_date=datetime.now().strftime('%Y-%m-%d'),  # Pass the optional entered_date
@@ -63,7 +65,7 @@ class PriceControl:
             )
             print(excelResult)
             htmlResult = ExportUtils.export_to_html(
-                command="check_availability",
+                command="get_price",
                 url=url,
                 result=result,
                 entered_date=datetime.now().strftime('%Y-%m-%d'),  # Pass the optional entered_date
@@ -101,6 +103,9 @@ class PriceControl:
                     else:
                         result = f"Price remains the same: {current_price}"
                     previous_price = current_price
+
+                    send_email_with_attachments("get_price.html")
+                    send_email_with_attachments("check_availability.xlsx")
                 else:
                     result = "Failed to retrieve the price."
 

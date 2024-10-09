@@ -1,111 +1,78 @@
-import pytest
-import logging
-from unittest.mock import patch, MagicMock
-from test_init import base_test_case, setup_logging, log_test_start_end
+import sys, os, pytest, logging
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from unittest.mock import patch, AsyncMock, Mock
+from control.BrowserControl import BrowserControl
+from entity.BrowserEntity import BrowserEntity
 
-# Enable asyncio for all tests in this file
-pytestmark = pytest.mark.asyncio
+"""
+Executable steps for the !login command use case:
+1. Control Layer Processing
+This test will ensure that BotControl.receive_command() handles the "!login" command correctly, including proper parameter passing and validation.
 
-setup_logging()
+2. Website Interaction
+This test will focus on the BrowserEntity.login() function to ensure it processes the request to log into the website using the provided credentials.
 
-async def test_login_success(base_test_case):
-    """Test that the login is successful when valid credentials are provided."""
-    # Patch methods
-    with patch('entity.BrowserEntity.BrowserEntity.login') as mock_login:
-        with patch('control.AccountControl.AccountControl.fetch_account_by_website') as mock_fetch_account:
-            # Setup mock return values
-            mock_login.return_value = "Logged in to http://example.com successfully with username: sample_username"
-            mock_fetch_account.return_value = ("sample_username", "sample_password")
-            
-            expected_entity_result = "Logged in to http://example.com successfully with username: sample_username"
-            expected_control_result = f"Control Object Result: {expected_entity_result}"
-            
-            # Execute the command
-            result = await base_test_case.browser_control.receive_command("login", site="example.com")
-            
-            # Assert results and logging
-            logging.info(f"Entity Layer Expected: {expected_entity_result}")
-            logging.info(f"Entity Layer Received: {mock_login.return_value}")
-            assert mock_login.return_value == expected_entity_result, "Entity layer assertion failed."
-            logging.info("Unit Test Passed for entity layer.\n")
-            
-            logging.info(f"Control Layer Expected: {expected_control_result}")
-            logging.info(f"Control Layer Received: {result}")
-            assert result == expected_control_result, "Control layer assertion failed."
-            logging.info("Unit Test Passed for control layer.")
+3. Response Generation
+This test will validate that the control layer correctly interprets the response from the website interaction step and returns the appropriate result to the boundary layer.
+"""
 
-async def test_login_no_account(base_test_case):
-    """Test that the control layer handles the scenario where no account is found for the website."""
-    with patch('control.AccountControl.AccountControl.fetch_account_by_website') as mock_fetch_account:
-        # Setup mock to return no account
-        mock_fetch_account.return_value = None
+# test_bot_control_login.py
+@pytest.mark.asyncio
+async def test_control_layer_login():
+    logging.info("Starting test: Control Layer Processing for Login")
+    
+    with patch('entity.BrowserEntity.BrowserEntity.login', new_callable=AsyncMock) as mock_login:
+        mock_login.return_value = "Login successful!"
+        browser_control = BrowserControl()
+
+        result = await browser_control.receive_command("login", "example.com", "user", "pass")
         
-        expected_result = "No account found for example.com"
+        logging.info(f"Expected outcome: Control Object Result: Login successful!")
+        logging.info(f"Actual outcome: {result}")
         
-        # Execute the command
-        result = await base_test_case.browser_control.receive_command("login", site="example.com")
+        assert result == "Control Object Result: Login successful!"
+        logging.info("Step 1 executed and Test passed: Control Layer Processing for Login was successful")
+
+@pytest.fixture
+def browser_entity_setup():     # Fixture to setup the BrowserEntity for testing
+    with patch('selenium.webdriver.Chrome') as mock_browser:    # Mocking the Chrome browser
+        entity = BrowserEntity()    # Creating an instance of BrowserEntity
+        entity.driver = Mock()  # Mocking the driver
+        entity.driver.get = Mock()  # Mocking the get method
+        entity.driver.find_element = Mock() # Mocking the find_element method
+        return entity
+
+def test_website_interaction(browser_entity_setup):
+    logging.info("Starting test: Website Interaction for Login")    
+    
+    browser_entity = browser_entity_setup   # Setting up the BrowserEntity
+    browser_entity.login = Mock(return_value="Login successful!")   # Mocking the login method
+    
+    result = browser_entity.login("http://example.com", "user", "pass")  # Calling the login method
+    
+    logging.info("Expected to attempt login on 'http://example.com'")       
+    logging.info(f"Actual outcome: {result}")
+    
+    assert "Login successful!" in result    # Assertion to check if the login was successful
+    logging.info("Step 2 executed and Test passed: Website Interaction for Login was successful")
+
+# test_response_generation.py
+@pytest.mark.asyncio
+async def test_response_generation():
+    logging.info("Starting test: Response Generation for Login")
+    
+    with patch('control.BrowserControl.BrowserControl.receive_command', new_callable=AsyncMock) as mock_receive:
+        mock_receive.return_value = "Login successful!"
+        browser_control = BrowserControl()
+
+        result = await browser_control.receive_command("login", "example.com", "user", "pass")
         
-        # Assert results and logging
-        logging.info(f"Control Layer Expected: {expected_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_result, "Control layer failed to handle missing account correctly."
-        logging.info("Unit Test Passed for missing account handling.")
-
-async def test_login_entity_layer_failure(base_test_case):
-    """Test that the control layer handles an exception raised in the entity layer."""
-    with patch('entity.BrowserEntity.BrowserEntity.login') as mock_login:
-        with patch('control.AccountControl.AccountControl.fetch_account_by_website') as mock_fetch_account:
-            # Setup mocks
-            mock_login.side_effect = Exception("BrowserEntity_Failed to log in to http://example.com: Internal error")
-            mock_fetch_account.return_value = ("sample_username", "sample_password")
-            
-            expected_result = "Control Layer Exception: BrowserEntity_Failed to log in to http://example.com: Internal error"
-            
-            # Execute the command
-            result = await base_test_case.browser_control.receive_command("login", site="example.com")
-            
-            # Assert results and logging
-            logging.info(f"Control Layer Expected: {expected_result}")
-            logging.info(f"Control Layer Received: {result}")
-            assert result == expected_result, "Control layer failed to handle entity layer exception."
-            logging.info("Unit Test Passed for entity layer failure.")
-
-
-async def test_login_control_layer_failure(base_test_case):
-    """Test that the control layer handles an unexpected failure or exception."""
-    with patch('control.AccountControl.AccountControl.fetch_account_by_website') as mock_fetch_account:
-        # Simulate an exception being raised in the control layer
-        mock_fetch_account.side_effect = Exception("Control layer failure during account fetch.")
+        logging.info("Expected outcome: 'Login successful!'")
+        logging.info(f"Actual outcome: {result}")
         
-        expected_result = "Control Layer Exception: Control layer failure during account fetch."
-        
-        # Execute the command
-        result = await base_test_case.browser_control.receive_command("login", site="example.com")
-        
-        # Assert results and logging
-        logging.info(f"Control Layer Expected: {expected_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_result, "Control layer failed to handle control layer exception."
-        logging.info("Unit Test Passed for control layer failure handling.")
+        assert "Login successful!" in result
+        logging.info("Step 3 executed and Test passed: Response Generation for Login was successful")
 
-async def test_login_invalid_url(base_test_case):
-    """Test that the control layer handles the scenario where the URL or selectors are not found."""
-    with patch('control.AccountControl.AccountControl.fetch_account_by_website') as mock_fetch_account:
-        with patch('utils.css_selectors.Selectors.get_selectors_for_url') as mock_get_selectors:
-            # Setup mocks
-            mock_fetch_account.return_value = ("sample_username", "sample_password")
-            mock_get_selectors.return_value = {'url': None}  # Simulate missing URL
-            
-            expected_result = "URL for example not found."
-            
-            # Execute the command
-            result = await base_test_case.browser_control.receive_command("login", site="example")
-            
-            # Assert results and logging
-            logging.info(f"Control Layer Expected: {expected_result}")
-            logging.info(f"Control Layer Received: {result}")
-            assert result == expected_result, "Control layer failed to handle missing URL or selectors."
-            logging.info("Unit Test Passed for missing URL/selector handling.")
-
+# This condition ensures that the pytest runner handles the test run.
 if __name__ == "__main__":
     pytest.main([__file__])

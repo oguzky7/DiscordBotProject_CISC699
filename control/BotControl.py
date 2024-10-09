@@ -1,5 +1,5 @@
 import discord
-from utils.email_utils import send_email_with_attachments
+from entity.EmailEntity import send_email_with_attachments
 
 class BotControl:
     async def receive_command(self, command_data, *args):

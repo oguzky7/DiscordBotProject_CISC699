@@ -1,59 +1,23 @@
 Commands/ use cases
 
-!stop_bot
-
 !project_help
-
-!fetch_all_accounts
-
-!add_account 
-
-!fetch_account_by_website
-
-!delete_account 
 
 !receive_email <file name>
 
-!launch_browser
+!navigate_to_website
+
+!login <website> <username> <password>
 
 !close_browser
 
-!navigate_to_website
+!get_price <website>
 
-!login bestbuy
+!start_monitoring_price <website>
 
-!get_price
+!stop_monitoring_price <website>
 
-!start_monitoring_price
+!check_availability <website>
 
-!stop_monitoring_price
+!start_monitoring_availability <website>
 
-!check_availability 
-
-!start_monitoring_availability 
-
-!stop_monitoring_availability
-
-
-Rules:
-Your New Rules and Approach Summarized:
-Boundaries:
-
-Initialize only necessary control objects.
-Do not hold unnecessary references like the bot object unless absolutely needed.
-Pass data cleanly to the control objects via the receive_command method.
-Control Objects:
-
-Handle all business logic and decide what action to take based on the command or data received from the boundary.
-Can access the bot dynamically through context (ctx.bot) if necessary.
-Data Passing:
-
-Boundaries pass data (commands, URLs, etc.) via method parameters, keeping the connection between boundary and control simple and efficient.
-Code Structure:
-
-Clean separation of concerns.
-No redundant variables or unnecessary initialization.
-Final Feedback:
-Your approach is clean and efficient.
-Your comments are sufficient and explain the data flow without unnecessary verbosity.
-Separation of logic between boundary and control is well-maintained, following the best practices for maintainability.
+!stop_monitoring_availability <website>

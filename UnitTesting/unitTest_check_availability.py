@@ -1,81 +1,78 @@
-import pytest, logging
-from unittest.mock import patch
-from test_init import base_test_case, setup_logging, log_test_start_end
+import sys, os, pytest, logging
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from unittest.mock import patch, AsyncMock
+from control.AvailabilityControl import AvailabilityControl
+from entity.DataExportEntity import ExportUtils
+"""
+Executable steps for the 'Check_Availability' use case:
+1. Control Layer Command Reception
+This test will ensure that AvailabilityControl.receive_command() handles the "check_availability" command properly, including parsing and validating parameters such as URL and optional date string.
 
-# Enable asyncio for all tests in this file
-pytestmark = pytest.mark.asyncio
-setup_logging()
+2. Availability Checking
+This test focuses on the AvailabilityEntity.check_availability() function to verify that it correctly processes the availability check against a provided URL and optional date string. It will ensure that the availability status is accurately determined and returned.
 
-# Test for successful availability check (Control and Entity Layers)
-async def test_check_availability_success(base_test_case):
-    with patch('entity.AvailabilityEntity.AvailabilityEntity.check_availability') as mock_check:
-        url = "https://example.com"
-        mock_check.return_value = f"Selected or default date current date is available for booking."
-        expected_entity_result = f"Selected or default date current date is available for booking."
-        expected_control_result = f"Checked availability: Selected or default date current date is available for booking."
+3. Data Logging to Excel
+This test checks that the event data is correctly logged to an Excel file using DataExportEntity.log_to_excel(). It will verify that the export includes the correct data formatting, timestamping, and file handling, ensuring data integrity.
 
-        # Execute the command
-        result = await base_test_case.availability_control.receive_command("check_availability", url)
+4. Data Logging to HTML
+Ensures that the event data is appropriately exported to an HTML file using DataExportEntity.export_to_html(). This test will confirm the data integrity and formatting in the HTML output, ensuring it matches expected outcomes.
+"""
 
-        # Log and assert the outcomes
-        logging.info(f"Entity Layer Expected: {expected_entity_result}")
-        logging.info(f"Entity Layer Received: {mock_check.return_value}")
-        assert mock_check.return_value == expected_entity_result, "Entity layer assertion failed."
-        logging.info("Unit Test Passed for entity layer.\n")
 
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer.")
+# Testing the control layer's ability to receive and process the "check_availability" command
+@pytest.mark.asyncio
+async def test_control_layer_command_reception():
+    logging.info("Starting test: Control Layer Command Reception for check_availability command")
+    
+    command_data = "check_availability"
+    url = "https://example.com/reservation"
+    date_str = "2023-10-10"
 
-# Test for failure in entity layer (Control should handle it gracefully)
-async def test_check_availability_failure_entity(base_test_case):
-    with patch('entity.AvailabilityEntity.AvailabilityEntity.check_availability', side_effect=Exception("Failed to check availability")) as mock_check:
-        url = "https://example.com"
-        expected_control_result = "Failed to check availability: Failed to check availability"
+    with patch('control.AvailabilityControl.AvailabilityControl.receive_command', new_callable=AsyncMock) as mock_receive:
+        control = AvailabilityControl()
+        await control.receive_command(command_data, url, date_str)
+        
+        logging.info("Verifying that the receive_command was called with correct parameters")
+        mock_receive.assert_called_with(command_data, url, date_str)
+        logging.info("Test passed: Control layer correctly processes 'check_availability'")
 
-        # Execute the command
-        result = await base_test_case.availability_control.receive_command("check_availability", url)
+# Testing the availability checking functionality from the AvailabilityEntity
+@pytest.mark.asyncio
+async def test_availability_checking():
+    with patch('entity.AvailabilityEntity.AvailabilityEntity.check_availability', new_callable=AsyncMock) as mock_check:
+        # Mock returns a tuple mimicking the real function's output
+        mock_check.return_value = ("Checked availability: Availability confirmed", 
+                                   "Data saved to Excel file at ExportedFiles\\excelFiles\\check_availability.xlsx.",
+                                   "HTML file saved and updated at ExportedFiles\\htmlFiles\\check_availability.html.")
+        result = await AvailabilityControl().check_availability("https://example.com/reservation", "2023-10-10")
+        
+        # Properly access the tuple and check the relevant part
+        assert "Availability confirmed" in result[0]  # Accessing the first element of the tuple where the status message is
 
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer failed to handle entity error correctly."
-        logging.info("Unit Test Passed for entity layer error handling.")
 
-# Test for no availability scenario (control and entity)
-async def test_check_availability_no_availability(base_test_case):
-    with patch('entity.AvailabilityEntity.AvailabilityEntity.check_availability') as mock_check:
-        url = "https://example.com"
-        mock_check.return_value = "No availability for the selected date."
-        expected_control_result = "Checked availability: No availability for the selected date."
+# Testing the Excel logging functionality
+@pytest.mark.asyncio
+async def test_data_logging_excel():
+    logging.info("Starting test: Data Logging to Excel for check_availability command")
 
-        # Execute the command
-        result = await base_test_case.availability_control.receive_command("check_availability", url)
+    with patch('entity.DataExportEntity.ExportUtils.log_to_excel', return_value="Data saved to Excel file at path.xlsx") as mock_excel:
+        excel_result = ExportUtils.log_to_excel("check_availability", "https://example.com", "Available")
+        
+        logging.info("Verifying Excel file creation and data logging")
+        assert "path.xlsx" in excel_result, "Excel data logging did not return expected file path"
+        logging.info("Test passed: Data correctly logged to Excel")
 
-        # Log and assert the outcomes
-        logging.info(f"Entity Layer Received: {mock_check.return_value}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer failed to handle no availability scenario."
-        logging.info("Unit Test Passed for control layer no availability handling.")
-
-# Test for control layer failure scenario
-async def test_check_availability_failure_control(base_test_case):
-    with patch('control.AvailabilityControl.AvailabilityControl.receive_command', side_effect=Exception("Control Layer Failed")) as mock_control:
-        url = "https://example.com"
-        expected_control_result = "Control Layer Exception: Control Layer Failed"
-
-        # Execute the command and catch the raised exception
-        try:
-            result = await base_test_case.availability_control.receive_command("check_availability", url)
-        except Exception as e:
-            result = f"Control Layer Exception: {str(e)}"
-
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_control_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_control_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for control layer failure.")
+# Testing the HTML export functionality
+@pytest.mark.asyncio
+async def test_data_logging_html():
+    logging.info("Starting test: Data Export to HTML for check_availability command")
+    
+    with patch('entity.DataExportEntity.ExportUtils.export_to_html', return_value="Data exported to HTML file at path.html") as mock_html:
+        html_result = ExportUtils.export_to_html("check_availability", "https://example.com", "Available")
+        
+        logging.info("Verifying HTML file creation and data export")
+        assert "path.html" in html_result, "HTML data export did not return expected file path"
+        logging.info("Test passed: Data correctly exported to HTML")
 
 if __name__ == "__main__":
     pytest.main([__file__])

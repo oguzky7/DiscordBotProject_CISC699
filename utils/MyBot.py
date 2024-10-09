@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 from boundary.BrowserBoundary import BrowserBoundary
-from boundary.AccountBoundary import AccountBoundary
 from boundary.AvailabilityBoundary import AvailabilityBoundary
 from boundary.PriceBoundary import PriceBoundary
 from boundary.BotBoundary import BotBoundary
@@ -38,7 +37,6 @@ class MyBot(commands.Bot):
 
     async def setup_hook(self):
         await self.add_cog(BrowserBoundary())  # Add your boundary objects
-        await self.add_cog(AccountBoundary())
         await self.add_cog(AvailabilityBoundary())
         await self.add_cog(PriceBoundary())
         await self.add_cog(BotBoundary())

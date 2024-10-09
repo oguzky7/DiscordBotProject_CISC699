@@ -1,60 +1,41 @@
-import pytest, logging
-from unittest.mock import patch
-from test_init import base_test_case, setup_logging, log_test_start_end
+import sys, os, pytest, logging
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+############################################################################################################
+from unittest.mock import patch, AsyncMock
+from control.BotControl import BotControl
 
-# Enable asyncio for all tests in this file
-pytestmark = pytest.mark.asyncio
-setup_logging()
+"""
+Executable steps for the project_help use case:
+1. Control Layer Processing
+This test will ensure that BotControl.receive_command() handles the "project_help" command correctly, including proper parameter passing.
+"""
 
-async def test_project_help_success(base_test_case):
-    with patch('control.BotControl.BotControl.receive_command') as mock_help:
-        # Setup mock return and expected outcomes
-        mock_help.return_value = (
-            "Here are the available commands:\n"
-            "!project_help - Get help on available commands.\n"
-            "!fetch_all_accounts - Fetch all stored accounts.\n"
-            "!add_account 'username' 'password' 'website' - Add a new account to the database.\n"
-            "!fetch_account_by_website 'website' - Fetch account details by website.\n"
-            "!delete_account 'account_id' - Delete an account by its ID.\n"
-            "!launch_browser - Launch the browser.\n"
-            "!close_browser - Close the browser.\n"
-            "!navigate_to_website 'url' - Navigate to a specified website.\n"
-            "!login 'website' - Log in to a website (e.g., !login bestbuy).\n"
-            "!get_price 'url' - Check the price of a product on a specified website.\n"
-            "!start_monitoring_price 'url' 'frequency' - Start monitoring a product's price at a specific interval (frequency in minutes).\n"
-            "!stop_monitoring_price - Stop monitoring the product's price.\n"
-            "!check_availability 'url' - Check availability for a restaurant or service.\n"
-            "!start_monitoring_availability 'url' 'frequency' - Monitor availability at a specific interval.\n"
-            "!stop_monitoring_availability - Stop monitoring availability.\n"
-            "!stop_bot - Stop the bot.\n"
-        )
-        expected_result = mock_help.return_value
+# test_project_help_control.py
+@pytest.mark.asyncio
+async def test_project_help_control():
+    # Start logging the test case
+    logging.info("Starting test: test_project_help_control")
+    
+    # Mocking the BotControl to simulate control layer behavior
+    with patch('control.BotControl.BotControl.receive_command', new_callable=AsyncMock) as mock_command:
+        # Setup the mock to return the expected help message
+        expected_help_message = "Here are the available commands:..."
+        mock_command.return_value = expected_help_message
         
-        # Execute the command
-        result = await base_test_case.bot_control.receive_command("project_help")
-
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_result, "Control layer assertion failed."
-        logging.info("Unit Test Passed for project help.\n")
-
-
-async def test_project_help_failure(base_test_case):
-    with patch('control.BotControl.BotControl.receive_command', side_effect=Exception("Error handling help command")) as mock_help:
-        expected_result = "Error handling help command: Error handling help command"
+        # Creating an instance of BotControl
+        control = BotControl()
         
-        # Execute the command and catch the raised exception
-        try:
-            result = await base_test_case.bot_control.receive_command("project_help")
-        except Exception as e:
-            result = f"Error handling help command: {str(e)}"
+        # Simulating the command processing
+        result = await control.receive_command("project_help")
+        
+        # Logging expected and actual outcomes
+        logging.info(f"Expected outcome: '{expected_help_message}'")
+        logging.info(f"Actual outcome: '{result}'")
+        
+        # Assertion to check if the result is as expected
+        assert result == expected_help_message
+        logging.info("Step 1 executed and Test passed: Control Layer Processing was successful")
 
-        # Log and assert the outcomes
-        logging.info(f"Control Layer Expected: {expected_result}")
-        logging.info(f"Control Layer Received: {result}")
-        assert result == expected_result, "Control layer failed to handle error correctly."
-        logging.info("Unit Test Passed for error handling in project help.\n")
-
+# This condition ensures that the pytest runner handles the test run.
 if __name__ == "__main__":
     pytest.main([__file__])

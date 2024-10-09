@@ -12,7 +12,7 @@ class BrowserEntity:
     _instance = None
     config = load_config()
     search_element_timeOut = config.get('project_options', {}).get('search_element_timeOut', 15)
-    sleep_time = config.get('project_options', {}).get('sleep_time', 15)
+    sleep_time = config.get('project_options', {}).get('sleep_time', 3)
     
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
