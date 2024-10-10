@@ -3,11 +3,11 @@ from fpdf import FPDF
 from docx import Document
 
 # Directory where the project files are located
-directory = r"D:\HARRISBURG\Harrisburg Master's Fifth Term Late Summer\CISC 699\DiscordBotProject_CISC699\UnitTesting"
+directory = r"D:\HARRISBURG\Harrisburg Master's Fifth Term Late Summer\CISC 699\DiscordBotProject_CISC699"
 
 # Lists for files and folders to ignore
-files_to_ignore = ['ignore_this.py', '*txt', '*md', '*.pdf', '*.docx', '*.pyc', 'Config.py']  # Example file names to ignore
-folders_to_ignore = ['ignore_folder', '.git', '__pycache__', 'PersonelTest', 'MockTesting', 'ExportedFiles', 'other']  # Folders to ignore
+files_to_ignore = ['ignore_this.py', '*png', '*txt', '*md', '*.pdf', '*.docx', '*.pyc', 'Config.py']  # Example file names to ignore
+folders_to_ignore = ['ignore_folder', '.git', '__pycache__', 'ExportedFiles', 'other']  # Folders to ignore
 
 def create_pdf(text_blocks, output_path):
     pdf = FPDF()
@@ -59,7 +59,7 @@ def create_documentation(directory, ignore_files=None, ignore_folders=None):
     text_blocks = extract_project_text(directory, ignore_files, ignore_folders)
     if text_blocks:
         #pdf_path = os.path.join(directory, "project_text.pdf")
-        docx_path = os.path.join(directory, "UnitTesting.docx")
+        docx_path = os.path.join(directory, "CompleteProjectSourceCode.docx")
         #create_pdf(text_blocks, pdf_path)
         create_docx(text_blocks, docx_path)
         #print(f"Documentation created at: {pdf_path} and {docx_path}")
